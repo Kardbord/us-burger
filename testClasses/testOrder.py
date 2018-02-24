@@ -30,8 +30,15 @@ class Order:
 
 
 class OrderItem:
-# TODO: write docstring
+"""
+The Order class is composed of OrderItems
 
+Attributes:
+    __item: the MenuItem object that was ordered
+    __name: the name of the MenuItem object that was ordered
+    __qty : the quantity of the MenuItem object that was ordered
+
+"""
     # ------------------------------ Private Attributes -------------------------------- #
 
     __qty
@@ -42,16 +49,31 @@ class OrderItem:
 
     # ---------------------------- Public Member Functions ----------------------------- #
 
-    def __init__(self, item, qty):
-        # TODO: add docstring
+    def __init__(self, menu_item, qty):
+        """
+        Initializer for OrderItem objects
+
+        param menu_item : a MenuItem object
+        param qty       : the quantity of @menu_item ordered
+
+        """
         if qty > 0:
             self.__qty = qty
         else:
             self.__qty = 1
 
-        self.__item = item
+        self.__item = menu_item
         try:
             self.__name = self.__item.getName()
         except AttributeError:
             raise AttributeError\
-            ('bad "item" passed to OrderItem initializer')
+            ('bad "menu_item" passed to OrderItem initializer')
+
+    def getQuantity(self):
+        return self.__qty
+
+    def getName(self):
+        return self.__name
+
+    def getItem(self):
+        return self.__item
