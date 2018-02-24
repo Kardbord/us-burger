@@ -28,5 +28,30 @@ class Order:
         return self.__items
 
 
-    # ---------------------------- Private Member Functions ---------------------------- #
 
+class OrderItem:
+# TODO: write docstring
+
+    # ------------------------------ Private Attributes -------------------------------- #
+
+    __qty
+
+    __name
+
+    __item
+
+    # ---------------------------- Public Member Functions ----------------------------- #
+
+    def __init__(self, item, qty):
+        # TODO: add docstring
+        if qty > 0:
+            self.__qty = qty
+        else:
+            self.__qty = 1
+
+        self.__item = item
+        try:
+            self.__name = self.__item.getName()
+        except AttributeError:
+            raise AttributeError\
+            ('bad "item" passed to OrderItem initializer')
