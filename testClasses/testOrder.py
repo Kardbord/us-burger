@@ -53,7 +53,8 @@ class Order:
 
     def addItem(self, item, qty=1):
         """
-        Updates the quantity of @item in self.__order_items if the item is already included in the Order.
+        Increases the quantity of @item in self.__order_items by @qty 
+        if the item is already included in the Order.
         Inserts @item into the Order with the provided @qty if @item is not already present.
         """
         if self.__order_items.has_key(item.getName()):
@@ -62,6 +63,20 @@ class Order:
             order_item = OrderItem(item)
             self.__order_items.update( {order_item.getName() : order_item} )
             self.__order_items[order_item.getName()].updateQty(qty)
+
+    def removeItem(self, item_name, qty=1):
+        """
+        Decreases the quantity of self.__order_items[item_name] by qty 
+        if the item is present in the Order.
+        If @qty exceeds the present quantity of the OrderItem,
+        the OrderItem is removed from the Order entirely.
+        """
+        if self.__order_items.has_key(item_name):
+            order_item = self.__order_items[item_name]
+            if order_item.getQuantity() > qty:
+                self.__order_items[item_name].decrementQty(qty)
+            else:
+                del self.__order_items[item_name]
 
     def getPin(self):
         return self.__pin
@@ -110,11 +125,11 @@ class OrderItem:
 
     def incrementQty(self, inc_by=1):
         if inc_by > 0:
-            self.__qty += qty
+            self.__qty += inc_by 
 
     def decrementQty(self, dec_by=1):
-        if self.__qty - dec_by > 0:
-            self.__qty -= 1
+        if self.__qty - dec_by > 0 and dec_by > 0:
+            self.__qty -= dec_by 
 
     def updateQty(self, qty):
         if qty > 0:
