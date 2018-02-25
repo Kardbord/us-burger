@@ -1,5 +1,7 @@
 #!/bin/python
 
+""" This file is the work of Tanner Kvarfordt """
+
 from testMenuItem import MenuItem
 
 class Order:
