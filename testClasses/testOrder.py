@@ -3,14 +3,23 @@
 from testMenuItem import MenuItem
 
 class Order:
-# TODO: Write docstring
+    """
+    A composition of OrderItems.
 
+    Instance Attributes:
+        __pin         : The unique customer PIN associated with this Order (a string)
+        __order_items : A dictionary where
+                            key   : name (a string) of OrderItem instance 
+                            value : OrderItem instance
+        __total_cost  : The total cost of the Order
+    
+    """
     def __init__(self, pin, items = []):
         """
         Initializer for Order objects
 
-        param pin   : the unique customer PIN associated with this order
-        param items : a list of MenuItem objects to be included in the order
+        param pin   : the unique customer PIN associated with this Order
+        param items : a list of MenuItem objects to be included in the Order
 
         """
         self.__order_items = {}
@@ -36,6 +45,9 @@ class Order:
                 raise AttributeError\
                 ('Non-MenuItem object present in Order initializer parameter "items"')
 
+    def updateItemQty(self, item_name, qty):
+        if self.__order_items.has_key(item_name):
+            self.__order_items[item_name].updateQuantity(qty)
 
     def getPin(self):
         return self.__pin
@@ -89,7 +101,7 @@ class OrderItem:
         if self.__qty > 1:
             self.__qty -= 1
 
-    def updateQuantity(self, qty):
+    def updateQty(self, qty):
         if qty > 0:
             self.__qty = qty
 
@@ -99,6 +111,6 @@ class OrderItem:
     def getName(self):
         return self.__name
 
-    def getItem(self):
+    def getMenuItem(self):
         return self.__item
 
