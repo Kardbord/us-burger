@@ -6,7 +6,7 @@ from testMenuItem import MenuItem
 
 class Order:
     """
-    A composition of OrderItems.
+    An aggregation of OrderItems.
 
     Instance Attributes:
         __pin         : The unique customer PIN associated with this Order (a string)
@@ -92,7 +92,7 @@ class Order:
 
 class OrderItem:
     """
-    The Order class is composed of OrderItems
+    The Order class is an aggregate of OrderItems
     
     Instance Attributes:
         __item: the MenuItem object that was ordered
