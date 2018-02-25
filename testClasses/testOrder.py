@@ -14,6 +14,7 @@ class Order:
         __total_cost  : The total cost of the Order
     
     """
+
     def __init__(self, pin, items = []):
         """
         Initializer for Order objects
@@ -46,8 +47,21 @@ class Order:
                 ('Non-MenuItem object present in Order initializer parameter "items"')
 
     def updateItemQty(self, item_name, qty):
+        """Uses @qty to update the quantity of an OrderItem identified by @item_name"""
         if self.__order_items.has_key(item_name):
             self.__order_items[item_name].updateQuantity(qty)
+
+    def addItem(self, item, qty=1):
+        """
+        Updates the quantity of @item in self.__order_items if the item is already included in the Order.
+        Inserts @item into the Order with the provided @qty if @item is not already present.
+        """
+        if self.__order_items.has_key(item.getName()):
+            self.__order_items[item.getName()].incrementQty(qty)
+        else:
+            order_item = OrderItem(item)
+            self.__order_items.update( {order_item.getName() : order_item} )
+            self.__order_items[order_item.getName()].updateQty(qty)
 
     def getPin(self):
         return self.__pin
@@ -94,11 +108,12 @@ class OrderItem:
             raise AttributeError\
             ('bad "menu_item" passed to OrderItem initializer')
 
-    def incrementQty(self):
-        self.__qty += 1
+    def incrementQty(self, inc_by=1):
+        if inc_by > 0:
+            self.__qty += qty
 
-    def decrementQty(self):
-        if self.__qty > 1:
+    def decrementQty(self, dec_by=1):
+        if self.__qty - dec_by > 0:
             self.__qty -= 1
 
     def updateQty(self, qty):
