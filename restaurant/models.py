@@ -33,7 +33,6 @@ class SupplyItem(models.Model):
     quantity = models.FloatField()
 
 
-# TODO: Implement the Order class/model
 class Order(models.Model):
     pin = models.SmallIntegerField(max_length=4)
 
