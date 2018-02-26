@@ -60,15 +60,18 @@ class MenuItem(models.Model):
         pass
         # for supply in supplies try/catch supply.decrement
 
+    def set_quantities(self):
+        pass
+
     available = models.BooleanField(True)
     name = models.CharField(max_length=30)
     # TODO: Figure out how to properly store the SupplyItems along with the quantity for each item.
     #  Maybe create a KeyVal class as the following stackoverflow suggests?
     #  https://stackoverflow.com/questions/402217/how-to-store-a-dictionary-on-a-django-model
-    ingredients = models.ManyToManyField(SupplyItem, on_delete=models.PROTECT)
-    price = models.DecimalField(max_digits=None, decimal_places=2)
+    ingredients = models.ManyToManyField(SupplyItem)
+    price = models.DecimalField(max_digits=3, decimal_places=2)
     description = models.TextField()
-    # TODO: Read the documentation and figure out how the ImageField works.
+    # Next Sprint: Read the documentation and figure out how the ImageField works.
     # image = models.ImageField(upload_to=None, height_field=None, width_field=None, max_length=100)
 
 

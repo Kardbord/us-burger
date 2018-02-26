@@ -1,0 +1,20 @@
+NAME			PRICE		INGREDIENTS	
+DESCRIPTION		
+
+Cheeseburger		$6.00		Bun, Hamburger Patty, Cheese, Lettuce
+A hamburger topped with cheese so good you will leave your tastebuds wanting more!
+
+Fries			$2.00		Potato Sliced
+Our deep fried fries are so tasty, you will be sad when they are gone!
+
+Chicken Salad		$8.00		Lettuce Chopped, Chicken Sliced
+Freshly chopped lettuce topped with delicious chicken.
+
+Grilled Cheese		$4.00		Bread Slice (2), Cheese
+Great with Tomato Soup!
+
+Tomato Soup		$4.00		Tomato Soup
+Great with grilled cheese!
+
+
+
