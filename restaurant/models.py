@@ -82,7 +82,7 @@ class Order(models.Model):
     - orderitem_set : the set of OrderItems belonging to this Order
     """
 
-    pin = models.SmallIntegerField(max_length=4)
+    pin = models.PositiveSmallIntegerField(default=0000)
 
     def __str__(self):
         """Returns the Order's PIN"""
