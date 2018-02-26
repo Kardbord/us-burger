@@ -1,0 +1,12 @@
+NAME			QUANTITY	MEASUREMENT
+Bun			10		2 Oz
+Bread Slice (2)		10		2 Oz
+Hamburger Patty		10		8 Oz
+Cheese			10		3 Oz
+Lettuce			10		2 Oz
+Tomato Sliced		10		2 Oz
+Tomato Soup		10		12 Oz
+Lettuce Chopped		10		24 Oz
+Chicken Sliced		10		8 Oz
+Potato Sliced		10		4 Oz
+
