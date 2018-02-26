@@ -33,6 +33,15 @@ class SupplyItem(models.Model):
     quantity = models.FloatField()
 
 
+# TODO: Implement the Order class/model
+class Order(models.Model):
+    pin = models.SmallIntegerField(max_length=4)
+
+    def __str__(self):
+        """Returns the Order's PIN"""
+        return str(self.pin)
+
+
 class MenuItem(models.Model):
     """
     MenuItem class/model:
@@ -71,12 +80,10 @@ class MenuItem(models.Model):
     # Next Sprint: Read the documentation and figure out how the ImageField works.
     # image = models.ImageField(upload_to=None, height_field=None, width_field=None, max_length=100)
 
+    # A MenuItem can be included in multiple Orders, and an Order can have multiple MenuItems
+    order = models.ManyToManyField(Order)
+
 
 # TODO: Implement the Menu class/model
 class Menu(models.Model):
-    pass
-
-
-# TODO: Implement the Order class/model
-class Order(models.Model):
     pass
