@@ -33,14 +33,6 @@ class SupplyItem(models.Model):
     quantity = models.FloatField()
 
 
-class Order(models.Model):
-    pin = models.SmallIntegerField(max_length=4)
-
-    def __str__(self):
-        """Returns the Order's PIN"""
-        return str(self.pin)
-
-
 class MenuItem(models.Model):
     """
     MenuItem class/model:
@@ -52,8 +44,9 @@ class MenuItem(models.Model):
      - price: a DecimalField that holds the dish's price, fixed at two decimal places.
      - description: TextField for containing a short description of the dish.
      - image: An ImageField for storing an image of the dish.
-        (NOTE): Inherits from FileField, which has some nuances in the documentation that I need to research before implementing.
-     -
+        (NOTE): Inherits from FileField, which has some nuances in the documentation that I need to research before
+        implementing.
+     - orderitem_set : the set of OrderItems that this MenuItem is a part of
     """
 
     def __str__(self):
@@ -79,8 +72,51 @@ class MenuItem(models.Model):
     # Next Sprint: Read the documentation and figure out how the ImageField works.
     # image = models.ImageField(upload_to=None, height_field=None, width_field=None, max_length=100)
 
-    # A MenuItem can be included in multiple Orders, and an Order can have multiple MenuItems
-    order = models.ManyToManyField(Order)
+
+class Order(models.Model):
+    """
+    Order class/model:
+    ===================================
+    Contains the following members/fields:
+    - pin           : a unique PIN number associated with this Order
+    - orderitem_set : the set of OrderItems belonging to this Order
+    """
+
+    pin = models.SmallIntegerField(max_length=4)
+
+    def __str__(self):
+        """Returns the Order's PIN"""
+        return str(self.pin)
+
+    def get_total_price(self):
+        """Returns the total price of the Order"""
+        total = 0.00
+        for order_item in self.orderitem_set.all():
+            total += order_item.price * order_item.quantity
+        return total
+
+
+class OrderItem(models.Model):
+    """
+    OrderItem class/model:
+    ===================================
+    Contains the following members/fields:
+     - menu_item : The MenuItem associated with this OrderItem
+     - order     : The Order to which this OrderItem belongs
+     - quantity  : The quantity of @menu_item ordered
+    """
+
+    # A MenuItem can be included in many OrderItems, but an OrderItem can only have one MenuItem
+    menu_item = models.ForeignKey(MenuItem, on_delete=models.CASCADE)
+
+    # An Order can have many OrderItems, but an OrderItem can belong to only one Order
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+
+    quantity = models.PositiveSmallIntegerField()
+
+    def __str__(self):
+        """Returns the OrderItem's menu_item name"""
+        return self.menu_item.name
 
 
 # TODO: Implement the Menu class/model
