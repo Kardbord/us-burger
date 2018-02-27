@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import MenuItem, SupplyItem, Order, OrderItem
+from .models import MenuItem, SupplyItem, Order, OrderItem, Menu
 
 
 class OrderItemInline(admin.StackedInline):
@@ -20,3 +20,4 @@ class OrderAdmin(admin.ModelAdmin):
 admin.site.register(MenuItem)
 admin.site.register(SupplyItem)
 admin.site.register(Order, OrderAdmin)
+admin.site.register(Menu)

@@ -47,6 +47,7 @@ class MenuItem(models.Model):
         (NOTE): Inherits from FileField, which has some nuances in the documentation that I need to research before
         implementing.
      - orderitem_set : the set of OrderItems that this MenuItem is a part of
+     - menu_set : the set of Menus that this MenuItem is a part of
     """
 
     def __str__(self):
@@ -78,8 +79,8 @@ class Order(models.Model):
     Order class/model:
     ===================================
     Contains the following members/fields:
-    - pin           : a unique PIN number associated with this Order
-    - orderitem_set : the set of OrderItems belonging to this Order
+     - pin           : a unique PIN number associated with this Order
+     - orderitem_set : the set of OrderItems belonging to this Order
     """
 
     pin = models.CharField(max_length=4, default=0000)
@@ -119,6 +120,20 @@ class OrderItem(models.Model):
         return self.menu_item.name
 
 
-# TODO: Implement the Menu class/model
 class Menu(models.Model):
-    pass
+    """
+    Menu class/model:
+    ===================================
+    Contains the following members/fields:
+     - name       : the name of the Menu
+     - menu_items : the MenuItems included in the Menu
+    """
+
+    name = models.CharField(max_length=200, default="Menu")
+
+    # MenuItems can be on multiple Menus, and Menus are made up of multiple MenuItems
+    menu_items = models.ManyToManyField(MenuItem)
+
+    def __str__(self):
+        """Returns the Menu's name"""
+        return self.name
