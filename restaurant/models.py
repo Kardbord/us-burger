@@ -22,7 +22,7 @@ class SupplyItem(models.Model):
     If there is sufficient quantity then it decrements, otherwise it raises a descriptive error.
     """
     def decrement(self, amt):
-        if amt >= self.quantity:
+        if amt <= self.quantity:
             self.quantity -= amt
         else:
             raise ValueError("Insufficient quantity of %s.\n\t Need: %s %s, Have: %s %s"
@@ -55,24 +55,43 @@ class MenuItem(models.Model):
     def __str__(self):
         return "%s - $%s \n\t%s" %(self.name, str(self.price), self.description)
 
-    # TODO: Implement some try-catch functionality for trying to prepare something that's unavailable
+    """Method that should be called for each MenuItem upon submission of an Order."""
     def prepare_item(self):
-        pass
-        # for supply in supplies try/catch supply.decrement
+        # First make sure each ingredient has an amount defined in ingredients_amt
+        '''
+        for supply in self.ingredients.all():
+            if self.ingredients_amt[supply.name] is None:
+                print("No quantity for SupplyItem: %s set for %s" % (supply.name, self.name))
+                return
+        '''
+        # Now decrement quantity in each supply.
+        for supply in self.ingredients.all():
+            # amt = self.ingredients_amt[supply.name]
+            try:
+                amt = self.ingredients_amt[supply.name]
+                supply.decrement(amt)
+            except KeyError as err:
+                print("No quantity for SupplyItem: %s set for %s" % (err.args[0], self.name))
+                return
+            except ValueError as err:
+                print(err.args[0])
+                return
+        print("Enjoy your yummy %s!" % self.name)
 
-    def set_quantities(self):
-        pass
+    """Method that should be called in the API before Orders can be created."""
+    def set_quantity(self, item, amt):
+        i = self.ingredients.filter(name=item)
+        if len(i) == 1:
+            self.ingredients_amt[item] = amt
+        else:
+            print("Could not find SupplyItem: %s in %s's ingredients." % (item, self.name))
 
     available = models.BooleanField(True)
     name = models.CharField(max_length=30)
-    # TODO: Figure out how to properly store the SupplyItems along with the quantity for each item.
-    #  Maybe create a KeyVal class as the following stackoverflow suggests?
-    #  https://stackoverflow.com/questions/402217/how-to-store-a-dictionary-on-a-django-model
     ingredients = models.ManyToManyField(SupplyItem)
+    ingredients_amt = {}
     price = models.DecimalField(max_digits=3, decimal_places=2)
     description = models.TextField()
-    # Next Sprint: Read the documentation and figure out how the ImageField works.
-    # image = models.ImageField(upload_to=None, height_field=None, width_field=None, max_length=100)
 
 
 # TODO: Implement the Menu class/model
