@@ -39,11 +39,13 @@ menu > button, h3, a{
 body {
 	background-color: black;
 	color: white;
+	font-size: 40px;
 }
 
 button {
 	padding: 15px 32px;
 	border-radius: 5px;
+	font-size: 30px;
 }
 
 h2 {
