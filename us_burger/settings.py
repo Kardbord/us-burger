@@ -27,7 +27,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
+STATICFILES_DIRS = [
+    "/restaurant/static",
+]
 # Application definition
 
 INSTALLED_APPS = [
