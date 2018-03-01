@@ -1,8 +1,8 @@
-<!DOCTYPE html>
+{% load static %}
 <html lang=en>
 	<head>
 		<title>Us-Burger Menu</title>
-		<link rel="stylesheet" type="text/css" href="style0.css"/>
+		<link rel="stylesheet" type="text/css" href="{% static 'css/style0.css' %}"/>
 	</head>
 	
 	<body>
@@ -29,13 +29,13 @@
 				
 				<h3>Total: $00.00</h3>
 				
-				<a href="customerOrder.html">
+				<a href="{% url 'restaurant:customerOrder' %}">
 					<button>
 						<p>Place Order</p>
 					</button>
-				<a>
+				</a>
 				
-			<menu>
+			</menu>
 			
 		</main>
 		

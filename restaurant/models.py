@@ -57,12 +57,12 @@ class MenuItem(models.Model):
     """Method that should be called for each MenuItem upon submission of an Order."""
     def prepare_item(self):
         # First make sure each ingredient has an amount defined in ingredients_amt
-        '''
+        """
         for supply in self.ingredients.all():
             if self.ingredients_amt[supply.name] is None:
                 print("No quantity for SupplyItem: %s set for %s" % (supply.name, self.name))
                 return
-        '''
+        """
         # Now decrement quantity in each supply.
         for supply in self.ingredients.all():
             # amt = self.ingredients_amt[supply.name]
