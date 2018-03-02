@@ -2,7 +2,6 @@ from django.db import models
 
 
 class SupplyItem(models.Model):
-    # TODO: Register this in the database, make the migrations, and start playing with the API and admin side to test.
     """
     SupplyItem class/Model:
     ===================================
@@ -31,6 +30,10 @@ class SupplyItem(models.Model):
     def check_availability(self, amt):
         return self.quantity > amt
 
+    def replenish(self, amt):
+        self.quantity += amt
+        self.save()
+
     # member variables
     name = models.CharField(max_length=30)
     units = models.CharField(max_length=10)
@@ -51,6 +54,9 @@ class SupplyAmt(models.Model):
 
     def check_availability(self):
         return self.supply.check_availability(self.amt)
+
+    def replenish(self, amt):
+        self.supply.replenish(amt)
 
 
 class MenuItem(models.Model):
