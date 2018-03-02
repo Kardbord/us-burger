@@ -73,11 +73,7 @@ class MenuItem(models.Model):
     def __str__(self):
         """Returns a formatted string containing the name, price, and description of the item."""
         self.check_availability()
-        this_description = "%s - $%s \n\t%s" % (self.name, str(self.price), self.description)
-        if self.available:
-            return this_description
-        else:
-            return "UNAVAILABLE: " + this_description
+        return "%s - $%s" % (self.name, str(self.price))
 
     def prepare_item(self):
         self.check_availability()
