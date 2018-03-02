@@ -11,6 +11,10 @@ class SupplyItem(models.Model):
     - quantity: FloatField containing the amount of units left in stock.
     """
 
+    name = models.CharField(max_length=30)
+    units = models.CharField(max_length=10)
+    quantity = models.FloatField()
+
     def __str__(self):
         """Returns the name of the SupplyItem."""
         return self.name
@@ -28,34 +32,53 @@ class SupplyItem(models.Model):
                              % (self.name, str(amt), self.units, str(self.quantity), self.units))
 
     def check_availability(self, amt):
+        """Method that returns True or False depending on if the supply quantity is sufficient (>= amt)."""
         return self.quantity > amt
 
     def replenish(self, amt):
+        """
+        Method that increments the quantity by number value 'amt'. This is used mostly for debugging purposes,
+        and may or may not be used further into production."""
         self.quantity += amt
         self.save()
 
-    # member variables
-    name = models.CharField(max_length=30)
-    units = models.CharField(max_length=10)
-    quantity = models.FloatField()
-
 
 class SupplyAmt(models.Model):
+    """
+    SupplyItem class/model:
+    ==============================
+    SupplyAmt behaves as a very detailed key-value pair that allows each MenuItem to list the quantity it needs for each
+    of its ingredients, which its associated to indirectly through one SupplyAmt for each SupplyItem. By using this we
+    eliminate the need for the SupplyItem itself to know how much of itself is required for each MenuItem.
+    SupplyAmt contains the following members/Fields:
+     - supply: each SupplyAmt is connected to exactly one SupplyItem via ForeignKey in this data member.
+     - item: each SupplyAmt is connected to exactly one MenuItem via ForeignKey.
+     - amt: the quantity of SupplyItem that the associated MenuItem requires.
+    One advantage of using this ForeignKey setup is that even though SupplyItems don't NEED to know which MenuItem
+    recipes they're a part of, we can easily implement that functionality at a later date by using self.supplyamt_set
+    in SupplyItem the way we do in MenuItem.
+    """
     supply = models.ForeignKey('SupplyItem', on_delete=models.PROTECT)
     item = models.ForeignKey('MenuItem', on_delete=models.CASCADE)
     amt = models.IntegerField()
 
     def __str__(self):
-        return self.item.name + ": " + self.supply.name + "\n" + \
-               str(self.amt) + "/" + str(self.supply.quantity) + self.supply.units + " available"
+        """Concatenates and lightly formats the names of the associated MenuItem and SupplyItem and the amt."""
+        return self.item.name + ": " + self.supply.name + "\n" + str(self.amt) + " " + self.supply.units
 
     def decrement(self):
+        """
+        Method that is called from the 'parent' MenuItem that in turn calls the decrement function in the
+        associated SupplyItem.
+        """
         self.supply.decrement(self.amt)
 
     def check_availability(self):
+        """Method that returns the availability of the associated SupplyItem."""
         return self.supply.check_availability(self.amt)
 
     def replenish(self, amt):
+        """Increments the associated SupplyItem's quantity by an amt passed to this by the associated MenuItem."""
         self.supply.replenish(amt)
 
 
@@ -66,15 +89,17 @@ class MenuItem(models.Model):
     Contains the following members/fields:
      - available: True or False, depending on if all necessary Inventory items are available.
      - name: CharField containing the name of the dish.
-     - ingredients: ManyToManyField relationship that links each MenuItem with the corresponding Inventory items.
      - price: a DecimalField that holds the dish's price, fixed at two decimal places.
      - description: TextField for containing a short description of the dish.
-     - image: An ImageField for storing an image of the dish.
-        (NOTE): Inherits from FileField, which has some nuances in the documentation that I need to research before
-        implementing.
      - orderitem_set : the set of OrderItems that this MenuItem is a part of
      - menu_set : the set of Menus that this MenuItem is a part of
+     - supplyamt_set: the set of SupplyAmt's that 'belong' to this MenuItem.
     """
+
+    available = models.BooleanField(True)
+    name = models.CharField(max_length=30)
+    price = models.DecimalField(max_digits=3, decimal_places=2)
+    description = models.TextField()
 
     def __str__(self):
         """Returns a formatted string containing the name, price, and description of the item."""
@@ -82,12 +107,17 @@ class MenuItem(models.Model):
         return "%s - $%s" % (self.name, str(self.price))
 
     def replenish(self, amt):
+        """Method that increments each associated SupplyItem's quantity by amt, then updates availability."""
         for supply in self.supplyamt_set.all():
             supply.replenish(amt)
         self.check_availability()
         self.save()
 
     def prepare_item(self):
+        """
+        Method that first checks the availability of the MenuItem by checking each of its associated SupplyItems,
+        then decrements each SupplyItem, saving once it's all done.
+        """
         self.check_availability()
         if self.available is True:
             print("Available!")
@@ -101,6 +131,10 @@ class MenuItem(models.Model):
             print("Unavailable!")
 
     def print_ingredients(self):
+        """
+        Method used for debugging before I got everything working on the admin/HTML side. Likely won't be
+        used in production.
+        """
         print("Ingredients for " + self.name)
         for supply in self.supplyamt_set.get_queryset():
             print(supply)
@@ -119,11 +153,6 @@ class MenuItem(models.Model):
         # After you make it through all of the ingredients, set availability to True
         self.available = True
         self.save()
-
-    available = models.BooleanField(True)
-    name = models.CharField(max_length=30)
-    price = models.DecimalField(max_digits=3, decimal_places=2)
-    description = models.TextField()
 
 
 class Order(models.Model):
