@@ -31,7 +31,7 @@ nosetests.xml
 
 .svn/
 log/*
-*.sqlite3
+#*.sqlite3
 
 media/*
 
