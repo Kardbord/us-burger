@@ -27,5 +27,5 @@ The following steps and shell code outline the steps necessary to change the dat
   ```
 Now, if you refresh the CustomerMenu page, you should no longer see the Cheeseburger! Note: if the while
     loop doesn't print out "Available", that means you're out of one of the necessary SupplyItems. Call
-    `m.replenish()`
+    `m.replenish(10)` to increment each of the supply quantities by 10, then try calling `m.prepare_item()`
     

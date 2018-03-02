@@ -81,6 +81,12 @@ class MenuItem(models.Model):
         self.check_availability()
         return "%s - $%s" % (self.name, str(self.price))
 
+    def replenish(self, amt):
+        for supply in self.supplyamt_set.all():
+            supply.replenish(amt)
+        self.check_availability()
+        self.save()
+
     def prepare_item(self):
         self.check_availability()
         if self.available is True:
