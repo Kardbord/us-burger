@@ -23,9 +23,13 @@ class SupplyItem(models.Model):
         """
         if amt <= self.quantity:
             self.quantity -= amt
+            self.save()
         else:
             raise ValueError("Insufficient quantity of %s.\n\t Need: %s %s, Have: %s %s"
                              % (self.name, str(amt), self.units, str(self.quantity), self.units))
+
+    def check_availability(self, amt):
+        return self.quantity > amt
 
     # member variables
     name = models.CharField(max_length=30)
@@ -36,14 +40,17 @@ class SupplyItem(models.Model):
 class SupplyAmt(models.Model):
     supply = models.ForeignKey('SupplyItem', on_delete=models.PROTECT)
     item = models.ForeignKey('MenuItem', on_delete=models.CASCADE)
-    na
     amt = models.IntegerField()
 
     def __str__(self):
-        return self.name + ": " + str(self.amt)
+        return self.item.name + ": " + self.supply.name + "\n" + \
+               str(self.amt) + "/" + str(self.supply.quantity) + self.supply.units + " available"
 
     def decrement(self):
         self.supply.decrement(self.amt)
+
+    def check_availability(self):
+        return self.supply.check_availability(self.amt)
 
 
 class MenuItem(models.Model):
@@ -65,50 +72,48 @@ class MenuItem(models.Model):
 
     def __str__(self):
         """Returns a formatted string containing the name, price, and description of the item."""
-        return "%s - $%s \n\t%s" % (self.name, str(self.price), self.description)
+        self.check_availability()
+        this_description = "%s - $%s \n\t%s" % (self.name, str(self.price), self.description)
+        if self.available:
+            return this_description
+        else:
+            return "UNAVAILABLE: " + this_description
 
     def prepare_item(self):
-        for supply in self.supplyamt_set.all():
-            try:
-                supply.decrement()
-            except ValueError as err:
-                print(err[0])
+        self.check_availability()
+        if self.available is True:
+            print("Available!")
+            for supply in self.supplyamt_set.all():
+                try:
+                    supply.decrement()
+                except ValueError as err:
+                    print(err[0])
+            self.save()
+        else:
+            print("Unavailable!")
 
-    # """Method that should be called for each MenuItem upon submission of an Order."""
-    # def prepare_item(self):
-    #     # First make sure each ingredient has an amount defined in ingredients_amt
-    #     """
-    #     for supply in self.ingredients.all():
-    #         if self.ingredients_amt[supply.name] is None:
-    #             print("No quantity for SupplyItem: %s set for %s" % (supply.name, self.name))
-    #             return
-    #     """
-    #     # Now decrement quantity in each supply.
-    #     for supply in self.ingredients.all():
-    #         # amt = self.ingredients_amt[supply.name]
-    #         try:
-    #             amt = self.ingredients_amt[supply.name]
-    #             supply.decrement(amt)
-    #         except KeyError as err:
-    #             print("No quantity for SupplyItem: %s set for %s" % (err.args[0], self.name))
-    #             return
-    #         except ValueError as err:
-    #             print(err.args[0])
-    #             return
-    #     print("Enjoy your yummy %s!" % self.name)
-    #
-    # """Method that should be called in the API before Orders can be created."""
-    # def set_quantity(self, item, amt):
-    #     i = self.ingredients.filter(name=item)
-    #     if len(i) == 1:
-    #         self.ingredients_amt[item] = amt
-    #     else:
-    #         print("Could not find SupplyItem: %s in %s's ingredients." % (item, self.name))
+    def print_ingredients(self):
+        print("Ingredients for " + self.name)
+        for supply in self.supplyamt_set.get_queryset():
+            print(supply)
+
+    def check_availability(self):
+        """
+        This method will check all the SupplyItems and make sure that there is enough inventory
+        to create at least one of these MenuItems. Later, we can also add time checking for lunch/
+        breakfast etc...
+        """
+        for supply in self.supplyamt_set.all():
+            if not supply.check_availability():
+                self.available = False
+                self.save()
+                return
+        # After you make it through all of the ingredients, set availability to True
+        self.available = True
+        self.save()
 
     available = models.BooleanField(True)
     name = models.CharField(max_length=30)
-    # ingredients = models.ManyToManyField(SupplyAmt)
-    # ingredients_amt = {}
     price = models.DecimalField(max_digits=3, decimal_places=2)
     description = models.TextField()
 
