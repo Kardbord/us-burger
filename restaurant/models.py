@@ -33,6 +33,19 @@ class SupplyItem(models.Model):
     quantity = models.FloatField()
 
 
+class SupplyAmt(models.Model):
+    supply = models.ForeignKey('SupplyItem', on_delete=models.PROTECT)
+    item = models.ForeignKey('MenuItem', on_delete=models.CASCADE)
+    na
+    amt = models.IntegerField()
+
+    def __str__(self):
+        return self.name + ": " + str(self.amt)
+
+    def decrement(self):
+        self.supply.decrement(self.amt)
+
+
 class MenuItem(models.Model):
     """
     MenuItem class/model:
@@ -54,41 +67,48 @@ class MenuItem(models.Model):
         """Returns a formatted string containing the name, price, and description of the item."""
         return "%s - $%s \n\t%s" % (self.name, str(self.price), self.description)
 
-    """Method that should be called for each MenuItem upon submission of an Order."""
     def prepare_item(self):
-        # First make sure each ingredient has an amount defined in ingredients_amt
-        """
-        for supply in self.ingredients.all():
-            if self.ingredients_amt[supply.name] is None:
-                print("No quantity for SupplyItem: %s set for %s" % (supply.name, self.name))
-                return
-        """
-        # Now decrement quantity in each supply.
-        for supply in self.ingredients.all():
-            # amt = self.ingredients_amt[supply.name]
+        for supply in self.supplyamt_set.all():
             try:
-                amt = self.ingredients_amt[supply.name]
-                supply.decrement(amt)
-            except KeyError as err:
-                print("No quantity for SupplyItem: %s set for %s" % (err.args[0], self.name))
-                return
+                supply.decrement()
             except ValueError as err:
-                print(err.args[0])
-                return
-        print("Enjoy your yummy %s!" % self.name)
+                print(err[0])
 
-    """Method that should be called in the API before Orders can be created."""
-    def set_quantity(self, item, amt):
-        i = self.ingredients.filter(name=item)
-        if len(i) == 1:
-            self.ingredients_amt[item] = amt
-        else:
-            print("Could not find SupplyItem: %s in %s's ingredients." % (item, self.name))
+    # """Method that should be called for each MenuItem upon submission of an Order."""
+    # def prepare_item(self):
+    #     # First make sure each ingredient has an amount defined in ingredients_amt
+    #     """
+    #     for supply in self.ingredients.all():
+    #         if self.ingredients_amt[supply.name] is None:
+    #             print("No quantity for SupplyItem: %s set for %s" % (supply.name, self.name))
+    #             return
+    #     """
+    #     # Now decrement quantity in each supply.
+    #     for supply in self.ingredients.all():
+    #         # amt = self.ingredients_amt[supply.name]
+    #         try:
+    #             amt = self.ingredients_amt[supply.name]
+    #             supply.decrement(amt)
+    #         except KeyError as err:
+    #             print("No quantity for SupplyItem: %s set for %s" % (err.args[0], self.name))
+    #             return
+    #         except ValueError as err:
+    #             print(err.args[0])
+    #             return
+    #     print("Enjoy your yummy %s!" % self.name)
+    #
+    # """Method that should be called in the API before Orders can be created."""
+    # def set_quantity(self, item, amt):
+    #     i = self.ingredients.filter(name=item)
+    #     if len(i) == 1:
+    #         self.ingredients_amt[item] = amt
+    #     else:
+    #         print("Could not find SupplyItem: %s in %s's ingredients." % (item, self.name))
 
     available = models.BooleanField(True)
     name = models.CharField(max_length=30)
-    ingredients = models.ManyToManyField(SupplyItem)
-    ingredients_amt = {}
+    # ingredients = models.ManyToManyField(SupplyAmt)
+    # ingredients_amt = {}
     price = models.DecimalField(max_digits=3, decimal_places=2)
     description = models.TextField()
 
