@@ -16,18 +16,16 @@
 		<main>
 			<menu>
 				<h2>Menu:</h2>
-				
-				<menuitem>
-					<h4>Example Burger</h4>
-					<p>Example description of example burger</p>
-				</menuitem>
-				
-				<menuitem>
-					<h4>Example Salad</h4>
-					<p>Example description of example salad</p>
-				</menuitem>
-				
-				<h3>Total: $00.00</h3>
+			    {% if latest_menu %}
+                    {% for item in latest_menu %}
+                        <menuitem>
+                            <h4>{{ item }}</h4>
+                            <h4>{{ item.description }}</h4>
+                        </menuitem>
+                    {% endfor %}
+                {% else %}
+                    <p>No menu items available</p>
+                {% endif %}
 				
 				<a href="{% url 'restaurant:customerOrder' %}">
 					<button>
