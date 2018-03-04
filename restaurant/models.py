@@ -160,21 +160,40 @@ class Order(models.Model):
     Order class/model:
     ===================================
     Contains the following members/fields:
-     - pin           : a unique PIN number associated with this Order
-     - orderitem_set : the set of OrderItems belonging to this Order
+     - pin                       : a unique PIN number associated with this Order
+     - orderitem_set             : the set of OrderItems belonging to this Order
+     - order_items_are_available : boolean indicating whether or not each OrderItem is in stock and the Order
+                                   can be placed.
+                                   Initialized to False. check_availability function must be run to verify
     """
 
     pin = models.CharField(max_length=4, default=0000)
+
+    order_items_are_available = models.BooleanField(default=False)
 
     def __str__(self):
         """Returns the Order's PIN"""
         return str(self.pin)
 
+    def check_availability(self):
+        """
+        Verifies all OrderItems are in stock.
+        Sets order_items_are_available field to True if all OrderItems are in stock and Order can be placed.
+        Sets order_items_are_available field to False if an OrderItem is out of stock and Order cannot be placed.
+        """
+        for order_item in self.orderitem_set.all():
+            if not order_item.check_availability():
+                self.order_items_are_available = False
+                self.save()
+                return
+        self.order_items_are_available = True
+        self.save()
+
     def get_total_price(self):
         """Returns the total price of the Order"""
         total = 0.00
         for order_item in self.orderitem_set.all():
-            total += order_item.price * order_item.quantity
+            total += float(order_item.get_price() * order_item.quantity)
         return total
 
 
@@ -195,6 +214,14 @@ class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
 
     quantity = models.PositiveSmallIntegerField()
+
+    def get_price(self):
+        return self.menu_item.price
+
+    def check_availability(self):
+        """Returns true if all needed ingredients are present. Returns false otherwise."""
+        self.menu_item.check_availability()
+        return self.menu_item.available
 
     def __str__(self):
         """Returns the OrderItem's menu_item name"""
