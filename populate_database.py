@@ -8,7 +8,9 @@ from restaurant.models import *
 
 
 def populate():
-    """Removes all entries in the database, then repopulates the SupplyAmts, SupplyItems, MenuItems, and Menus"""
+    """
+    Removes all entries in the database, then repopulates the SupplyAmts, SupplyItems, MenuItems, Menus, and WaitTime
+    """
 
     Order.objects.all().delete()
     OrderItem.objects.all().delete()
