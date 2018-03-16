@@ -12,6 +12,7 @@ class OrderItemInline(admin.StackedInline):
 class OrderAdmin(admin.ModelAdmin):
     fieldsets = [
         (None, {'fields': ['pin']}),
+        ('Order Validity', {'fields': ['order_items_are_available']}),
     ]
 
     inlines = [OrderItemInline]
