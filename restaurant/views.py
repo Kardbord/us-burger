@@ -2,11 +2,15 @@ from django.http import HttpResponse
 from django.template import loader
 from django.shortcuts import render
 
-from .models import MenuItem
+from .models import MenuItem, WaitTime
 
 
 def index(request):
-    return render(request, 'restaurant/index.html')
+    wait_time = WaitTime.objects.last()
+    context = {
+        'wait_time': wait_time
+    }
+    return render(request, 'restaurant/index.html', context)
 
 def customerMenu(request):
     latest_menu = MenuItem.objects.filter(available=True)
