@@ -49,8 +49,11 @@
 
 				<form>
 					E-Mail: <input type="email" name="email"><br>
-					Order Name: <input type="text" name="orderName"><br>
-					<input type="submit" value="Create Order">
+					Order Name: <input type="text" name="orderName"><br><br>
+
+					<a href="{% url 'restaurant:customerOrder' %}">
+						<button type="submit">Place Order</button>
+					</a>
 				</form>
 
 
