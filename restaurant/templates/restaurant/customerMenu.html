@@ -45,6 +45,17 @@
                     <p>No menu items available</p>
                 {% endif %}
 				
+
+
+				<form>
+					E-Mail: <input type="email" name="email"><br>
+					Order Name: <input type="text" name="orderName"><br>
+					<input type="submit" value="Create Order">
+				</form>
+
+
+
+				
 				<a href="{% url 'restaurant:customerOrder' %}">
 					<button>
 						<p>Place Order</p>
@@ -52,6 +63,7 @@
 				</a>
 				
 			</menu>
+
 			
 		</main>
 		
