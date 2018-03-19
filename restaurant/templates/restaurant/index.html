@@ -9,7 +9,11 @@
 		
 		<header>
 			<h1>Us-Burger</h1>
-			<h3>Wait time to be seated: 00:00</h3>
+            {% if wait_time %}
+                <h3>Wait time to be seated: {{ wait_time.get_wait_time }}</h3>
+			{% else %}
+                <h3>Wait time unavailable</h3>
+            {% endif %}
 		</header>
 		
 		<main>
@@ -17,9 +21,17 @@
 				<li>
 					<a href="{% url 'restaurant:customerMenu' %}">
 						<button>
-							<h3>Customer Page</h3>
+							<h3>View Menu</h3>
 						</button>
 					</a>
+				</li>
+				<li>
+					<form>
+						<h6>Enter email to edit current order:
+							<input type="email" name="orderEmail" value="email">
+							<input type="submit" value="Submit">
+						</h6>
+					</form>
 				</li>
 				<li>
 					<a href="#">

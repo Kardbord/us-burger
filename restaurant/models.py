@@ -1,6 +1,25 @@
 from django.db import models
 
 
+class WaitTime(models.Model):
+    """
+    WaitTime class/Model:
+    ===================================
+    Contains the following members/fields:
+    = wait_time : CharField representing the number of minutes customers will have to wait to be sat/get their food
+    """
+
+    wait_time = models.CharField(default="0", max_length=4)
+
+    def get_wait_time(self):
+        """Returns the wait time"""
+        return self.wait_time
+
+    def __str__(self):
+        """Returns the wait time and a string indicating that the time is given in minutes"""
+        return self.get_wait_time() + " minute wait"
+
+
 class SupplyItem(models.Model):
     """
     SupplyItem class/Model:

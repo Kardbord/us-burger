@@ -4,11 +4,13 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'us_burger.settings')
 import django
 django.setup()
 
-from restaurant.models import SupplyItem, SupplyAmt, Order, OrderItem, Menu, MenuItem
+from restaurant.models import *
 
 
 def populate():
-    """Removes all entries in the database, then repopulates the SupplyAmts, SupplyItems, MenuItems, and Menus"""
+    """
+    Removes all entries in the database, then repopulates the SupplyAmts, SupplyItems, MenuItems, Menus, and WaitTime
+    """
 
     Order.objects.all().delete()
     OrderItem.objects.all().delete()
@@ -16,6 +18,11 @@ def populate():
     Menu.objects.all().delete()
     SupplyItem.objects.all().delete()
     SupplyAmt.objects.all().delete()
+    WaitTime.objects.all().delete()
+
+    # Create WaitTime
+    wait = WaitTime(wait_time=0)
+    wait.save()
 
     # Create SupplyItems
     tomato_soup = SupplyItem(name='Tomato Soup', units='oz', quantity=10)

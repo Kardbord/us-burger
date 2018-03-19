@@ -23,6 +23,17 @@ menu {
 	border: 5px solid white;
 }
 
+menu > div {
+	display: flex;
+	flex-direction: row;
+	align-self: right;
+}
+
+menu > div > select {
+	align-self: center;
+	height: 30px;
+}
+
 menuitem {
 	display: flex;
 	flex-direction: column;
