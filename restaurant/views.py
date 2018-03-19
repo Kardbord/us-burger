@@ -12,13 +12,21 @@ def index(request):
     }
     return render(request, 'restaurant/index.html', context)
 
+
 def customerMenu(request):
+    wait_time = WaitTime.objects.last()
     latest_menu = MenuItem.objects.filter(available=True)
     template = loader.get_template('restaurant/customerMenu.html')
     context = {
-        'latest_menu': latest_menu
+        'latest_menu': latest_menu,
+        'wait_time': wait_time
     }
     return HttpResponse(template.render(context, request))
 
+
 def customerOrder(request):
-    return render(request, 'restaurant/customerOrder.html')
+    wait_time = WaitTime.objects.last()
+    context = {
+        'wait_time': wait_time
+    }
+    return render(request, 'restaurant/customerOrder.html', context)

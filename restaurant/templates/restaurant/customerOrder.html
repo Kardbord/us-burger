@@ -9,7 +9,11 @@
 	
 		<header>
 			<h1>Us-Burger</h1>
-			<h3>Wait time to be seated: 00:00</h3>
+            {% if wait_time %}
+                <h3>Wait time to be seated: {{ wait_time.get_wait_time }}</h3>
+			{% else %}
+                <h3>Wait time unavailable</h3>
+            {% endif %}
 			<h3>Customer PIN: 1111</h3>
 		</header>
 		
