@@ -23,26 +23,34 @@
 			    {% if latest_menu %}
                     {% for item in latest_menu %}
                         <menuitem>
-                            <h4>{{ item }}</h4>
-                            <h4>{{ item.description }}</h4>
+							<h4>{{ item }}</h4>
+                            
+							<div>
+								<div>
+									<h4>{{ item.description }}</h4>
+								</div>
+								<div>
+									<h6>Quantity:</h6>
+								</div>
+								<div>
+									<select>
+										<option value="0">0</option>
+										<option value="1">1</option>
+										<option value="2">2</option>
+										<option value="3">3</option>
+										<option value="4">4</option>
+										<option value="5">5</option>
+										<option value="6">6</option>
+										<option value="7">7</option>
+										<option value="8">8</option>
+										<option value="9">9</option>
+										<option value="10">10</option>
+									</select>
+								</div>
+							</div>
                         </menuitem>
 						
-						<div>
-							<h6>Quantity:</h6>
-							<select>
-								<option value="0">0</option>
-								<option value="1">1</option>
-								<option value="2">2</option>
-								<option value="3">3</option>
-								<option value="4">4</option>
-								<option value="5">5</option>
-								<option value="6">6</option>
-								<option value="7">7</option>
-								<option value="8">8</option>
-								<option value="9">9</option>
-								<option value="10">10</option>
-							</select>
-						</div>
+						
 						 
                     {% endfor %}
                 {% else %}

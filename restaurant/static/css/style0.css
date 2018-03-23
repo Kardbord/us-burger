@@ -21,6 +21,8 @@ menu {
 	flex-direction: column;
 	align-items: left;
 	border: 5px solid white;
+	padding: 10px 10px;
+	align-items: stretch;
 }
 
 menu > div {
@@ -29,17 +31,32 @@ menu > div {
 	align-self: right;
 }
 
-menu > div > select {
-	align-self: center;
-	height: 30px;
-}
-
 menuitem {
 	display: flex;
 	flex-direction: column;
 	margin: 10px 10px;
 	border: 1px dashed white;
 	padding: 10px 10px;
+}
+
+menuitem > div {
+	display: flex;
+	flex-direction:	row;
+	align-items: center;
+}
+
+menuitem > div > div:nth-child(1) {
+	#padding: 10px 10px;
+	margin: 0px 30px;
+	flex: 20;
+}
+
+menuitem > div > div:nth-child(2) {
+	flex: 1;
+}
+
+menuitem > div > div:nth-child(3) {
+	flex: 1;
 }
 
 menu > button, h3, a{
