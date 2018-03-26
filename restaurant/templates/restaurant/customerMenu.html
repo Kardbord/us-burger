@@ -21,7 +21,7 @@
 			<menu>
                     <h2>Menu:</h2>
                     {% if latest_menu %}
-                        <form action="{% url 'restaurant:customerOrder' %}" method="post">
+                        <form action="{% url 'restaurant:newOrder' %}" method="post">
                             {%  csrf_token %}
                             {% for item in latest_menu %}
                                 <menuitem>

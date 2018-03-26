@@ -184,15 +184,18 @@ class Order(models.Model):
      - order_items_are_available : boolean indicating whether or not each OrderItem is in stock and the Order
                                    can be placed.
                                    Initialized to False. check_availability function must be run to verify
+     - email                     : the email that will be used for customers to look up their existing Orders
+     - name                      : the name of the customer associated with this Order.
     """
 
     pin = models.CharField(max_length=4, default=0000)
-
+    email = models.EmailField(max_length=254, default="customer@www.com")
+    name = models.CharField(max_length=254, default="Customer Smith")
     order_items_are_available = models.BooleanField(default=False)
 
     def __str__(self):
-        """Returns the Order's PIN"""
-        return str(self.pin)
+        """Returns the Order's ID"""
+        return str(self.id)
 
     def check_availability(self):
         """
