@@ -184,10 +184,13 @@ class Order(models.Model):
      - order_items_are_available : boolean indicating whether or not each OrderItem is in stock and the Order
                                    can be placed.
                                    Initialized to False. check_availability function must be run to verify
+     - email                     : the email that will be used for customers to look up their existing Orders
+     - name                      : the name of the customer associated with this Order.
     """
 
     pin = models.CharField(max_length=4, default=0000)
-
+    email = models.EmailField(max_length=254, default="customer@www.com")
+    name = models.CharField(max_length=254, default="Customer Smith")
     order_items_are_available = models.BooleanField(default=False)
 
     confirmed = models.BooleanField(default=False)
@@ -222,8 +225,8 @@ class Order(models.Model):
         self.save()
 
     def __str__(self):
-        """Returns the Order's PIN"""
-        return str(self.pin)
+        """Returns the Order's ID"""
+        return str(self.id)
 
     def check_availability(self):
         """
@@ -258,7 +261,7 @@ class OrderItem(models.Model):
     """
 
     # A MenuItem can be included in many OrderItems, but an OrderItem can only have one MenuItem
-    menu_item = models.ForeignKey(MenuItem, on_delete=models.CASCADE)
+    menu_item = models.ForeignKey(MenuItem, on_delete=models.PROTECT)
 
     # An Order can have many OrderItems, but an OrderItem can belong to only one Order
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
