@@ -190,6 +190,37 @@ class Order(models.Model):
 
     order_items_are_available = models.BooleanField(default=False)
 
+    confirmed = models.BooleanField(default=False)
+    cooking = models.BooleanField(default=False)
+    cooked = models.BooleanField(default=False)
+    delivered = models.BooleanField(default=False)
+
+    def changeConfirmed(self):
+        """Changes Confirmed Status"""
+        self.confirmed = True
+        self.save()
+
+    def changeCooking(self):
+        """Changes Cooking to True if Confirmed is true"""
+        if not self.confirmed:
+            return
+        self.cooking = True
+        self.save()
+
+    def changeCooked(self):
+        """Changes Cooked to True if Cooking is true"""
+        if not self.cooking:
+            return
+        self.cooked = True
+        self.save()
+
+    def changeDelivered(self):
+        """Changes Delivered to True if Cooked is true"""
+        if not self.cooked:
+            return
+        self.delivered = True
+        self.save()
+
     def __str__(self):
         """Returns the Order's PIN"""
         return str(self.pin)
