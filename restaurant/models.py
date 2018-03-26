@@ -227,7 +227,7 @@ class OrderItem(models.Model):
     """
 
     # A MenuItem can be included in many OrderItems, but an OrderItem can only have one MenuItem
-    menu_item = models.ForeignKey(MenuItem, on_delete=models.CASCADE)
+    menu_item = models.ForeignKey(MenuItem, on_delete=models.PROTECT)
 
     # An Order can have many OrderItems, but an OrderItem can belong to only one Order
     order = models.ForeignKey(Order, on_delete=models.CASCADE)

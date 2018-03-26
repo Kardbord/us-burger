@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.template import loader
 from django.shortcuts import render, get_object_or_404
 
-from .models import MenuItem, WaitTime, Order
+from .models import MenuItem, WaitTime, Order, OrderItem
 
 
 def index(request):
@@ -33,6 +33,21 @@ def customerMenu(request):
 #        'wait_time': wait_time
 #    }
 #    return render(request, 'restaurant/customerOrder.html', context)
+
 def customerOrder(request):
-    pass
-    # new_order =
+    # First we need to create a new Order
+    new_order = Order()
+    new_order.save()
+    # Then we need to create an OrderItem for each nonzero value in the request
+    available_items = MenuItem.objects.filter(available=True)
+    for item in available_items:
+        item_key = str(item.id) + "qty"
+        try:
+            item_amt = int(request.POST[item_key])
+            if item_amt > 0:
+                new_order_item = OrderItem(order=new_order, menu_item=item, quantity=item_amt)
+                new_order_item.save()
+        except(KeyError):
+            return HttpResponse("Invalid key: %s" % item_key)
+    new_order.save()
+    return HttpResponse("Order created, check the database.")
