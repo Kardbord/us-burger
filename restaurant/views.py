@@ -34,8 +34,5 @@ def customerMenu(request):
 #    }
 #    return render(request, 'restaurant/customerOrder.html', context)
 def customerOrder(request):
-    wait_time = WaitTime.objects.last()
-    context = {
-        'wait_time': wait_time
-    }
-    return render(request, 'restaurant/customerOrder.html', context)
+    pass
+    # new_order =
