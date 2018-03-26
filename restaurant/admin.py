@@ -13,6 +13,7 @@ class OrderAdmin(admin.ModelAdmin):
     fieldsets = [
         (None, {'fields': ['pin']}),
         ('Order Validity', {'fields': ['order_items_are_available']}),
+        ('Status', {'fields': ['confirmed', 'cooking', 'cooked', 'delivered']})
     ]
 
     inlines = [OrderItemInline]
