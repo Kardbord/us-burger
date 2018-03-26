@@ -190,6 +190,11 @@ class Order(models.Model):
 
     order_items_are_available = models.BooleanField(default=False)
 
+    comfirmed = models.BooleanField(default=False)
+    cooking = models.BooleanField(default=False)
+    cooked = models.BooleanField(default=False)
+    delivered = models.BooleanField(default=False)
+
     def __str__(self):
         """Returns the Order's PIN"""
         return str(self.pin)
