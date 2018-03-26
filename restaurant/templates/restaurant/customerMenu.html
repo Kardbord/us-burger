@@ -19,68 +19,53 @@
 		
 		<main>
 			<menu>
-				<form>
-				<h2>Menu:</h2>
-			    {% if latest_menu %}
-                    {% for item in latest_menu %}
-                        <menuitem>
-							<h4>{{ item }}</h4>
-                            
-							<div>
-								<div>
-									<h4>{{ item.description }}</h4>
-								</div>
-								<div>
-									<h6>Quantity:</h6>
-								</div>
-								<div>
-									<select>
-										<option value="0">0</option>
-										<option value="1">1</option>
-										<option value="2">2</option>
-										<option value="3">3</option>
-										<option value="4">4</option>
-										<option value="5">5</option>
-										<option value="6">6</option>
-										<option value="7">7</option>
-										<option value="8">8</option>
-										<option value="9">9</option>
-										<option value="10">10</option>
-									</select>
-								</div>
-							</div>
-                        </menuitem>
-						
-						
-						 
-                    {% endfor %}
-                {% else %}
-                    <p>No menu items available</p>
-                {% endif %}
-				
+                    <h2>Menu:</h2>
+                    {% if latest_menu %}
+                        <form action="{% url 'restaurant:customerOrder' %}" method="post">
+                            {%  csrf_token %}
+                            {% for item in latest_menu %}
+                                <menuitem>
+                                    <h4>{{ item }}</h4>
+                                    <div>
+                                        <div>
+                                            <h4>{{ item.description }}</h4>
+                                        </div>
+                                        <div>
+                                            <h6>Quantity:</h6>
+                                        </div>
+                                        <div>
+                                            <input type="number" name="{{ item.id }}qty" value="0" min="0">
+                                        </div>
+                                    </div>
+                                </menuitem>
+
+                            {% endfor %}
+                            E-Mail: <input type="email" name="email"><br>
+                            Order Name: <input type="text" name="orderName"><br><br>
+                            <input type="submit" value="Place Order" />
+                        </form>
+                    {% else %}
+                        <p>No menu items available</p>
+                    {% endif %}
 
 
-				
-					E-Mail: <input type="email" name="email"><br>
-					Order Name: <input type="text" name="orderName"><br><br>
-
+                {% comment %}
 					<a href="{% url 'restaurant:customerOrder' %}">
 						<button type="submit">Place Order</button>
 					</a>
-				</form>
 
 
 
-			    {% comment %}
 				TODO: Once an order is created in the database, send its pk to the customerOrder view.
                 TODO: for example, <a href="{% url 'restaurant:customerOrder' order.pk %}">
-                {% endcomment %}
 				<a href="{% url 'restaurant:customerOrder' %}">
 					<button>
 						<p>Place Order</p>
 					</button>
 				</a>
-				
+
+                {% endcomment %}
+
 			</menu>
 
 			
