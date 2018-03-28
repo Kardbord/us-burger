@@ -8,7 +8,9 @@
 	<body>
 	
 		<header>
-			<h1>Us-Burger</h1>
+			<img src="{% static 'images\us_burger.jpg' %}"
+				height="150">
+			<br>
             {% if wait_time %}
                 <h3>Wait time to be seated: {{ wait_time.get_wait_time }}</h3>
 			{% else %}

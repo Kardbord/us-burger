@@ -59,6 +59,12 @@ menuitem > div > div:nth-child(3) {
 	flex: 1;
 }
 
+#numberInput {
+	width: 70px;
+	height: 50px;
+	font-size: 40px;
+}
+
 menu > button, h3, a{
 	align-self: right;
 	margin: 10px 10px;
