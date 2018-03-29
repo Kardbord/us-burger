@@ -56,11 +56,7 @@ def newOrder(request):
 
     # Finally, save the Order.
     new_order.save()
-    return HttpResponse("Order %s successfully created with cost $%s." % (str(new_order.id), str(new_order.get_total_price())))
-    # TODO: Change this to correctly redirect to the dynamically-created Order page.
-    # return HttpResponseRedirect(reverse(
-    #     'restaurant:customerOrder/' + str(new_order.id) + '/',
-    #     kwargs={ 'order_pk': str(new_order.id) }))
+    return HttpResponseRedirect(reverse('restaurant:customerOrder', kwargs={'order_pk': new_order.pk}))
 
 
 def customerOrder(request, order_pk):
@@ -70,4 +66,4 @@ def customerOrder(request, order_pk):
         'order': order,
         'wait_time': wait_time
     }
-    return HttpResponse("Order page for Order %s: %s." % order_pk, str(order.get_total_price()))
+    return render(request, 'restaurant/customerOrder.html', context)
