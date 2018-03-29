@@ -17,8 +17,7 @@
                 <h3>Wait time unavailable</h3>
             {% endif %}
 		</header>
-		
-		
+
 		<main>
 			<menu>
                     <h2>Menu:</h2>
@@ -53,28 +52,7 @@
                     {% else %}
                         <p>No menu items available</p>
                     {% endif %}
-
-
-                {% comment %}
-					<a href="{% url 'restaurant:customerOrder' %}">
-						<button type="submit">Place Order</button>
-					</a>
-
-
-
-				TODO: Once an order is created in the database, send its pk to the customerOrder view.
-                TODO: for example, <a href="{% url 'restaurant:customerOrder' order.pk %}">
-				<a href="{% url 'restaurant:customerOrder' %}">
-					<button>
-						<p>Place Order</p>
-					</button>
-				</a>
-
-                {% endcomment %}
-
 			</menu>
-
-			
 		</main>
 		
 		<footer>

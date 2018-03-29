@@ -28,6 +28,8 @@ def customerMenu(request):
 def newOrder(request):
     # First we need to create a new Order
     # Try to get the Email and the Name from the request.
+    # TODO: figure out why this still works if no email or order name is submitted
+    # TODO do not create an order if nothing is ordered
     try:
         new_order = Order(
             email=request.POST['email'],

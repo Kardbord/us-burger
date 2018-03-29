@@ -26,19 +26,21 @@
 		<main>
 			<menu>
 				<h2>Your Order:</h2>
-				
-				<menuitem>
-					<h4>Example Burger</h4>
-					<p>Number: 0</p>
-				</menuitem>
-				
-				<menuitem>
-					<h4>Example Salad</h4>
-					<p>Number: 0</p>
-				</menuitem>
-				
-				<h3>Total: $00.00</h3>
-				
+				{% if order %}
+                    {% for order_item in order.orderitem_set.all %}
+                        <menuitem>
+                            <h4>{{ order_item.menu_item.name }}</h4>
+                            <p>Quantity: {{ order_item.quantity }}</p>
+                        </menuitem>
+                    {% endfor %}
+                    <h3>${{ order.get_total_price }}</h3>
+                {% else %}
+                    <p>An error occurred and no order was sent.</p>
+                {% endif %}
+
+                {% comment %}
+                TODO: make this acutally edit the current order instead of create a new one
+                {% endcomment %}
 				<a href="{% url 'restaurant:customerMenu' %}">
 					<button>
 						<p>Change Order</p>
