@@ -19,7 +19,7 @@
             {% comment %}
             TODO: dynamically generate and display appropriate customer PIN
             {% endcomment %}
-			<h3>Customer PIN: 1111</h3>
+			<h3>Order Name: {{ order.name }}</h3>
 		</header>
 		
 		
@@ -27,6 +27,24 @@
 			<menu>
 				<h2>Your Order:</h2>
 				{% if order %}
+					{% if order.delivered %}
+						<h3>Status: Delivered</h3>
+					{% elif order.cooked %}
+						<h3>Status: Cooked</h3>
+					{% elif order.cooking %}
+						<h3>Status: Cooking</h3>
+					{% elif order.confirmed %}
+						<h3>Status: Confirmed</h3>
+					{% else %}
+						<h3>Status: Needs Confirmation</h3>
+						<form>
+							<h5>Enter Server PIN to confirm order:
+							<input type="password" name="serverPin" value="">
+							<input type="submit" value="Submit">
+							</h5>
+						</form>
+					{% endif %}
+				
                     {% for order_item in order.orderitem_set.all %}
                         <menuitem>
                             <h4>{{ order_item.menu_item.name }}</h4>
@@ -52,12 +70,7 @@
 						<p>Cancel Order</p>
 					</button>
 				</a>
-                <form>
-                    <h5>Enter Server PIN to confirm order:
-                        <input type="password" name="serverPin" value="">
-                        <input type="submit" value="Submit">
-                    </h5>
-                </form>
+
 			</menu>
 		</main>
 		
