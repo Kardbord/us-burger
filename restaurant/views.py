@@ -4,6 +4,16 @@ from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 
 from .models import MenuItem, WaitTime, Order, OrderItem
+from populate_database import populate
+
+
+def init(request):
+    """
+    This view serves as an easy method of repopulating the database.
+    It is for testing/developing purposes only, and should ABSOLUTELY NOT be included in the production build.
+    """
+    populate()
+    return HttpResponseRedirect(reverse('restaurant:index'))
 
 
 def index(request):
