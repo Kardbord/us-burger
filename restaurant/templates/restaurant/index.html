@@ -28,14 +28,14 @@
 					</a>
 				</li>
 				<li>
-					<form>
-						<p>Existing Order:</p>
-							<form action="{% url 'restaurant:verify' %}" method="post">
-							{% csrf_token %}
-								<p>Email: <input type="email" name="orderEmail"></p>
-								<p>Order Name: <input type="text" name="orderName"></p>
-								<input type="submit" value="Submit">
-							</form>
+					<h3>Existing Order</h3>
+					<form action="{% url 'restaurant:verify' %}" method="post">
+						{% csrf_token %}
+						<label for="orderEmail">Email: </label>
+						<input type="email" name="orderEmail" id="orderEmail"><br/>
+						<label for="orderName">Order Name: </label>
+						<input type="text" name="orderName" id="orderName"><br/>
+						<input type="submit" value="Submit">
 					</form>
 				</li>
 				<li>

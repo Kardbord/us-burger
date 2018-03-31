@@ -84,20 +84,17 @@ def customerOrder(request, order_pk):
 	
 def verify(request):
 	#order = get_object_or_404(Order, email=request.POST['orderEmail'])
-	#order.changedConfirmed()
 	
 	try:
 		order = Order.objects.get(email=request.POST['orderEmail'])
-	except KeyError:
-		return HttpResponse("Could not find email or name.")
+	except (KeyError, Order.DoesNotExist):
+		return HttpResponseRedirect(reverse('restaurant:index'),)
 		
-#	if order.name != request.POST['orderName']:
-#		wait_time = WaitTime.objects.last()
-#		return render(request, 'restaurant/index.html', {
-#			'wait_time': wait_time,
-#		})
-		
-	return HttpResponseRedirect(reverse('restaurant:customerOrder', kwargs={'order': order.pk}))
+	if order.name != request.POST['orderName']:
+		return HttpResponseRedirect(reverse('restaurant:index'),)
+	
+	#return HttpResponse("This is a new page.")
+	return HttpResponseRedirect(reverse('restaurant:customerOrder', args=(order.pk,)))
 	
 	
 	
