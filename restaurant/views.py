@@ -70,3 +70,25 @@ def customerOrder(request, order_pk):
     }
     # TODO: find a way to redirect user to home page if back button pressed
     return render(request, 'restaurant/customerOrder.html', context)
+	
+	
+def verify(request):
+	#order = get_object_or_404(Order, email=request.POST['orderEmail'])
+	#order.changedConfirmed()
+	
+	try:
+		order = Order.objects.get(email=request.POST['orderEmail'])
+	except KeyError:
+		return HttpResponse("Could not find email or name.")
+		
+#	if order.name != request.POST['orderName']:
+#		wait_time = WaitTime.objects.last()
+#		return render(request, 'restaurant/index.html', {
+#			'wait_time': wait_time,
+#		})
+		
+	return HttpResponseRedirect(reverse('restaurant:customerOrder', kwargs={'order': order.pk}))
+	
+	
+	
+	

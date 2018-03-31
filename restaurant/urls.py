@@ -12,4 +12,6 @@ urlpatterns = [
     path('newOrder/', views.newOrder, name='newOrder'),
     # ex: /restaurant/customerOrder/1
     path('customerOrder/<int:order_pk>/', views.customerOrder, name='customerOrder'),
+	# this will verify if an order exists
+	path('verify/', views.verify, name='verify'),
 ]

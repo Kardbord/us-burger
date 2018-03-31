@@ -29,10 +29,11 @@
 				</li>
 				<li>
 					<form>
-						<h5>Existing Order:</h5><br>
-							<form action="" method="post">
-								<h6>Email: </h6><input type="email" name="orderEmail"><br>
-								<h6>Order Name: </h6><input type="text" name="orderName"><br>
+						<p>Existing Order:</p>
+							<form action="{% url 'restaurant:verify' %}" method="post">
+							{% csrf_token %}
+								<p>Email: <input type="email" name="orderEmail"></p>
+								<p>Order Name: <input type="text" name="orderName"></p>
 								<input type="submit" value="Submit">
 							</form>
 					</form>
