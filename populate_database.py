@@ -108,6 +108,33 @@ def populate():
     dinner.menu_items.add(tom_soup, gril_cheese, chick_salad, fries, burger)
     dinner.save()
 
+    # Create some Orders
+    order = Order(pin='0001', email='email@email.com', name='order1')
+    order2 = Order()
+    order3 = Order(pin='1112', email='johndoe@www.com', name='John\'s order')
+    order.save()
+    order2.save()
+    order3.save()
+
+    # Create some OrderItems for the Orders
+    fry_item = OrderItem(menu_item=fries, order=order, quantity=3)
+    fry_item.save()
+    burger_item = OrderItem(menu_item=burger, order=order, quantity=1)
+    burger_item.save()
+    soup_item = OrderItem(menu_item=tom_soup, order=order2, quantity=1)
+    soup_item.save()
+    gril_cheese_item = OrderItem(menu_item=gril_cheese, order=order2, quantity=2)
+    gril_cheese_item.save()
+    salad_item = OrderItem(menu_item=chick_salad, order=order3, quantity=4)
+    salad_item.save()
+
+    order.check_availability()
+    order.save()
+    order2.check_availability()
+    order2.save()
+    order3.check_availability()
+    order3.save()
+
 
 if __name__ == '__main__':
     populate()
