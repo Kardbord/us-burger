@@ -31,6 +31,12 @@
                                         <div>
                                             <h4>{{ item.description }}</h4>
                                         </div>
+                                        <!-- For images to show up make sure item.name in the database is the same as the picture file -->
+                                        <div>
+                                            <h5>
+                                                <img src="{% static 'images/' %}{{ item.name }}.jpg" width="500px"/>
+                                            </h5>
+                                        </div>
                                         <div>
                                             <h6>Quantity:</h6>
                                         </div>
