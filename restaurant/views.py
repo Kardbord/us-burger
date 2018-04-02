@@ -97,5 +97,17 @@ def verify(request):
 	return HttpResponseRedirect(reverse('restaurant:customerOrder', args=(order.pk,)))
 	
 	
+def confirm(request, order_pk):
+	order = get_object_or_404(Order, pk=order_pk)
+	
+	pin = request.POST['serverPin']
+	
+	if (pin == "1234"):
+		order.changeConfirmed()
+		order.save()
+ 
+	return HttpResponseRedirect(reverse('restaurant:customerOrder', args=(order.pk,)))
+	
+	
 	
 	
