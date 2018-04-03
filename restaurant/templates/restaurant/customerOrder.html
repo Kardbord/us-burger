@@ -37,12 +37,13 @@
 						<h3>Status: Confirmed</h3>
 					{% else %}
 						<h3>Status: Needs Confirmation</h3>
-						<form>
-							<h5>Enter Server PIN to confirm order:
-							<input type="password" name="serverPin" value="">
-							<input type="submit" value="Submit">
-							</h5>
-						</form>
+						<h5>Enter Server PIN to confirm order:
+							<form action="{% url 'restaurant:confirm' order.id %}" method="post">
+							{% csrf_token %}
+								<input type="password" name="serverPin" value="">
+								<input type="submit" value="Submit">
+							</form>
+						</h5>
 					{% endif %}
 				
                     {% for order_item in order.orderitem_set.all %}
@@ -80,3 +81,6 @@
 		
 	</body>
 </html>
+
+
+<!-- \{% url 'restaurant:confirm' order.id %\} -->

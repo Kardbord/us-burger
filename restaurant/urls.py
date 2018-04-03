@@ -17,5 +17,8 @@ urlpatterns = [
 	# ex: /init/
 	# This url is for testing/developing purposes ONLY
 	# TODO: delete this in production version
-	path('init/', views.init, name='init')
+	path('init/', views.init, name='init'),
+	# This url will test the validity of the host pin
+	# to change the order status to confirmed.
+	path('customerOrder/<int:order_pk>/confirm/', views.confirm, name='confirm')
 ]
