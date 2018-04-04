@@ -79,10 +79,11 @@
 				{% if order.confirmed %}
 
 				{% else %}
-					<form action="{% url 'restaurant:delete' order.id%}" method="post">
-					{% csrf_token %}
-						<input id="formButton" type="submit" value="Cancel Order">
-					</form>
+					<a href="{% url 'restaurant:delete' order.id %}">
+						<button type="button">
+							<p>Cancel Order</p>
+						</button>
+					</a>
 				{% endif %}
 
 			</menu>
@@ -94,3 +95,6 @@
 		
 	</body>
 </html>
+
+
+<!-- \{% url 'restaurant:confirm' order.id %\} -->
