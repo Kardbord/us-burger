@@ -22,5 +22,7 @@ urlpatterns = [
 	# to change the order status to confirmed.
 	path('customerOrder/<int:order_pk>/confirm/', views.confirm, name='confirm'),
 	# This will go to the Server Page.
-	path('serverPage/', views.server, name='server')
+	path('serverPage/', views.server, name='server'),
+	# This will delete the order specified.
+	path('customerOrder/<int:order_pk>/delete/', views.delete, name='delete')
 ]

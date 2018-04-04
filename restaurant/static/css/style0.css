@@ -83,6 +83,13 @@ button {
 	font-size: 30px;
 }
 
+
+#formButton {
+	padding: 15px 32px;
+	border-radius: 5px;
+	font-size: 30px;
+}
+
 h2 {
 	text-decoration: underline;
 }

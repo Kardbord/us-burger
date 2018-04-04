@@ -114,7 +114,19 @@ def server(request):
 	context = {
 		'wait_time': wait_time
 	}
+	
 	return render(request, 'restaurant/serverPage.html', context)
+	
+	
+	
+def delete(request, order_pk):
+	order = get_object_or_404(Order, pk=order_pk)
+	
+	if (order.confirmed != True):
+		order.delete()
+
+	
+	return HttpResponseRedirect(reverse('restaurant:index'),)
 	
 	
 	
