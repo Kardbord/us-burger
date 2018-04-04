@@ -3,7 +3,7 @@ from django.template import loader
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 
-from .models import MenuItem, WaitTime, Order, OrderItem
+from .models import MenuItem, WaitTime, Order, OrderItem, Host
 from populate_database import populate
 
 
@@ -102,9 +102,12 @@ def confirm(request, order_pk):
 	
 	pin = request.POST['serverPin']
 	
-	if (pin == "1234"):
-		order.changeConfirmed()
-		order.save()
+	all_Hosts = Host.objects.all()
+	
+	for n in all_Hosts:
+		if (pin == n.pin):
+			order.changeConfirmed()
+			order.save()
  
 	return HttpResponseRedirect(reverse('restaurant:customerOrder', args=(order.pk,)))
 	
