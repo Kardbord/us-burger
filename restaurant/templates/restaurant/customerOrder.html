@@ -60,17 +60,35 @@
                 {% comment %}
                 TODO: make this acutally edit the current order instead of create a new one
                 {% endcomment %}
-				<a href="{% url 'restaurant:customerMenu' %}">
-					<button>
-						<p>Change Order</p>
-					</button>
-				</a>
-
-				<a href="{% url 'restaurant:index' %}">
-					<button>
-						<p>Cancel Order</p>
-					</button>
-				</a>
+				
+				
+				{% if order.confirmed %}
+					<a href="{% url 'restaurant:customerMenu' %}">
+						<button type="button" disabled>
+							<p>Change Order</p>
+						</button>
+					</a>
+				{% else %}
+					<a href="{% url 'restaurant:customerMenu' %}">
+						<button type="button">
+							<p>Change Order</p>
+						</button>
+					</a>
+				{% endif %}
+					
+				{% if order.confirmed %}
+					<a href="{% url 'restaurant:index' %}">
+						<button type="button" disabled>
+							<p>Cancel Order</p>
+						</button>
+					</a>
+				{% else %}
+					<a href="{% url 'restaurant:index' %}">
+						<button type="button">
+							<p>Cancel Order</p>
+						</button>
+					</a>
+				{% endif %}
 
 			</menu>
 		</main>

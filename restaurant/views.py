@@ -109,5 +109,13 @@ def confirm(request, order_pk):
 	return HttpResponseRedirect(reverse('restaurant:customerOrder', args=(order.pk,)))
 	
 	
+def server(request):
+	wait_time = WaitTime.objects.last()
+	context = {
+		'wait_time': wait_time
+	}
+	return render(request, 'restaurant/serverPage.html', context)
+	
+	
 	
 	

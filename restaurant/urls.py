@@ -20,5 +20,7 @@ urlpatterns = [
 	path('init/', views.init, name='init'),
 	# This url will test the validity of the host pin
 	# to change the order status to confirmed.
-	path('customerOrder/<int:order_pk>/confirm/', views.confirm, name='confirm')
+	path('customerOrder/<int:order_pk>/confirm/', views.confirm, name='confirm'),
+	# This will go to the Server Page.
+	path('serverPage/', views.server, name='server')
 ]
