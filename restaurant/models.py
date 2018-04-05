@@ -312,5 +312,8 @@ class Host(models.Model):
 
     name = models.CharField(max_length=50)
 
+    def __str__(self):
+        return self.name
+
     # pin = models.CharField(max_length=50)
     pin = models.CharField(max_length=5, default=create_random_string())
