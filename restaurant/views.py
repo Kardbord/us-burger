@@ -141,3 +141,30 @@ def editOrder(request, order_pk):
         'order_qtys': order_qtys
     }
     return HttpResponse(template.render(context, request))
+
+def changeOrder(request, order_pk):
+    this_order = get_object_or_404(Order, pk=order_pk)
+    # delete the existing order items since we want to overwrite them.
+    for item in this_order.orderitem_set.all():
+        item.delete()
+
+    # create new order_items for each nonzero value in the request
+    available_items = MenuItem.objects.filter(available=True)
+    for item in available_items:
+        item_key = str(item.id) + "qty"
+        try:
+            item_amt = int(request.POST[item_key])
+            if item_amt > 0:
+                new_order_item = OrderItem(
+                    order=this_order,
+                    menu_item=item,
+                    quantity=item_amt
+                )
+                new_order_item.save()
+        except KeyError:
+            new_order.delete()
+            return HttpResponse("Invalid key: %s" % item_key)
+
+    # Finally, save the Order.
+    this_order.save()
+    return HttpResponseRedirect(reverse('restaurant:customerOrder', kwargs={'order_pk': this_order.pk}))

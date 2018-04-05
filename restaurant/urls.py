@@ -26,5 +26,7 @@ urlpatterns = [
     # This will go to the Server Page.
     path('serverPage/', views.server, name='server'),
     # This will delete the order specified.
-    path('customerOrder/<int:order_pk>/delete/', views.delete, name='delete')
+    path('customerOrder/<int:order_pk>/delete/', views.delete, name='delete',),
+    # This url will call the view that changes an existing order, and then send you to the Order page
+    path('changeOrder/<int:order_pk>', views.changeOrder, name='changeOrder')
 ]

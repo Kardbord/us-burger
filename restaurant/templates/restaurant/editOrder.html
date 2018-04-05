@@ -25,7 +25,7 @@
 			<menu>
                     <h2>Menu:</h2>
                     {% if latest_menu %}
-                        <form action="{% url 'restaurant:newOrder' %}" method="post">
+                        <form action="{% url 'restaurant:changeOrder' order.id %}" method="post">
                             {%  csrf_token %}
                             {% for item in latest_menu %}
                                 <menuitem>
@@ -54,7 +54,7 @@
                                 </menuitem>
 
                             {% endfor %}
-                            <input type="submit" value="Place Order" />
+                            <input type="submit" value="Save Changes" />
                         </form>
                     {% else %}
                         <p>No menu items available</p>
