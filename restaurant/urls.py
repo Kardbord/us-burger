@@ -12,17 +12,17 @@ urlpatterns = [
     path('newOrder/', views.newOrder, name='newOrder'),
     # ex: /restaurant/customerOrder/1
     path('customerOrder/<int:order_pk>/', views.customerOrder, name='customerOrder'),
-	# this will verify if an order exists
-	path('verify/', views.verify, name='verify'),
-	# ex: /init/
-	# This url is for testing/developing purposes ONLY
-	# TODO: delete this in production version
-	path('init/', views.init, name='init'),
-	# This url will test the validity of the host pin
-	# to change the order status to confirmed.
-	path('customerOrder/<int:order_pk>/confirm/', views.confirm, name='confirm'),
-	# This will go to the Server Page.
-	path('serverPage/', views.server, name='server'),
-	# This will delete the order specified.
-	path('customerOrder/<int:order_pk>/delete/', views.delete, name='delete')
+    # this will verify if an order exists
+    path('verify/', views.verify, name='verify'),
+    # ex: /init/
+    # This url is for testing/developing purposes ONLY
+    # TODO: delete this in production version
+    path('init/', views.init, name='init'),
+    # This url will test the validity of the host pin
+    # to change the order status to confirmed.
+    path('customerOrder/<int:order_pk>/confirm/', views.confirm, name='confirm'),
+    # This will go to the Server Page.
+    path('serverPage/', views.server, name='server'),
+    # This will delete the order specified.
+    path('customerOrder/<int:order_pk>/delete/', views.delete, name='delete')
 ]
