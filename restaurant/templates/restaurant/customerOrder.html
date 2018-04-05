@@ -60,7 +60,7 @@
                 {% comment %}
                 TODO: make this acutally edit the current order instead of create a new one
                 {% endcomment %}
-				<a href="{% url 'restaurant:customerMenu' %}">
+				<a href="{% url 'restaurant:editOrder' order.id %}">
 					<button>
 						<p>Change Order</p>
 					</button>

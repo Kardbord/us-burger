@@ -1,10 +1,9 @@
 import os
+import django
+from restaurant.models import *
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'us_burger.settings')
 
-import django
 django.setup()
-
-from restaurant.models import *
 
 
 def populate():

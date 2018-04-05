@@ -80,34 +80,46 @@ def customerOrder(request, order_pk):
     }
     # TODO: find a way to redirect user to home page if back button pressed
     return render(request, 'restaurant/customerOrder.html', context)
-	
-	
+
+
 def verify(request):
-	#order = get_object_or_404(Order, email=request.POST['orderEmail'])
-	
-	try:
-		order = Order.objects.get(email=request.POST['orderEmail'])
-	except (KeyError, Order.DoesNotExist):
-		return HttpResponseRedirect(reverse('restaurant:index'),)
-		
-	if order.name != request.POST['orderName']:
-		return HttpResponseRedirect(reverse('restaurant:index'),)
-	
-	#return HttpResponse("This is a new page.")
-	return HttpResponseRedirect(reverse('restaurant:customerOrder', args=(order.pk,)))
-	
-	
+    # order = get_object_or_404(Order, email=request.POST['orderEmail'])
+    try:
+        order = Order.objects.get(email=request.POST['orderEmail'])
+    except (KeyError, Order.DoesNotExist):
+        return HttpResponseRedirect(reverse('restaurant:index'),)
+
+    if order.name != request.POST['orderName']:
+        return HttpResponseRedirect(reverse('restaurant:index'),)
+
+    # return HttpResponse("This is a new page.")
+    return HttpResponseRedirect(reverse('restaurant:customerOrder', args=(order.pk,)))
+
+
 def confirm(request, order_pk):
 	order = get_object_or_404(Order, pk=order_pk)
-	
+
 	pin = request.POST['serverPin']
-	
+
 	if (pin == "1234"):
 		order.changeConfirmed()
 		order.save()
- 
+
 	return HttpResponseRedirect(reverse('restaurant:customerOrder', args=(order.pk,)))
-	
-	
-	
-	
+
+
+def editOrder(request, order_pk):
+    order = get_object_or_404(Order, pk=order_pk)
+    latest_menu = MenuItem.objects.filter(available=True)
+    template = loader.get_template('restaurant/editOrder.html')
+    order_quantities = {}
+    for item in latest_menu:
+        order_quantities[item] = order.getValueByName(item.name)
+    context = {
+        'latest_menu': latest_menu,
+        'order': order,
+        'order_quantities': order_quantities
+    }
+    return HttpResponse(template.render(context, request))
+
+
