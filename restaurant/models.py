@@ -326,5 +326,6 @@ class Host(models.Model):
     def __str__(self):
         return self.name
 
+    # TODO: Figure out why this gives the same PIN to the 4 Hosts created in populate()
     # pin = models.CharField(max_length=50)
     pin = models.CharField(max_length=5, default=create_random_string())

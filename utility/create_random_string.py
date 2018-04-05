@@ -1,7 +1,7 @@
 import random
 import string
 
-
+# TODO: Figure out why this gives the same PIN to the 4 Hosts created in populate()
 def create_random_string(digit_weight=20, string_length=5):
     random_string = ''
 

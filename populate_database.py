@@ -136,6 +136,7 @@ def populate():
     order3.save()
 
     # Create some Hosts
+    # TODO: Figure out why this gives the same PIN to the 4 Hosts created in populate()
     host1 = Host(name='Samantha')
     host2 = Host(name='Jonathan')
     host3 = Host(name='Eliza')
