@@ -3,7 +3,7 @@ from django.template import loader
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 
-from .models import MenuItem, WaitTime, Order, OrderItem
+from .models import MenuItem, WaitTime, Order, OrderItem, Host
 from populate_database import populate
 
 
@@ -87,39 +87,42 @@ def verify(request):
     try:
         order = Order.objects.get(email=request.POST['orderEmail'])
     except (KeyError, Order.DoesNotExist):
-        return HttpResponseRedirect(reverse('restaurant:index'),)
+        return HttpResponseRedirect(reverse('restaurant:index'), )
 
     if order.name != request.POST['orderName']:
-        return HttpResponseRedirect(reverse('restaurant:index'),)
-
+        return HttpResponseRedirect(reverse('restaurant:index'), )
     # return HttpResponse("This is a new page.")
     return HttpResponseRedirect(reverse('restaurant:customerOrder', args=(order.pk,)))
 
 
 def confirm(request, order_pk):
-	order = get_object_or_404(Order, pk=order_pk)
-
-	pin = request.POST['serverPin']
-
-	if (pin == "1234"):
-		order.changeConfirmed()
-		order.save()
-
-	return HttpResponseRedirect(reverse('restaurant:customerOrder', args=(order.pk,)))
-
-
-def editOrder(request, order_pk):
     order = get_object_or_404(Order, pk=order_pk)
-    latest_menu = MenuItem.objects.filter(available=True)
-    template = loader.get_template('restaurant/editOrder.html')
-    order_qtys = {}
-    for item in latest_menu:
-        order_qtys[item.name] = order.getValueByName(item.name)
+
+    pin = request.POST['serverPin']
+
+    all_Hosts = Host.objects.all()
+
+    for n in all_Hosts:
+        if pin == n.pin:
+            order.changeConfirmed()
+            order.save()
+
+    return HttpResponseRedirect(reverse('restaurant:customerOrder', args=(order.pk,)))
+
+
+def server(request):
+    wait_time = WaitTime.objects.last()
     context = {
-        'latest_menu': latest_menu,
-        'order': order,
-        'order_qtys': order_qtys
+        'wait_time': wait_time
     }
-    return HttpResponse(template.render(context, request))
+
+    return render(request, 'restaurant/serverPage.html', context)
 
 
+def delete(request, order_pk):
+    order = get_object_or_404(Order, pk=order_pk)
+
+    if not order.confirmed:
+        order.delete()
+
+    return HttpResponseRedirect(reverse('restaurant:index'), )

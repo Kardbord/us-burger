@@ -12,6 +12,7 @@ def populate():
     """
 
     Order.objects.all().delete()
+    Host.objects.all().delete()
     OrderItem.objects.all().delete()
     MenuItem.objects.all().delete()
     Menu.objects.all().delete()
@@ -133,6 +134,16 @@ def populate():
     order2.save()
     order3.check_availability()
     order3.save()
+
+    # Create some Hosts
+    host1 = Host(name='Samantha')
+    host2 = Host(name='Jonathan')
+    host3 = Host(name='Eliza')
+    host4 = Host(name='Peter')
+    host1.save()
+    host2.save()
+    host3.save()
+    host4.save()
 
 
 if __name__ == '__main__':

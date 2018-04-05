@@ -1,4 +1,5 @@
 from django.db import models
+from utility.create_random_string import *
 
 
 class WaitTime(models.Model):
@@ -309,3 +310,21 @@ class Menu(models.Model):
     def __str__(self):
         """Returns the Menu's name"""
         return self.name
+
+
+class Host(models.Model):
+    """
+    Host class/model:
+    ===================================
+    Contains the following members/fields:
+     - name     : the name of the Host
+     - pin		: randomly generated 5 digit hexadecimal pin
+    """
+
+    name = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.name
+
+    # pin = models.CharField(max_length=50)
+    pin = models.CharField(max_length=5, default=create_random_string())
