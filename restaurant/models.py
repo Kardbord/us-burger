@@ -300,17 +300,17 @@ class Menu(models.Model):
         """Returns the Menu's name"""
         return self.name
 
-		
+
 class Host(models.Model):
-	"""
+    """
     Host class/model:
     ===================================
     Contains the following members/fields:
      - name     : the name of the Host
      - pin		: randomly generated 5 digit hexadecimal pin
     """
-	
-	name = models.CharField(max_length=50)
-	
-	#pin = models.CharField(max_length=50)
-	pin = models.CharField(max_length=5, default=create_random_string())
+
+    name = models.CharField(max_length=50)
+
+    # pin = models.CharField(max_length=50)
+    pin = models.CharField(max_length=5, default=create_random_string())

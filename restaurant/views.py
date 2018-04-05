@@ -80,57 +80,51 @@ def customerOrder(request, order_pk):
     }
     # TODO: find a way to redirect user to home page if back button pressed
     return render(request, 'restaurant/customerOrder.html', context)
-	
-	
-def verify(request):
-	#order = get_object_or_404(Order, email=request.POST['orderEmail'])
-	
-	try:
-		order = Order.objects.get(email=request.POST['orderEmail'])
-	except (KeyError, Order.DoesNotExist):
-		return HttpResponseRedirect(reverse('restaurant:index'),)
-		
-	if order.name != request.POST['orderName']:
-		return HttpResponseRedirect(reverse('restaurant:index'),)
-	
-	#return HttpResponse("This is a new page.")
-	return HttpResponseRedirect(reverse('restaurant:customerOrder', args=(order.pk,)))
-	
-	
-def confirm(request, order_pk):
-	order = get_object_or_404(Order, pk=order_pk)
-	
-	pin = request.POST['serverPin']
-	
-	all_Hosts = Host.objects.all()
-	
-	for n in all_Hosts:
-		if (pin == n.pin):
-			order.changeConfirmed()
-			order.save()
- 
-	return HttpResponseRedirect(reverse('restaurant:customerOrder', args=(order.pk,)))
-	
-	
-def server(request):
-	wait_time = WaitTime.objects.last()
-	context = {
-		'wait_time': wait_time
-	}
-	
-	return render(request, 'restaurant/serverPage.html', context)
-	
-	
-	
-def delete(request, order_pk):
-	order = get_object_or_404(Order, pk=order_pk)
-	
-	if (order.confirmed != True):
-		order.delete()
 
-	
-	return HttpResponseRedirect(reverse('restaurant:index'),)
-	
-	
-	
-	
+
+def verify(request):
+    # order = get_object_or_404(Order, email=request.POST['orderEmail'])
+
+    try:
+        order = Order.objects.get(email=request.POST['orderEmail'])
+    except (KeyError, Order.DoesNotExist):
+        return HttpResponseRedirect(reverse('restaurant:index'), )
+
+    if order.name != request.POST['orderName']:
+        return HttpResponseRedirect(reverse('restaurant:index'), )
+
+    # return HttpResponse("This is a new page.")
+    return HttpResponseRedirect(reverse('restaurant:customerOrder', args=(order.pk,)))
+
+
+def confirm(request, order_pk):
+    order = get_object_or_404(Order, pk=order_pk)
+
+    pin = request.POST['serverPin']
+
+    all_Hosts = Host.objects.all()
+
+    for n in all_Hosts:
+        if pin == n.pin:
+            order.changeConfirmed()
+            order.save()
+
+    return HttpResponseRedirect(reverse('restaurant:customerOrder', args=(order.pk,)))
+
+
+def server(request):
+    wait_time = WaitTime.objects.last()
+    context = {
+        'wait_time': wait_time
+    }
+
+    return render(request, 'restaurant/serverPage.html', context)
+
+
+def delete(request, order_pk):
+    order = get_object_or_404(Order, pk=order_pk)
+
+    if not order.confirmed:
+        order.delete()
+
+    return HttpResponseRedirect(reverse('restaurant:index'), )
