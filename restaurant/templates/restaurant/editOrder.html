@@ -1,4 +1,5 @@
 {% load static %}
+{% load order_quantities %}
 <html lang=en>
 	<head>
 		<title>Us-Burger Edit Order</title>
@@ -45,7 +46,7 @@
                                         <div>
                                             <input type="number"
 												name="{{ item.id }}qty"
-												value="0"
+												value="{{ order_qtys|val:item.name }}"
 												min="0"
 												id="numberInput">
                                         </div>

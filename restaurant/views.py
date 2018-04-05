@@ -112,13 +112,13 @@ def editOrder(request, order_pk):
     order = get_object_or_404(Order, pk=order_pk)
     latest_menu = MenuItem.objects.filter(available=True)
     template = loader.get_template('restaurant/editOrder.html')
-    order_quantities = {}
+    order_qtys = {}
     for item in latest_menu:
-        order_quantities[item] = order.getValueByName(item.name)
+        order_qtys[item.name] = order.getValueByName(item.name)
     context = {
         'latest_menu': latest_menu,
         'order': order,
-        'order_quantities': order_quantities
+        'order_qtys': order_qtys
     }
     return HttpResponse(template.render(context, request))
 
