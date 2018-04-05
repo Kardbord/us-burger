@@ -84,7 +84,6 @@ def customerOrder(request, order_pk):
 
 def verify(request):
     # order = get_object_or_404(Order, email=request.POST['orderEmail'])
-
     try:
         order = Order.objects.get(email=request.POST['orderEmail'])
     except (KeyError, Order.DoesNotExist):
@@ -92,7 +91,6 @@ def verify(request):
 
     if order.name != request.POST['orderName']:
         return HttpResponseRedirect(reverse('restaurant:index'), )
-
     # return HttpResponse("This is a new page.")
     return HttpResponseRedirect(reverse('restaurant:customerOrder', args=(order.pk,)))
 

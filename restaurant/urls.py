@@ -21,6 +21,8 @@ urlpatterns = [
     # This url will test the validity of the host pin
     # to change the order status to confirmed.
     path('customerOrder/<int:order_pk>/confirm/', views.confirm, name='confirm'),
+    # This url will take you to the edit order page for the corresponding order.
+    path('editOrder/<int:order_pk>', views.editOrder, name='editOrder'),
     # This will go to the Server Page.
     path('serverPage/', views.server, name='server'),
     # This will delete the order specified.

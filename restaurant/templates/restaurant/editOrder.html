@@ -1,0 +1,72 @@
+{% load static %}
+{% load order_quantities %}
+<html lang=en>
+	<head>
+		<title>Us-Burger Edit Order</title>
+		<link rel="stylesheet" type="text/css" href="{% static 'css/style0.css' %}"/>
+	</head>
+
+	<body>
+
+		<header>
+			<img src="{% static 'images\us_burger.jpg' %}"
+				height="150">
+			<br>
+		</header>
+
+		<main>
+            {% for order_item in order.orderitem_set.all %}
+                <menuitem>
+                    <h4>{{ order_item.menu_item.name }}</h4>
+                    <p>Quantity: {{ order_item.quantity }}</p>
+                </menuitem>
+            {% endfor %}
+
+			<menu>
+                    <h2>Menu:</h2>
+                    {% if latest_menu %}
+                        <form action="{% url 'restaurant:newOrder' %}" method="post">
+                            {%  csrf_token %}
+                            {% for item in latest_menu %}
+                                <menuitem>
+                                    <h4>{{ item }}</h4>
+                                    <div>
+                                        <div>
+                                            <h4>{{ item.description }}</h4>
+                                        </div>
+                                        <!-- For images to show up make sure item.name in the database is the same as the picture file -->
+                                        <div>
+                                            <h5>
+                                                <img src="{% static 'images/' %}{{ item.name }}.jpg" width="500px"/>
+                                            </h5>
+                                        </div>
+                                        <div>
+                                            <h6>Quantity:</h6>
+                                        </div>
+                                        <div>
+                                            <input type="number"
+												name="{{ item.id }}qty"
+												value="{{ order_qtys|val:item.name }}"
+												min="0"
+												id="numberInput">
+                                        </div>
+                                    </div>
+                                </menuitem>
+
+                            {% endfor %}
+                            E-Mail: <input type="email" name="email"><br>
+                            Order Name: <input type="text" name="orderName"><br><br>
+                            <input type="submit" value="Place Order" />
+                        </form>
+                    {% else %}
+                        <p>No menu items available</p>
+                    {% endif %}
+			</menu>
+		</main>
+
+		<footer>
+			<p>Restaurant Address or other info goes here.</p>
+		</footer>
+
+	</body>
+</html>

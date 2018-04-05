@@ -199,6 +199,17 @@ class Order(models.Model):
     cooked = models.BooleanField(default=False)
     delivered = models.BooleanField(default=False)
 
+    def getValueByName(self, itemName):
+        """
+        This method takes an itemName and checks all of the Order's items to see if
+        the Order has a quantity for it. If it finds one, it returns the quantity.
+        If not, it returns 0.
+        """
+        for order_item in self.orderitem_set.all():
+            if order_item.menu_item.name == itemName:
+                return order_item.quantity
+        return 0
+
     def changeConfirmed(self):
         """Changes Confirmed Status"""
         self.confirmed = True
