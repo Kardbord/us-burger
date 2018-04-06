@@ -1,10 +1,11 @@
+from django.core import serializers
 from django.http import HttpResponse, HttpResponseRedirect
-from django.template import loader
 from django.shortcuts import render, get_object_or_404
+from django.template import loader
 from django.urls import reverse
 
-from .models import MenuItem, WaitTime, Order, OrderItem, Host
 from populate_database import populate
+from .models import MenuItem, WaitTime, Order, OrderItem, Host
 
 
 def init(request):
@@ -25,12 +26,15 @@ def index(request):
 
 
 def customerMenu(request):
+    serialize_emails = serializers.serialize("json", Order.objects.all(), indent=4)
+
     wait_time = WaitTime.objects.last()
     latest_menu = MenuItem.objects.filter(available=True)
     template = loader.get_template('restaurant/customerMenu.html')
     context = {
         'latest_menu': latest_menu,
-        'wait_time': wait_time
+        'wait_time': wait_time,
+        'emails': serialize_emails
     }
     return HttpResponse(template.render(context, request))
 

@@ -107,4 +107,12 @@ order > button, h3, a{
 
 }
 
+input.invalid {
+    border: 2px dashed red;
+}
+
+input.valid {
+    border: none;
+}
+
 

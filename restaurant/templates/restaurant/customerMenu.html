@@ -3,13 +3,16 @@
 	<head>
 		<title>Us-Burger Menu</title>
 		<link rel="stylesheet" type="text/css" href="{% static 'css/style0.css' %}"/>
+        <script type="text/javascript" src="{% static 'js/functions.js' %}"></script>
 	</head>
 	
 	<body>
 	
 		<header>
-			<img src="{% static 'images\us_burger.jpg' %}"
-				height="150">
+            <a href="/">
+                <img src="{% static 'images\us_burger.jpg' %}"
+                     height="150">
+            </a>
 			<br>
             {% if wait_time %}
                 <h3>Wait time to be seated: {{ wait_time.get_wait_time }}</h3>
@@ -22,7 +25,8 @@
 			<menu>
                     <h2>Menu:</h2>
                     {% if latest_menu %}
-                        <form action="{% url 'restaurant:newOrder' %}" method="post">
+                <form name="customerForm" action="{% url 'restaurant:newOrder' %}"
+                      onsubmit="return validateForm({{ emails }})" method="post">
                             {%  csrf_token %}
                             {% for item in latest_menu %}
                                 <menuitem>
@@ -51,8 +55,9 @@
                                 </menuitem>
 
                             {% endfor %}
-                            E-Mail: <input type="email" name="email"><br>
-                            Order Name: <input type="text" name="orderName"><br><br>
+
+                    E-Mail: <input type="email" class="valid" name="email"><br>
+                    Order Name: <input type="text" class="valid" name="orderName"><br><br>
                             <input type="submit" value="Place Order" />
                         </form>
                     {% else %}
