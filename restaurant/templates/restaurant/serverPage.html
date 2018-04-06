@@ -8,17 +8,10 @@
 	<body>
 	
 		<header>
-<<<<<<< HEAD
-			<a href="{% url 'restaurant:index' %}">
-				<img src="{% static 'images\us_burger.jpg' %}"
-					height="150">
-			</a>
-=======
             <a href="/">
-                <img src="{% static 'images\us_burger.jpg' %}"
+                <img src="{% static 'images\us_burger.png' %}"
                      height="150">
             </a>
->>>>>>> 600d256ec767ed13612de641576f1c9406ea2268
 			<br>
             {% if wait_time %}
                 <h3>Wait time to be seated: {{ wait_time.get_wait_time }}</h3>

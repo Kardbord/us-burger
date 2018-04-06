@@ -53,7 +53,7 @@ menuitem > div > div:nth-child(1) {
 }
 
 menuitem > div > div:nth-child(2) {
-	flex: 1;
+    flex: 1;
 }
 
 menuitem > div > div:nth-child(3) {
@@ -107,12 +107,5 @@ order > button, h3, a{
 
 }
 
-input.invalid {
-    border: 2px dashed red;
-}
-
-input.valid {
-    border: none;
-}
 
 

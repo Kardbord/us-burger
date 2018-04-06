@@ -18,9 +18,14 @@ def init(request):
 
 
 def index(request):
+    serialize_emails = serializers.serialize("json", Order.objects.all(), indent=4)
+
     wait_time = WaitTime.objects.last()
+    latest_menu = MenuItem.objects.filter(available=True)
     context = {
-        'wait_time': wait_time
+        'latest_menu': latest_menu,
+        'wait_time': wait_time,
+        'emails': serialize_emails
     }
     return render(request, 'restaurant/index.html', context)
 

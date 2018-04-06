@@ -1,72 +1,184 @@
 {% load static %}
-<html lang=en>
-	<head>
-		<title>Us-Burger Home Page</title>
-		<link rel="stylesheet" type="text/css" href="{% static 'css/style0.css' %}"/>
-	</head>
+<!DOCTYPE html>
+<html>
+<title>Us Burger</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Amatic+SC">
+<script type="text/javascript" src="{% static 'js/functions.js' %}"></script>
+<style>
+    body, html {height: 100%}
+    body,h1,h2,h3,h4,h5,h6 {font-family: "Amatic SC", sans-serif}
+    .bgimg {
+        background-size: cover;
+        background: url("https://images7.alphacoders.com/611/thumb-1920-611267.jpg") 50% 0 no-repeat fixed;
+        min-height: 90%;
+    }
+    input.invalid {
+        border: 2px dashed red;
+    }
+    input.valid {
+            border: none;
+    }
 
-	<body>
-		
-		<header>
-<<<<<<< HEAD
-			<a href="{% url 'restaurant:index' %}">
-				<img src="{% static 'images\us_burger.jpg' %}"
-					height="150">
-			</a>
-=======
-            <a href="/">
-                <img src="{% static 'images\us_burger.jpg' %}"
-                     height="150">
-            </a>
->>>>>>> 600d256ec767ed13612de641576f1c9406ea2268
-			<br>
+</style>
+<body>
+
+<!-- Navbar (sits on top) -->
+<div class="w3-top w3-hide-small">
+    <div class="w3-bar w3-xlarge w3-black w3-opacity w3-hover-opacity-off" id="myNavbar">
+        <a href="#" class="w3-bar-item w3-button">HOME</a>
+        <a href="#menu" class="w3-bar-item w3-button">MENU</a>
+        <a href="#editOrder" class="w3-bar-item w3-button">VIEW/EDIT ORDER</a>
+        <a href="#about" class="w3-bar-item w3-button">ABOUT</a>
+        <a href="#cookPage" class="w3-bar-item w3-button">COOK PAGE</a>
+    </div>
+</div>
+
+<!-- Header with image -->
+<header class="bgimg w3-display-container w3-grayscale-min" id="home">
+    <div class="w3-display-bottomleft w3-padding">
+        <span class="w3-tag w3-xlarge">
+            Open from 10am to 8pm
+            <br>
             {% if wait_time %}
-                <h3>Wait time to be seated: {{ wait_time.get_wait_time }}</h3>
-			{% else %}
-                <h3>Wait time unavailable</h3>
+                Wait time to be seated: {{ wait_time.get_wait_time }} minutes
+            {% else %}
+                Wait time unavailable
             {% endif %}
-		</header>
-		
-		<main>
-			<ul>
-				<li>
-					<a href="{% url 'restaurant:customerMenu' %}">
-						<button>
-							<h3>View Menu</h3>
-						</button>
-					</a>
-				</li>
-				<li>
-					<h3>Existing Order</h3>
-					<form action="{% url 'restaurant:verify' %}" method="post">
-						{% csrf_token %}
-						<label for="orderEmail">Email: </label>
-						<input type="email" name="orderEmail" id="orderEmail"><br/>
-						<label for="orderName">Order Name: </label>
-						<input type="text" name="orderName" id="orderName"><br/>
-						<input type="submit" value="Submit">
-					</form>
-				</li>
-				<li>
-					<a href="#">
-						<button>
-							<h3>Cook Page</h3>
-						</button>
-					</a>
-				</li>
-				<li>
-					<a href="#">
-						<button>
-							<h3>Host/Server Page</h3>
-						</button>
-					</a>
-				</li>
-			</ul>
-		</main>
-		
-		<footer>
-			<p>Restaurant Address or other info goes here.</p>
-		</footer>
-	
-	</body>
+        </span>
+    </div>
+    <div class="w3-display-middle w3-center">
+        <span class="w3-text-white w3-hide-small" style="font-size:100px">us<br>BURGER</span>
+        <span class="w3-text-white w3-hide-large w3-hide-medium" style="font-size:60px"><b>us<br>BURGER</b></span>
+        <p><a href="#menu" class="w3-button w3-xxlarge w3-black">Let me see the menu</a></p>
+    </div>
+</header>
+
+<!-- Menu Container -->
+<div class="w3-container w3-black w3-padding-64 w3-xxlarge" id="menu">
+    <div class="w3-content">
+
+        <h1 class="w3-center w3-jumbo" style="margin-bottom:64px">THE MENU</h1>
+
+        <div class="w3-row w3-center w3-border w3-border-dark-grey">
+            <hr>
+            {% if latest_menu %}
+            <form name="customerForm" action="{% url 'restaurant:newOrder' %}"
+                  onsubmit="return validateForm({{ emails }})" method="post">
+                {% csrf_token %}
+                {% for item in latest_menu %}
+                <h1>
+                    <b>{{ item }}</b>
+                    <span class="w3-right w3-tag w3-black w3-padding-0">
+                                <img src="{% static 'images/' %}{{ item.name }}.jpg"
+                                     width="200px" style="margin-right: 5px;"/>
+                            </span>
+                </h1>
+                <p class="w3-text-grey">{{ item.description }}</p>
+                <p><input class="w3-tag w3-padding-0 w3-right w3-white"
+                          type="number"
+                          name="{{ item.id }}qty"
+                          placeholder="Buy"
+                          value="0"
+                          min="0"
+                          id="numberInput"
+                          style="width: 10%; margin-right: 15px;"></p>
+                <br>
+                <hr>
+                {% endfor %}
+
+                <p><input class="w3-input w3-padding-16 w3-border valid"
+                          type="email"
+                          placeholder="Us.Burgers@usu.edu"
+                          name="email"
+                          style="width: 40%; margin: auto;">
+                </p>
+                <p><input class="w3-input w3-padding-16 w3-border valid"
+                          type="text"
+                          placeholder="Our Favs"
+                          name="orderName"
+                          style="width: 40%; margin: auto;">
+                </p>
+                <p>
+                    <button class="w3-button w3-light-grey w3-block"
+                            type="submit"
+                            style="width: 60%; margin: auto;">
+                        PLACE ORDER
+                    </button>
+                </p>
+            </form>
+            {% endif %}
+        </div>
+        <br>
+    </div>
+</div>
+
+<!-- Edit Order -->
+<div class="w3-container w3-padding-64 w3-blue-grey w3-grayscale-min w3-xlarge" id="editOrder">
+    <div class="w3-content">
+        <h1 class="w3-center w3-jumbo" style="margin-bottom:36px">View/Edit Order</h1>
+        <form action="{% url 'restaurant:verify' %}" method="post" class="w3-center w3-container">
+            {% csrf_token %}
+            <p><input class="w3-input w3-padding-16 w3-border w3-center"
+                      type="email"
+                      placeholder="Email"
+                      name="orderEmail"
+                      style="width: 30%; margin: auto;"></p>
+            <p><input class="w3-input w3-padding-16 w3-border w3-center"
+                      type="text"
+                      placeholder="Order Name"
+                      name="orderName"
+                      style="width: 30%; margin: auto;"></p>
+            <p>
+                <button class="w3-button w3-light-grey w3-block"
+                        type="submit"
+                        style="width: 50%; margin: auto;">
+                    EDIT
+                </button>
+            </p>
+        </form>
+    </div>
+</div>
+
+<!-- About Container -->
+<div class="w3-container w3-padding-64 w3-red w3-grayscale w3-xlarge" id="about">
+    <div class="w3-content">
+        <h1 class="w3-center w3-jumbo" style="margin-bottom:64px">About</h1>
+        <p>The Pizza Restaurant was founded in blabla by Mr. Italiano in lorem ipsum dolor sit amet, consectetur
+            adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+            veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+        <h1><b>Opening Hours</b></h1>
+
+        <div class="w3-row">
+            <div class="w3-col s6">
+                <p>Mon & Tue CLOSED</p>
+                <p>Wednesday 10.00 - 24.00</p>
+                <p>Thursday 10:00 - 24:00</p>
+            </div>
+            <div class="w3-col s6">
+                <p>Friday 10:00 - 12:00</p>
+                <p>Saturday 10:00 - 23:00</p>
+                <p>Sunday Closed</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Employee Section -->
+<div class="w3-container w3-white w3-padding-64 w3-xxlarge" id="cookPage">
+    <div class="w3-content">
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="w3-center w3-black w3-padding-48 w3-xxlarge">
+    <p>© 2018 Us Burger, Inc.</p>
+    <p>us.burger@usu.edu</p>
+    <p><a href="https://github.com/jfairbourn96/team_us_3450">Us GitBurger</a></p>
+</footer>
+
+</body>
 </html>
