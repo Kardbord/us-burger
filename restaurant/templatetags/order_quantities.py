@@ -2,9 +2,10 @@ from django import template
 
 register = template.Library()
 
+
 @register.filter(name='val')
-def val(dict, key):
+def val(dictionary, key):
     try:
-        return dict[key]
+        return dictionary[key]
     except KeyError:
         return 0
