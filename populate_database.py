@@ -22,13 +22,13 @@ def populate():
     Removes all entries in the database, then repopulates the SupplyAmts, SupplyItems, MenuItems, Menus, and WaitTime
     """
 
-    Order.objects.all().delete()
-    Host.objects.all().delete()
     OrderItem.objects.all().delete()
+    Order.objects.all().delete()
+    SupplyAmt.objects.all().delete()
+    Host.objects.all().delete()
     MenuItem.objects.all().delete()
     Menu.objects.all().delete()
     SupplyItem.objects.all().delete()
-    SupplyAmt.objects.all().delete()
     WaitTime.objects.all().delete()
 
     # Create WaitTime
