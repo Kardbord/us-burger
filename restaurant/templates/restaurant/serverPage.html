@@ -2,7 +2,7 @@
 <html lang=en>
 	<head>
 		<title>Us-Burger Menu</title>
-		<link rel="stylesheet" type="text/css" href="{% static 'css/style0.css' %}"/>
+		<link rel="stylesheet" type="text/css" href="{% static 'css/style1.css' %}"/>
 	</head>
 	
 	<body>
@@ -14,7 +14,7 @@
             </a>
 			<br>
             {% if wait_time %}
-                <h3>Wait time to be seated: {{ wait_time.get_wait_time }}</h3>
+                <h3>Wait Time: {{ wait_time.get_wait_time }}</h3>
 			{% else %}
                 <h3>Wait time unavailable</h3>
             {% endif %}
