@@ -1,9 +1,20 @@
+# It is important that these import statements and function calls remain in this following order:
+#
+# import os
+# os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'us_burger.settings')
+# import django
+# django.setup()
+# from restaurant.models import *
+
 import os
-import django
-from restaurant.models import *
+
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'us_burger.settings')
 
+import django
+
 django.setup()
+
+from restaurant.models import *
 
 
 def populate():
@@ -11,13 +22,13 @@ def populate():
     Removes all entries in the database, then repopulates the SupplyAmts, SupplyItems, MenuItems, Menus, and WaitTime
     """
 
-    Order.objects.all().delete()
-    Host.objects.all().delete()
     OrderItem.objects.all().delete()
+    Order.objects.all().delete()
+    SupplyAmt.objects.all().delete()
+    Host.objects.all().delete()
     MenuItem.objects.all().delete()
     Menu.objects.all().delete()
     SupplyItem.objects.all().delete()
-    SupplyAmt.objects.all().delete()
     WaitTime.objects.all().delete()
 
     # Create WaitTime
