@@ -182,3 +182,7 @@ def changeOrder(request, order_pk):
     # Finally, save the Order.
     this_order.save()
     return HttpResponseRedirect(reverse('restaurant:customerOrder', kwargs={'order_pk': this_order.pk}))
+	
+def cookOrder(request):
+	return render(request, 'restaurant/cookOrder.html');
+	
