@@ -123,14 +123,14 @@ def confirm(request, order_pk):
 
 
 def server(request):
-	wait_time = WaitTime.objects.last()
-	orders = Order.objects.all()
-	context = {
-		'wait_time': wait_time,
-		'orderList': orders
-	}
+    wait_time = WaitTime.objects.last()
+    orders = Order.objects.all()
+    context = {
+        'wait_time': wait_time,
+        'orderList': orders
+    }
 
-	return render(request, 'restaurant/serverPage.html', context)
+    return render(request, 'restaurant/serverPage.html', context)
 
 
 def delete(request, order_pk):
@@ -155,6 +155,7 @@ def editOrder(request, order_pk):
         'order_qtys': order_qtys
     }
     return HttpResponse(template.render(context, request))
+
 
 def changeOrder(request, order_pk):
     this_order = get_object_or_404(Order, pk=order_pk)
@@ -182,7 +183,7 @@ def changeOrder(request, order_pk):
     # Finally, save the Order.
     this_order.save()
     return HttpResponseRedirect(reverse('restaurant:customerOrder', kwargs={'order_pk': this_order.pk}))
-	
+
+
 def cookOrder(request):
-	return render(request, 'restaurant/cookOrder.html');
-	
+    return render(request, 'restaurant/cookOrder.html');
