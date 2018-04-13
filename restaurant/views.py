@@ -108,6 +108,9 @@ def confirm(request, order_pk):
     order = get_object_or_404(Order, pk=order_pk)
 
     pin = request.POST['serverPin']
+    comments = request.POST.get('orderComments', '')
+
+    order.comment = comments
 
     all_Hosts = Host.objects.all()
 

@@ -31,19 +31,29 @@
 				{% if order %}
 					{% if order.delivered %}
 						<h3>Status: Delivered</h3>
+                        <h5>Comments or Requests:</h5>
+                        <h6>{{ order.comment }}</h6>
 					{% elif order.cooked %}
 						<h3>Status: Cooked</h3>
+                        <h5>Comments or Requests:</h5>
+                        <h6>{{ order.comment }}</h6>
 					{% elif order.cooking %}
 						<h3>Status: Cooking</h3>
+                        <h5>Comments or Requests:</h5>
+                        <h6>{{ order.comment }}</h6>
 					{% elif order.confirmed %}
 						<h3>Status: Confirmed</h3>
+                        <h5>Comments or Requests:</h5>
+                        <h6>{{ order.comment }}</h6>
 					{% else %}
 						<h3>Status: Needs Confirmation</h3>
 						<h5>Enter Server PIN to confirm order:
 							<form action="{% url 'restaurant:confirm' order.id %}" method="post">
 							{% csrf_token %}
-								<input type="password" name="serverPin" value="">
+                                <input type="password" name="serverPin" value="">
 								<input type="submit" value="Submit">
+                                <h5>Comments or Requests:</h5>
+                                <textarea maxlength="500" name="orderComments" style="height: 15em; width: 30em; resize: none;"></textarea>
 							</form>
 						</h5>
 					{% endif %}
