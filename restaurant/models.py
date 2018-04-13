@@ -199,6 +199,8 @@ class Order(models.Model):
     cooked = models.BooleanField(default=False)
     delivered = models.BooleanField(default=False)
 
+    comment = models.TextField(max_length=500, default='')
+
     def getValueByName(self, itemName):
         """
         This method takes an itemName and checks all of the Order's items to see if
