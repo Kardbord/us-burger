@@ -179,11 +179,6 @@ def changeOrder(request, order_pk):
     # Finally, save the Order.
     this_order.save()
     return HttpResponseRedirect(reverse('restaurant:customerOrder', kwargs={'order_pk': this_order.pk}))
-
-# def aboutMe(request):
-	# curr_time = "The current MST time is: " + strftime('%c')
-	# context = {'curr_time':curr_time}
-	# return render(request, 'blog/aboutMe.html', context)
 	
 def cookOrder(request):
 	return render(request, 'restaurant/cookOrder.html');
