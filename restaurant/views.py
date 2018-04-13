@@ -120,12 +120,14 @@ def confirm(request, order_pk):
 
 
 def server(request):
-    wait_time = WaitTime.objects.last()
-    context = {
-        'wait_time': wait_time
-    }
+	wait_time = WaitTime.objects.last()
+	orders = Order.objects.all()
+	context = {
+		'wait_time': wait_time,
+		'orderList': orders
+	}
 
-    return render(request, 'restaurant/serverPage.html', context)
+	return render(request, 'restaurant/serverPage.html', context)
 
 
 def delete(request, order_pk):

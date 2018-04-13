@@ -20,3 +20,28 @@ button {
 	border-radius: 5px;
 	font-size: 30px;
 }
+
+.table {
+	display: flex;
+	justify-content: center;
+}
+
+table, th, td {
+	font-family: "Comic Sans MS", cursive, sans-serif;
+	font-size: 40px;
+}
+
+td {
+	border-top: 4px solid white;
+	padding: .25in;
+	align: center;
+}
+
+th {
+	border-bottom: 6px solid white;
+	align: left;
+}
+
+table {
+	border: 3px solid white;
+}

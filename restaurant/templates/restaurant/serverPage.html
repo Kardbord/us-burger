@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 {% load static %}
 <html lang=en>
 	<head>
@@ -21,30 +22,44 @@
 		</header>
 
 		<main>
-			<div class="tab">
-				Table
-				<!--<div>
-					Table
-				</div>
-				<div>
-					Email
-				</div>
-				<div>
-					F.R.
-				</div>
-				<div>
-					Del.
-				</div>
-				<div>
-					Paid
-				</div>
-				<div>
-					N.H.
-				</div>	-->			
+			<div>
+				<table class="table">	
+					<tr>
+						<th>Table</th>
+						<th>Email</th>
+						<th>C</th>
+						<th>F.R.</th>
+						<th>Del.</th>
+						<th>Paid</th>
+						<th>N.H.</th>
+					</tr>
+					{% for order in orderList %}
+						{%if order.confirmed %}
+							<tr>
+								<td>{{ order.pk }}</td>
+								<td>{{ order.email|truncatechars:10 }}</td>
+								{%if order.cooking %}
+									<td><button type="button">T</button></td>
+								{% else %}
+									<td><button type="button">F</button></td>
+								{% endif %}
+								{%if order.cooked %}
+									<td><button type="button">T</button></td>
+								{% else %}
+									<td><button type="button">F</button></td>
+								{% endif %}
+								{%if order.delivered %}
+									<td><button type="button">T</button></td>
+								{% else %}
+									<td><button type="button">F</button></td>
+								{% endif %}
+									<td><button type="button">F</button></td>
+								<td>:)</td>
+							</tr>
+						{% endif%}
+					{% endfor%}
+				</table>
 			</div>
-		
-			
-	
 		</main>
 		
 		<footer>
