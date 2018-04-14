@@ -51,9 +51,9 @@ class SupplyItem(models.Model):
             raise ValueError("Insufficient quantity of %s.\n\t Need: %s %s, Have: %s %s"
                              % (self.name, str(amt), self.units, str(self.quantity), self.units))
 
-    def check_availability(self, amt):
-        """Method that returns True or False depending on if the supply quantity is sufficient (>= amt)."""
-        return self.quantity > amt
+    def check_availability(self, amt, qty):
+        """Method that returns True or False depending on if the supply quantity is sufficient (>= amt * qty)."""
+        return self.quantity >= (amt * qty)
 
     def replenish(self, amt):
         """
@@ -93,9 +93,9 @@ class SupplyAmt(models.Model):
         """
         self.supply.decrement(self.amt)
 
-    def check_availability(self):
+    def check_availability(self, qty):
         """Method that returns the availability of the associated SupplyItem."""
-        return self.supply.check_availability(self.amt)
+        return self.supply.check_availability(self.amt, qty)
 
     def replenish(self, amt):
         """Increments the associated SupplyItem's quantity by an amt passed to this by the associated MenuItem."""
@@ -159,14 +159,14 @@ class MenuItem(models.Model):
         for supply in self.supplyamt_set.get_queryset():
             print(supply)
 
-    def check_availability(self):
+    def check_availability(self, qty=1):
         """
         This method will check all the SupplyItems and make sure that there is enough inventory
         to create at least one of these MenuItems. Later, we can also add time checking for lunch/
         breakfast etc...
         """
         for supply in self.supplyamt_set.all():
-            if not supply.check_availability():
+            if not supply.check_availability(qty):
                 self.available = False
                 self.save()
                 return
@@ -287,7 +287,7 @@ class OrderItem(models.Model):
 
     def check_availability(self):
         """Returns true if all needed ingredients are present. Returns false otherwise."""
-        self.menu_item.check_availability()
+        self.menu_item.check_availability(self.quantity)
         return self.menu_item.available
 
     def __str__(self):
