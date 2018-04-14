@@ -48,7 +48,7 @@ def populate():
     cheese = SupplyItem(name='Cheese', units='oz', quantity=50)
     cheese.save()
 
-    bread = SupplyItem(name='bread', units='oz', quantity=50)
+    bread = SupplyItem(name='Bread', units='oz', quantity=50)
     bread.save()
 
     lettuce = SupplyItem(name='Lettuce', units='oz', quantity=50)
@@ -145,6 +145,13 @@ def populate():
     order2.save()
     order3.check_availability()
     order3.save()
+
+    for item in order.orderitem_set.all():
+        item.prepare()
+    for item in order2.orderitem_set.all():
+        item.prepare()
+    for item in order3.orderitem_set.all():
+        item.prepare()
 
     # Create some Hosts
     # TODO: Figure out why this gives the same PIN to the 4 Hosts created in populate()
