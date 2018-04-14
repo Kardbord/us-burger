@@ -59,14 +59,10 @@
 					{% endif %}
 				
                     {% for order_item in order.orderitem_set.all %}
-                        {% if order_item.check_availability %}
                         <menuitem>
                             <h4>{{ order_item.menu_item.name }}</h4>
                             <p>Quantity: {{ order_item.quantity }}</p>
                         </menuitem>
-                        {% else %}
-                            <h4>Sorry! We've just run out of {{ order_item.menu_item.name }}. :(</h4>
-                        {% endif %}
                     {% endfor %}
                     <h3>${{ order.get_total_price }}</h3>
                 {% else %}
