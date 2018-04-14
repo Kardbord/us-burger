@@ -97,9 +97,9 @@ class SupplyAmt(models.Model):
         """Method that returns the availability of the associated SupplyItem."""
         return self.supply.check_availability(self.amt, qty)
 
-    def replenish(self, amt):
+    def replenish(self):
         """Increments the associated SupplyItem's quantity by an amt passed to this by the associated MenuItem."""
-        self.supply.replenish(amt)
+        self.supply.replenish(self.amt)
 
 
 class MenuItem(models.Model):
@@ -126,10 +126,11 @@ class MenuItem(models.Model):
         self.check_availability()
         return "%s - $%s" % (self.name, str(self.price))
 
-    def replenish(self, amt):
-        """Method that increments each associated SupplyItem's quantity by amt, then updates availability."""
+    def replenish(self):
+        """Method that increments each associated SupplyItem's quantity by the required amt to make one item,
+         then updates availability."""
         for supply in self.supplyamt_set.all():
-            supply.replenish(amt)
+            supply.replenish()
         self.check_availability()
         self.save()
 
@@ -140,7 +141,6 @@ class MenuItem(models.Model):
         """
         self.check_availability()
         if self.available is True:
-            print("Available!")
             for supply in self.supplyamt_set.all():
                 try:
                     supply.decrement()
@@ -285,6 +285,10 @@ class OrderItem(models.Model):
     def prepare(self):
         for _ in range(self.quantity):
             self.menu_item.prepare_item()
+
+    def replenish(self):
+        for _ in range(self.quantity):
+            self.menu_item.replenish()
 
     def get_price(self):
         return self.menu_item.price

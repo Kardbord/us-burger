@@ -75,6 +75,10 @@ def newOrder(request):
             new_order.delete()
             return HttpResponse("Invalid key: %s" % item_key)
 
+    # Prepare the order
+    for item in new_order.orderitem_set.all():
+        if item.check_availability():
+            item.prepare()
     # Finally, save the Order.
     new_order.save()
     return HttpResponseRedirect(reverse('restaurant:customerOrder', kwargs={'order_pk': new_order.pk}))
@@ -87,9 +91,6 @@ def customerOrder(request, order_pk):
         'order': order,
         'wait_time': wait_time
     }
-    for item in order.orderitem_set.all():
-        if item.check_availability():
-            item.prepare()
     return render(request, 'restaurant/customerOrder.html', context)
 
 
@@ -118,8 +119,8 @@ def confirm(request, order_pk):
 
     for n in all_Hosts:
         if pin == n.pin:
-            order.changeConfirmed()
             order.save()
+            order.changeConfirmed()
 
     return HttpResponseRedirect(reverse('restaurant:customerOrder', args=(order.pk,)))
 
@@ -139,6 +140,8 @@ def delete(request, order_pk):
     order = get_object_or_404(Order, pk=order_pk)
 
     if not order.confirmed:
+        for item in order.orderitem_set.all():
+            item.replenish()
         order.delete()
 
     return HttpResponseRedirect(reverse('restaurant:index'), )
