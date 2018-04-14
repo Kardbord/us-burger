@@ -282,6 +282,10 @@ class OrderItem(models.Model):
 
     quantity = models.PositiveSmallIntegerField()
 
+    def prepare(self):
+        for _ in range(self.quantity):
+            self.menu_item.prepare_item()
+
     def get_price(self):
         return self.menu_item.price
 

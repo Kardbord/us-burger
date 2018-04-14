@@ -87,6 +87,9 @@ def customerOrder(request, order_pk):
         'order': order,
         'wait_time': wait_time
     }
+    for item in order.orderitem_set.all():
+        if item.check_availability():
+            item.prepare()
     return render(request, 'restaurant/customerOrder.html', context)
 
 
