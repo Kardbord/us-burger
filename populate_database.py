@@ -36,28 +36,28 @@ def populate():
     wait.save()
 
     # Create SupplyItems
-    tomato_soup = SupplyItem(name='Tomato Soup', units='oz', quantity=10)
+    tomato_soup = SupplyItem(name='Tomato Soup', units='oz', quantity=50)
     tomato_soup.save()
 
-    sliced_potato = SupplyItem(name='Sliced Potato', units='oz', quantity=10)
+    sliced_potato = SupplyItem(name='Sliced Potato', units='oz', quantity=50)
     sliced_potato.save()
 
-    sliced_chicken = SupplyItem(name='Sliced Chicken', units='oz', quantity=10)
+    sliced_chicken = SupplyItem(name='Sliced Chicken', units='oz', quantity=50)
     sliced_chicken.save()
 
-    cheese = SupplyItem(name='Cheese', units='oz', quantity=10)
+    cheese = SupplyItem(name='Cheese', units='oz', quantity=50)
     cheese.save()
 
-    bread = SupplyItem(name='bread', units='oz', quantity=10)
+    bread = SupplyItem(name='bread', units='oz', quantity=50)
     bread.save()
 
-    lettuce = SupplyItem(name='Lettuce', units='oz', quantity=10)
+    lettuce = SupplyItem(name='Lettuce', units='oz', quantity=50)
     lettuce.save()
 
-    burger_patty = SupplyItem(name='Burger Patty', units='oz', quantity=10)
+    burger_patty = SupplyItem(name='Burger Patty', units='oz', quantity=50)
     burger_patty.save()
 
-    burger_bun = SupplyItem(name='Burger Bun', units='oz', quantity=10)
+    burger_bun = SupplyItem(name='Burger Bun', units='oz', quantity=50)
     burger_bun.save()
 
     # Create MenuItems
