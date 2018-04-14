@@ -87,7 +87,6 @@ def customerOrder(request, order_pk):
         'order': order,
         'wait_time': wait_time
     }
-    # TODO: find a way to redirect user to home page if back button pressed
     return render(request, 'restaurant/customerOrder.html', context)
 
 
