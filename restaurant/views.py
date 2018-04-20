@@ -21,7 +21,7 @@ def index(request):
     serialize_emails = serializers.serialize("json", Order.objects.all(), indent=4)
 
     wait_time = WaitTime.objects.last()
-    latest_menu = MenuItem.objects.filter(available=True)
+    latest_menu = MenuItem.objects.all()
     context = {
         'latest_menu': latest_menu,
         'wait_time': wait_time,
