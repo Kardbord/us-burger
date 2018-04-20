@@ -59,26 +59,30 @@ def newOrder(request):
     # Then we need to create an OrderItem for each nonzero value in the request
     for item in MenuItem.objects.all():
         item.check_availability()
-    available_items = MenuItem.objects.filter(available=True)
-    for item in available_items:
-        item_key = str(item.id) + "qty"
+    menu_items = MenuItem.objects.all()
+    item_count = 0
+    for item in menu_items:
+        item_key = str(item.pk) + "qty"
         try:
             item_amt = int(request.POST[item_key])
             if item_amt > 0:
-                new_order_item = OrderItem(
-                    order=new_order,
-                    menu_item=item,
-                    quantity=item_amt
-                )
-                new_order_item.save()
+                item_count += 1
+                if item.available:
+                    new_order_item = OrderItem(
+                        order=new_order,
+                        menu_item=item,
+                        quantity=item_amt
+                    )
+                    new_order_item.save()
         except KeyError:
-            new_order.delete()
-            return HttpResponse("Invalid key: %s" % item_key)
+            pass
+
+    new_order.save()
 
     # Verify that a valid order was placed
-    if not new_order.orderitem_set.exists():
+    if (not new_order.orderitem_set.exists()) or (item_count != new_order.orderitem_set.count()):
         new_order.delete()
-        return HttpResponseRedirect(reverse('restaurant:index'))
+        return HttpResponseRedirect(reverse('restaurant:orderFailed'))
 
     # Prepare the order
     for item in new_order.orderitem_set.all():
@@ -86,6 +90,14 @@ def newOrder(request):
     # Finally, save the Order.
     new_order.save()
     return HttpResponseRedirect(reverse('restaurant:customerOrder', kwargs={'order_pk': new_order.pk}))
+
+
+def order_failed(request):
+    wait_time = WaitTime.objects.last()
+    context = {
+        'wait_time': wait_time,
+    }
+    return render(request, 'restaurant/orderFailed.html', context)
 
 
 def customerOrder(request, order_pk):
