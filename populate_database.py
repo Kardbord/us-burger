@@ -102,9 +102,11 @@ def populate():
     burger.save()
     supply_amt1 = SupplyAmt(item=burger, supply=burger_patty, amt=1)
     supply_amt2 = SupplyAmt(item=burger, supply=burger_bun, amt=1)
+    supply_amt3 = SupplyAmt(item=burger, supply=cheese, amt=1)
     supply_amt1.save()
     supply_amt2.save()
-    burger.supplyamt_set.add(supply_amt1, supply_amt2)
+    supply_amt3.save()
+    burger.supplyamt_set.add(supply_amt1, supply_amt2, supply_amt3)
     burger.check_availability()
     burger.save()
 

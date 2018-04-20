@@ -47,8 +47,6 @@ def customerMenu(request):
 def newOrder(request):
     # First we need to create a new Order
     # Try to get the Email and the Name from the request.
-    # TODO: figure out why this still works if no email or order name is submitted
-    # TODO do not create an order if nothing is ordered
     try:
         new_order = Order(
             email=request.POST['email'],
@@ -59,6 +57,8 @@ def newOrder(request):
         return HttpResponse("Could not find email or name.")
 
     # Then we need to create an OrderItem for each nonzero value in the request
+    for item in MenuItem.objects.all():
+        item.check_availability()
     available_items = MenuItem.objects.filter(available=True)
     for item in available_items:
         item_key = str(item.id) + "qty"
@@ -77,8 +77,7 @@ def newOrder(request):
 
     # Prepare the order
     for item in new_order.orderitem_set.all():
-        if item.check_availability():
-            item.prepare()
+        item.prepare()
     # Finally, save the Order.
     new_order.save()
     return HttpResponseRedirect(reverse('restaurant:customerOrder', kwargs={'order_pk': new_order.pk}))

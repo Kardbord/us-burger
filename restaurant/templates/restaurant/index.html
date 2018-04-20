@@ -77,10 +77,12 @@
                 <form name="customerForm" action="{% url 'restaurant:newOrder' %}"
                       onsubmit="return validateForm({{ emails }})" method="post">
                     {% comment %}
-                TODO: display a message if an order item is not available/out of stock due to race condition
-                {% endcomment %}
+                    TODO: display a message if an order item is not available/out of stock due to race condition
+                    {% endcomment %}
                     {% csrf_token %}
                     {% for item in latest_menu %}
+                        {{ item.check_availability|default_if_none:"" }}
+                        {% if item.available %}
                         <h1>
                             <b>{{ item }}</b>
                             <span class="w3-right w3-tag w3-black w3-padding-0">
@@ -99,6 +101,7 @@
                                   style="width: 10%; margin-right: 15px;"></p>
                         <br>
                         <hr>
+                        {% endif %}
                     {% endfor %}
 
                     <p><input class="w3-input w3-padding-16 w3-border valid"

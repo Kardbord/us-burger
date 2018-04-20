@@ -283,8 +283,9 @@ class OrderItem(models.Model):
     quantity = models.PositiveSmallIntegerField()
 
     def prepare(self):
-        for _ in range(self.quantity):
-            self.menu_item.prepare_item()
+        if self.check_availability():
+            for _ in range(self.quantity):
+                self.menu_item.prepare_item()
 
     def replenish(self):
         for _ in range(self.quantity):
