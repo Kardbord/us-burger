@@ -75,6 +75,11 @@ def newOrder(request):
             new_order.delete()
             return HttpResponse("Invalid key: %s" % item_key)
 
+    # Verify that a valid order was placed
+    if not new_order.orderitem_set.exists():
+        new_order.delete()
+        return HttpResponseRedirect(reverse('restaurant:index'))
+
     # Prepare the order
     for item in new_order.orderitem_set.all():
         item.prepare()
