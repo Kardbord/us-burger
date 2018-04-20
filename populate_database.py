@@ -32,7 +32,7 @@ def populate():
     WaitTime.objects.all().delete()
 
     # Create WaitTime
-    wait = WaitTime(wait_time=0)
+    wait = WaitTime(wait_time=10)
     wait.save()
 
     # Create SupplyItems
