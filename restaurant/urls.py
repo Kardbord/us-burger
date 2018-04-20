@@ -30,5 +30,8 @@ urlpatterns = [
     # This url will call the view that changes an existing order, and then send you to the Order page
     path('changeOrder/<int:order_pk>', views.changeOrder, name='changeOrder'),
 	# URL for cooks to view current "cooking" orders
-	path('cookOrder/', views.cookOrder, name='cookOrder')
+	path('cookOrder/', views.cookOrder, name='cookOrder'),
+	# URL for cooks to view current ingredients
+	path('ingredients/', views.ingredients, name='ingredients')
+	
 ]

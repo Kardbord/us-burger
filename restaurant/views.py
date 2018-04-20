@@ -196,3 +196,6 @@ def changeOrder(request, order_pk):
 
 def cookOrder(request):
     return render(request, 'restaurant/cookOrder.html')
+	
+def ingredients(request):
+    return render(request, 'restaurant/ingredients.html')
