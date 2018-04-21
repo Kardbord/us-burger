@@ -13,6 +13,7 @@ class OrderAdmin(admin.ModelAdmin):
     fieldsets = [
         (None, {'fields': ['pin']}),
         ('Order Validity', {'fields': ['order_items_are_available']}),
+		('Table Assignment', {'fields': ['table']}),
         ('Status', {'fields': ['confirmed', 'cooking', 'cooked', 'delivered']}),
         ('Information', {'fields': ['email', 'name', 'comment']}),
     ]

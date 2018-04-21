@@ -181,6 +181,7 @@ class Table(models.Model):
 	"""
 	
 	number = models.IntegerField(default=0)
+	available = models.BooleanField(default=True)
 	
 	def __str__(self):
 		return "Table: " + str(self.number)

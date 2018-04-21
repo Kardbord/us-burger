@@ -26,6 +26,7 @@
 				<table class="table">	
 					<tr>
 						<th>Table</th>
+						<th>Name</th>
 						<th>Email</th>
 						<th>C</th>
 						<th>F.R.</th>
@@ -33,32 +34,50 @@
 						<th>Paid</th>
 						<th>N.H.</th>
 					</tr>
-					{% for order in orderList %}
-						{%if order.confirmed %}
-							<tr>
-								<td>{{ order.pk }}</td>
-								<td>{{ order.email|truncatechars:10 }}</td>
-								{%if order.cooking %}
-									<td><button type="button">T</button></td>
-								{% else %}
-									<td><button type="button">F</button></td>
-								{% endif %}
-								{%if order.cooked %}
-									<td><button type="button">T</button></td>
-								{% else %}
-									<td><button type="button">F</button></td>
-								{% endif %}
-								{%if order.delivered %}
-									<td><button type="button">T</button></td>
-								{% else %}
-									<td><button type="button">F</button></td>
-								{% endif %}
-									<td><button type="button">F</button></td>
-								<td>:)</td>
+					{% for table in tableList %}
+						{%if not table.available %}
+							{% for order in table.order_set.all %}
+								<tr>
+									<td>{{ table.number }}</td>
+									<td>{{ order.name|truncatechars:10 }}</td>
+									<td>{{ order.email|truncatechars:10 }}</td>
+									{%if order.cooking %}
+										<td><button class="tableButtonT" type="button">T</button></td>
+									{% else %}
+										<td><button class="tableButtonF" type="button">F</button></td>
+									{% endif %}
+									{%if order.cooked %}
+										<td><button class="tableButtonT" type="button">T</button></td>
+									{% else %}
+										<td><button class="tableButtonF" type="button">F</button></td>
+									{% endif %}
+									{%if order.delivered %}
+										<td><button class="tableButtonT" type="button">T</button></td>
+									{% else %}
+										<td><button class="tableButtonF" type="button">F</button></td>
+									{% endif %}
+									{%if order.paid %}
+										<td><button class="tableButtonT" type="button">T</button></td>
+									{% else %}
+										<td><button class="tableButtonF" type="button">F</button></td>
+									{% endif %}
+									
+									<td>:)</td>
+								{% endfor %}
 							</tr>
 						{% endif%}
 					{% endfor%}
 				</table>
+				<div class="tableA">
+					<p>Available Tables</p>
+					{% for table in tableList %}
+						{%if table.order_set.count == 0 %}
+							<div>
+								Table: {{ table.number }}
+							</div>
+						{% endif %}
+					{% endfor %}
+				</div>
 			</div>
 		</main>
 		

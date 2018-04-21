@@ -5,7 +5,7 @@ from django.template import loader
 from django.urls import reverse
 
 from populate_database import populate
-from .models import MenuItem, WaitTime, Order, OrderItem, Host
+from .models import MenuItem, WaitTime, Order, OrderItem, Host, Table
 
 
 def init(request):
@@ -108,29 +108,40 @@ def verify(request):
 
 
 def confirm(request, order_pk):
-    order = get_object_or_404(Order, pk=order_pk)
+	order = get_object_or_404(Order, pk=order_pk)
 
-    pin = request.POST['serverPin']
-    comments = request.POST.get('orderComments', '')
+	try:
+		table = Table.objects.get(number = request.POST.get('tableNumber'))
+		if table.available:
+			table.order_set.add(order)
+			table.available = False
+			table.save()
+			
+	except (KeyError, Table.DoesNotExist):
+		return HttpResponseRedirect(reverse('restaurant:customerOrder', args=(order.pk,)))
+		
+		
+	pin = request.POST.get('serverPin')
+	comments = request.POST.get('orderComments', '')
+    
+	order.comment = comments
 
-    order.comment = comments
+	all_Hosts = Host.objects.all()
 
-    all_Hosts = Host.objects.all()
-
-    for n in all_Hosts:
-        if pin == n.pin:
-            order.save()
-            order.changeConfirmed()
-
-    return HttpResponseRedirect(reverse('restaurant:customerOrder', args=(order.pk,)))
+	for n in all_Hosts:
+		if pin == n.pin:	
+			order.save()
+			order.changeConfirmed()
+	
+	return HttpResponseRedirect(reverse('restaurant:customerOrder', args=(order.pk,)))
 
 
 def server(request):
     wait_time = WaitTime.objects.last()
-    orders = Order.objects.all()
+    tables = Table.objects.all()
     context = {
         'wait_time': wait_time,
-        'orderList': orders
+        'tableList': tables
     }
 
     return render(request, 'restaurant/serverPage.html', context)
