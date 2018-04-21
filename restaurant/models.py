@@ -278,6 +278,7 @@ class Order(models.Model):
         return total
 
 
+
 class OrderItem(models.Model):
     """
     OrderItem class/model:

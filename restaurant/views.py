@@ -102,7 +102,7 @@ def order_failed(request):
 
 def customerOrder(request, order_pk):
     wait_time = WaitTime.objects.last()
-    order = get_object_or_404(Order, pk=int(order_pk))
+    order = get_object_or_404(Order, id=int(order_pk))
     context = {
         'order': order,
         'wait_time': wait_time
