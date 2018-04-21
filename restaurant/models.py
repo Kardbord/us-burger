@@ -297,8 +297,9 @@ class OrderItem(models.Model):
     quantity = models.PositiveSmallIntegerField()
 
     def prepare(self):
-        for _ in range(self.quantity):
-            self.menu_item.prepare_item()
+        if self.check_availability():
+            for _ in range(self.quantity):
+                self.menu_item.prepare_item()
 
     def replenish(self):
         for _ in range(self.quantity):
@@ -350,7 +351,6 @@ class Host(models.Model):
     def __str__(self):
         return self.name
 
-    # TODO: Figure out why this gives the same PIN to the 4 Hosts created in populate()
     # pin = models.CharField(max_length=50)
     pin = models.CharField(max_length=5, default=create_random_string)
 

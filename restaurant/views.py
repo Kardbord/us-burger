@@ -21,7 +21,7 @@ def index(request):
     serialize_emails = serializers.serialize("json", Order.objects.all(), indent=4)
 
     wait_time = WaitTime.objects.last()
-    latest_menu = MenuItem.objects.filter(available=True)
+    latest_menu = MenuItem.objects.all()
     context = {
         'latest_menu': latest_menu,
         'wait_time': wait_time,
@@ -47,8 +47,6 @@ def customerMenu(request):
 def newOrder(request):
     # First we need to create a new Order
     # Try to get the Email and the Name from the request.
-    # TODO: figure out why this still works if no email or order name is submitted
-    # TODO do not create an order if nothing is ordered
     try:
         new_order = Order(
             email=request.POST['email'],
@@ -59,29 +57,47 @@ def newOrder(request):
         return HttpResponse("Could not find email or name.")
 
     # Then we need to create an OrderItem for each nonzero value in the request
-    available_items = MenuItem.objects.filter(available=True)
-    for item in available_items:
-        item_key = str(item.id) + "qty"
+    for item in MenuItem.objects.all():
+        item.check_availability()
+    menu_items = MenuItem.objects.all()
+    item_count = 0
+    for item in menu_items:
+        item_key = str(item.pk) + "qty"
         try:
             item_amt = int(request.POST[item_key])
             if item_amt > 0:
-                new_order_item = OrderItem(
-                    order=new_order,
-                    menu_item=item,
-                    quantity=item_amt
-                )
-                new_order_item.save()
+                item_count += 1
+                if item.available:
+                    new_order_item = OrderItem(
+                        order=new_order,
+                        menu_item=item,
+                        quantity=item_amt
+                    )
+                    new_order_item.save()
         except KeyError:
-            new_order.delete()
-            return HttpResponse("Invalid key: %s" % item_key)
+            pass
+
+    new_order.save()
+
+    # Verify that a valid order was placed
+    if (not new_order.orderitem_set.exists()) or (item_count != new_order.orderitem_set.count()):
+        new_order.delete()
+        return HttpResponseRedirect(reverse('restaurant:orderFailed'))
 
     # Prepare the order
     for item in new_order.orderitem_set.all():
-        if item.check_availability():
-            item.prepare()
+        item.prepare()
     # Finally, save the Order.
     new_order.save()
     return HttpResponseRedirect(reverse('restaurant:customerOrder', kwargs={'order_pk': new_order.pk}))
+
+
+def order_failed(request):
+    wait_time = WaitTime.objects.last()
+    context = {
+        'wait_time': wait_time,
+    }
+    return render(request, 'restaurant/orderFailed.html', context)
 
 
 def customerOrder(request, order_pk):
@@ -203,3 +219,6 @@ def changeOrder(request, order_pk):
 
 def cookOrder(request):
     return render(request, 'restaurant/cookOrder.html')
+	
+def ingredients(request):
+    return render(request, 'restaurant/ingredients.html')
