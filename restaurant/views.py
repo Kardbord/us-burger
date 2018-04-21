@@ -3,6 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.template import loader
 from django.urls import reverse
+import json
 
 from populate_database import populate
 from .models import MenuItem, WaitTime, Order, OrderItem, Host, Table
@@ -42,6 +43,51 @@ def customerMenu(request):
         'emails': serialize_emails
     }
     return HttpResponse(template.render(context, request))
+	
+	
+def changeButton(table:int, button:int):
+	thisTable = Table.objects.get(number = table)
+	
+	if button == 1:
+		if thisTable.order.cooking:
+			thisTable.order.cooking = False
+		else:
+			thisTable.order.cooking.changeCooking()
+			
+	elif button == 2:
+		if thisTable.order.cooked:
+			thisTable.order.cooked = False
+		else:
+			thisTable.order.cooked.changeCooked()
+	
+	elif button == 3:
+		if thisTable.order.delivered:
+			thisTable.order.delivered = False
+		else:
+			thisTable.order.delivered.changeDelivered()
+	
+	elif button == 4:
+		ran = 4
+		#if thisTable.order.cooking:
+		#	thisTable.order.cooking = False
+		#else:
+		#	thisTable.order.cooking.changeCooking()
+	
+	elif button == 5:
+		ran = 5
+	
+	else:
+		ran = 3
+	
+	return 1
+	
+def button(request):
+	if 'table' in request.GET:
+		resp = { 'answer': changeButton(request.GET.get('table'), request.GET.get('button'))}
+	else:
+		rep = { 'ERROR': "use the HTTP request variable 'n' and 'button"}
+	
+	return HttpResponse(json.dumps(resp))
 
 
 def newOrder(request):

@@ -5,21 +5,6 @@
 		<title>Us-Burger Menu</title>
 		<link rel="stylesheet" type="text/css" href="{% static 'css/style1.css' %}"/>
 		
-		<script>
-			var buttonChange = function(number, butnum) {
-				var url = 'http://localhost:8000/serverPage/button/?table=' + number + '&button=' butnum;
-				var changeRequest = new XMLHttpRequest();
-				changeRequest.open('GET', url);
-				changeRequest.responseType = 'json';
-				changeRequest.send();
-				
-				changeRequest.onload = function() {
-					console.log("Change button was successful!")
-				};
-			}
-			
-		
-		</script>
 	</head>
 	
 	<body>
@@ -60,22 +45,22 @@
 									{%if order.cooking %}
 										<td><button class="tableButtonT" type="button" onclick="buttonChange({{ table.number }}, 1)">T</button></td>
 									{% else %}
-										<td><button class="tableButtonF" type="button" onclick="buttonChange({{ table.number }}, 1)>F</button></td>
+										<td><button class="tableButtonF" type="button" onclick="buttonChange({{ table.number }}, 1)">F</button></td>
 									{% endif %}
 									{%if order.cooked %}
-										<td><button class="tableButtonT" type="button" onclick="buttonChange({{ table.number }}, 2)>T</button></td>
+										<td><button class="tableButtonT" type="button" onclick="buttonChange({{ table.number }}, 2)">T</button></td>
 									{% else %}
-										<td><button class="tableButtonF" type="button" onclick="buttonChange({{ table.number }}, 2)>F</button></td>
+										<td><button class="tableButtonF" type="button" onclick="buttonChange({{ table.number }}, 2)">F</button></td>
 									{% endif %}
 									{%if order.delivered %}
-										<td><button class="tableButtonT" type="button" onclick="buttonChange({{ table.number }}, 3)>T</button></td>
+										<td><button class="tableButtonT" type="button" onclick="buttonChange({{ table.number }}, 3)">T</button></td>
 									{% else %}
-										<td><button class="tableButtonF" type="button" onclick="buttonChange({{ table.number }}, 3)>F</button></td>
+										<td><button class="tableButtonF" type="button" onclick="buttonChange({{ table.number }}, 3)">F</button></td>
 									{% endif %}
 									{%if order.paid %}
-										<td><button class="tableButtonT" type="button" onclick="buttonChange({{ table.number }}, 4)>T</button></td>
+										<td><button class="tableButtonT" type="button" onclick="buttonChange({{ table.number }}, 4)">T</button></td>
 									{% else %}
-										<td><button class="tableButtonF" type="button" onclick="buttonChange({{ table.number }}, 4)>F</button></td>
+										<td><button class="tableButtonF" type="button" onclick="buttonChange({{ table.number }}, 4)">F</button></td>
 									{% endif %}
 									
 									<td>:)</td>
@@ -84,6 +69,22 @@
 						{% endif%}
 					{% endfor%}
 				</table>
+				
+				<script type="text/javascript">
+					function buttonChange(){
+						console.log(arguments[0]);
+						var url = 'http://localhost:8000/serverPage/button/?table=' + arguments[0] + '&button=' + arguments[1];
+						var changeRequest = new XMLHttpRequest();
+						changeRequest.open('GET', url);
+						changeRequest.responseType = 'json';
+						changeRequest.send();
+				
+						changeRequest.onload = function() {
+							console.log("Change button was successful!")
+						};
+					}
+				</script>
+		
 				<div class="tableA">
 					<p>Available Tables</p>
 					{% for table in tableList %}
