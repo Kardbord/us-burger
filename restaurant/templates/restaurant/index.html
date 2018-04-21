@@ -76,9 +76,6 @@
             {% if latest_menu %}
                 <form name="customerForm" action="{% url 'restaurant:newOrder' %}"
                       onsubmit="return validateForm({{ emails }})" method="post">
-                    {% comment %}
-                    TODO: display a message if an order item is not available/out of stock due to race condition
-                    {% endcomment %}
                     {% csrf_token %}
                     {% for item in latest_menu %}
                         {{ item.check_availability|default_if_none:"" }}
