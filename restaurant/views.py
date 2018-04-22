@@ -3,6 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.template import loader
 from django.urls import reverse
+import json
 
 from populate_database import populate
 from .models import MenuItem, WaitTime, Order, OrderItem, Host, Table
@@ -42,6 +43,66 @@ def customerMenu(request):
         'emails': serialize_emails
     }
     return HttpResponse(template.render(context, request))
+	
+	
+def changeButton(order:int, button:str):
+	thisOrder = Order.objects.get(id=order)
+
+	if button == "1":
+		if thisOrder.cooking and not thisOrder.cooked:
+			thisOrder.cooking = False
+			thisOrder.save()
+			return False
+		else:
+			thisOrder.changeCooking()
+			thisOrder.save()
+			return True
+			
+			
+	elif button == "2":
+		if thisOrder.cooked and not thisOrder.delivered:
+			thisOrder.cooked = False
+			thisOrder.save()
+			return False
+		else:
+			thisOrder.changeCooked()
+			thisOrder.save()
+			return True
+	
+	elif button == "3":
+		if thisOrder.delivered:
+			thisOrder.delivered = False
+			thisOrder.save()
+			return False
+		else:
+			thisOrder.changeDelivered()
+			thisOrder.save()
+			return True
+	
+	elif button == "4":
+		ran = 4
+			#if thisTable.order.cooking:
+			#	thisTable.order.cooking = False
+			#else:
+			#	thisTable.order.cooking.changeCooking()
+	
+	elif button == "5":
+		ran = 5
+	
+	else:
+		ran = 3
+	
+	return button
+	
+def button(request):
+	if 'button' in request.GET:
+		table = request.GET.get('order')
+		button = request.GET.get('button')
+		resp = { 'answer': changeButton(request.GET.get('order'), request.GET.get('button'))}
+	else:
+		rep = { 'ERROR': "use the HTTP request variable 'n' and 'button"}
+	
+	return HttpResponse(json.dumps(resp))
 
 
 def newOrder(request):
@@ -146,8 +207,8 @@ def confirm(request, order_pk):
 
 	for n in all_Hosts:
 		if pin == n.pin:	
-			order.save()
 			order.changeConfirmed()
+			order.save()
 	
 	return HttpResponseRedirect(reverse('restaurant:customerOrder', args=(order.pk,)))
 

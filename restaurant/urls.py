@@ -35,5 +35,7 @@ urlpatterns = [
     path('ingredients/', views.ingredients, name='ingredients'),
     # URL for orders that are unable to be placed
     path('orderFailed/', views.order_failed, name='orderFailed'),
+	# Button Changes the status of the order
+	path('serverPage/button/', views.button, name='button')
 
 ]
