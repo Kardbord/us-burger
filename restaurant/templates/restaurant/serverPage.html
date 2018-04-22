@@ -43,24 +43,24 @@
 									<td>{{ order.name|truncatechars:10 }}</td>
 									<td>{{ order.email|truncatechars:10 }}</td>
 									{%if order.cooking %}
-										<td><button class="tableButtonT" type="button" onclick="buttonChange({{ table.number }}, 1)">T</button></td>
+										<td><button id="b1_{{ order.id }}" class="tableButtonT" type="button" onclick="buttonChange({{ order.id }}, 1)">T</button></td>
 									{% else %}
-										<td><button class="tableButtonF" type="button" onclick="buttonChange({{ table.number }}, 1)">F</button></td>
+										<td><button id="b1_{{ order.id }}" class="tableButtonF" type="button" onclick="buttonChange({{ order.id }}, 1)">F</button></td>
 									{% endif %}
 									{%if order.cooked %}
-										<td><button class="tableButtonT" type="button" onclick="buttonChange({{ table.number }}, 2)">T</button></td>
+										<td><button id="b2_{{ order.id }}" class="tableButtonT" type="button" onclick="buttonChange({{ order.id }}, 2)">T</button></td>
 									{% else %}
-										<td><button class="tableButtonF" type="button" onclick="buttonChange({{ table.number }}, 2)">F</button></td>
+										<td><button id="b2_{{ order.id }}" class="tableButtonF" type="button" onclick="buttonChange({{ order.id }}, 2)">F</button></td>
 									{% endif %}
 									{%if order.delivered %}
-										<td><button class="tableButtonT" type="button" onclick="buttonChange({{ table.number }}, 3)">T</button></td>
+										<td><button id="b3_{{ order.id }}" class="tableButtonT" type="button" onclick="buttonChange({{ order.id }}, 3)">T</button></td>
 									{% else %}
-										<td><button class="tableButtonF" type="button" onclick="buttonChange({{ table.number }}, 3)">F</button></td>
+										<td><button id="b3_{{ order.id }}" class="tableButtonF" type="button" onclick="buttonChange({{ order.id }}, 3)">F</button></td>
 									{% endif %}
 									{%if order.paid %}
-										<td><button class="tableButtonT" type="button" onclick="buttonChange({{ table.number }}, 4)">T</button></td>
+										<td><button id="b4_{{ order.id }}" class="tableButtonT" type="button" onclick="buttonChange({{ order.id }}, 4)">T</button></td>
 									{% else %}
-										<td><button class="tableButtonF" type="button" onclick="buttonChange({{ table.number }}, 4)">F</button></td>
+										<td><button id="b4_{{ order.id }}" class="tableButtonF" type="button" onclick="buttonChange({{ order.id }}, 4)">F</button></td>
 									{% endif %}
 									
 									<td>:)</td>
@@ -72,15 +72,29 @@
 				
 				<script type="text/javascript">
 					function buttonChange(){
-						console.log(arguments[0]);
-						var url = 'http://localhost:8000/serverPage/button/?table=' + arguments[0] + '&button=' + arguments[1];
+						var url = 'http://localhost:8000/serverPage/button/?order=' + arguments[0] + '&button=' + arguments[1];
 						var changeRequest = new XMLHttpRequest();
+						var button = arguments[1];
+						var order = arguments[0];
+						console.log(url);
 						changeRequest.open('GET', url);
 						changeRequest.responseType = 'json';
 						changeRequest.send();
 				
 						changeRequest.onload = function() {
-							console.log("Change button was successful!")
+							var answer = changeRequest.response;
+							console.log(changeRequest.response);
+							var clickerid = 'b' + button + '_' + order;
+							console.log(clickerid);
+							var clicker = document.getElementById(clickerid);
+							if(answer.answer == false){
+								clicker.textContent = "F";
+								clicker.setAttribute('class', 'tableButtonF');
+							}
+							else if (answer.answer == true){
+								clicker.textContent = "T";
+								clicker.setAttribute('class', 'tableButtonT');
+							}
 						};
 					}
 				</script>
