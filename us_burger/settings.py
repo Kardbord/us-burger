@@ -34,7 +34,7 @@ CSRF_COOKIE_SECURE = True
 ALLOWED_HOSTS = ['*']
 
 STATICFILES_DIRS = [
-    "/restaurant/static",
+    "../restaurant/static",
 ]
 # Application definition
 
