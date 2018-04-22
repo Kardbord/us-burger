@@ -4,3 +4,4 @@ pytz==2018.4
 setuptools==39.0.1
 wheel==0.31.0
 gunicorn
+django-heroku
