@@ -34,7 +34,7 @@ CSRF_COOKIE_SECURE = True
 ALLOWED_HOSTS = ['*']
 
 STATICFILES_DIRS = [
-    "../restaurant/static",
+    '/home/kardbord/Projects/team_us_3450/restaurant/static',
 ]
 # Application definition
 
