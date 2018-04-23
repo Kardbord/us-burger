@@ -17,29 +17,21 @@
 			<menu>
                 <h2>Orders to cook:</h2>
                 <form>
-						<menuitem>
-							<h4>Order #1</h4>
-							<div>
+					{% for order in order_list %}
+						{% if order.cooking %}
+							<menuitem>
+								<h4>Order #{{ order }}</h4>
 								<div>
-									<h4>Example: 2 Burgers, 1 Grilled cheese</h4>
+									<div>
+										<h4>Example: 2 Burgers, 1 Grilled cheese</h4>
+									</div>
+									<div>
+										 <button type="button">Order Cooked</button> 
+									</div>
 								</div>
-								<div>
-									 <button type="button">Order Cooked</button> 
-								</div>
-							</div>
-						</menuitem>
-						
-						<menuitem>	
-							<h4>Order #2</h4>
-							<div>
-								<div>
-									<h4>Example: 3 Fries, 2 Tomato soups</h4>
-								</div>
-								<div>
-									 <button type="button">Order Cooked</button> 
-								</div>
-							</div>
-						</menuitem>
+							</menuitem>
+						{% endif %}
+					{% endfor %}
 				</form>
 			</menu>
 		</main>
