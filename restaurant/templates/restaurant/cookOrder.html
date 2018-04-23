@@ -15,7 +15,7 @@
 
 		<main>
 			<menu>
-                <h2>Orders to cook:</h2>
+                <h2>Orders To Cook:</h2>
 
                 <form>
 					{% for order in order_list %}
@@ -24,33 +24,18 @@
 								<h4>Order #{{ order }}</h4>
 								<div>
 									<div>
-										{% for order_item in order.orderitem_set.all %}
-											<h4>{{ order_item.quantity }} {{ order_item.menu_item.name }}</h4>
-										{% endfor %}
-									</div>
-									<div>
-										 <button type="button">I will cook</button> 
+                                        <button type="button">I'll Cook This</button>
 									</div>
 								</div>
 							</menuitem>
 						{% endif %}
 					{% endfor %}
-						
-						<h2>Orders Cooking</h2>
+
+                    <h2>Orders Cooking:</h2>
 					{% for order in order_list %}
 						{% if order.cooked and not order.delivered %}
 							<menuitem>
 								<h4>Order #{{ order }}</h4>
-								<div>
-									<div>
-										{% for order_item in order.orderitem_set.all %}
-											<h4>{{ order_item.quantity }} {{ order_item.menu_item.name }}</h4>
-										{% endfor %}
-									</div>
-									<div>
-										 <button type="button">Order Ready</button> 
-									</div>
-								</div>
 							</menuitem>
 						{% endif %}
 					{% endfor %}

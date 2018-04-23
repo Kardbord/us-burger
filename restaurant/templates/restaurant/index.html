@@ -41,7 +41,6 @@
         <a href="#menu" class="w3-bar-item w3-button">MENU</a>
         <a href="#editOrder" class="w3-bar-item w3-button">VIEW/EDIT ORDER</a>
         <a href="#about" class="w3-bar-item w3-button">ABOUT</a>
-        <a href="#cookPage" class="w3-bar-item w3-button">COOK PAGE</a>
     </div>
 </div>
 
@@ -194,8 +193,17 @@
 </div>
 
 <!-- Employee Section -->
-<div class="w3-container w3-white w3-padding-64 w3-xxlarge" id="cookPage">
+<div class="w3-container w3-grey w3-padding-64 w3-xxlarge w3-grayscale" id="employLogin">
     <div class="w3-content">
+        <a href="{% url 'restaurant:login' %}">
+            <p>
+                <button class="w3-button w3-light-grey w3-block"
+                        type="submit"
+                        style="width: 60%; margin: auto;">
+                    EMPLOYEE LOGIN
+                </button>
+            </p>
+        </a>
     </div>
 </div>
 
