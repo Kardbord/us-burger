@@ -16,35 +16,22 @@
 		<main>
 			<menu>
                 <form>
+					{% for ingredient in ingredient_list %}
 						<menuitem>
 							<div>
 								<div>
-									<h4>Example: Tomatoes</h4>
+									<h4>{{ ingredient }}</h4>
 								</div>
 								<div>
 									<input type="number" 
 										name="{{ item.id }}qty" 
-										value="0" 
+										value="{{ ingredient.quantity }}" 
 										min="0"
 										id="numberInput">
 								</div>
 							</div>
 						</menuitem>
-						
-						<menuitem>	
-							<div>
-								<div>
-									<h4>Example: Beef Patties</h4>
-								</div>
-								<div>
-									<input type="number" 
-										name="{{ item.id }}qty" 
-										value="0" 
-										min="0"
-										id="numberInput">
-								</div>
-							</div>
-						</menuitem>
+					{% endfor %}
 				</form>
 			</menu>
 		</main>
