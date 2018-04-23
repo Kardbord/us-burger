@@ -31,7 +31,6 @@ menu > div {
 	align-self: right;
 }
 
-
 menuitem {
 	display: flex;
 	flex-direction: column;
@@ -45,6 +44,12 @@ menuitem > div {
 	flex-direction:	row;
 	align-items: center;
 }
+
+/* menuitem > div > div {
+	display: flex;
+	flex-direction: column;
+	align-self: right;
+} */
 
 menuitem > div > div:nth-child(1) {
 	#padding: 10px 10px;
