@@ -1,9 +1,6 @@
 # Compiled Python Files
 *.pyc
 
-# Migrations
-**/migrations/
-
 # C extensions
 *.so
 
