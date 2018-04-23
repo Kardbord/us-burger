@@ -1,1 +1,1 @@
-web: gunicorn us_burger.wsgi
+web: gunicorn us_burger.wsgi --log-file -
