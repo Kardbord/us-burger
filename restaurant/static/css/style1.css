@@ -26,14 +26,20 @@ button {
 	justify-content: center;
 }
 
+.tableA {
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+}
+
 table, th, td {
 	font-family: "Comic Sans MS", cursive, sans-serif;
-	font-size: 40px;
+	font-size: 25px;
 }
 
 td {
 	border-top: 4px solid white;
-	padding: .25in;
+	padding: .10in;
 	align: center;
 }
 
@@ -44,4 +50,20 @@ th {
 
 table {
 	border: 3px solid white;
+}
+
+.tableButtonT {
+	background-color: blue;
+	color: white;
+	font-size: 20px;
+	cursor: pointer;
+	border: none;
+}
+
+.tableButtonF {
+	background-color: red;
+	color: white;
+	font-size: 20px;
+	cursor: pointer;
+	border: none;
 }

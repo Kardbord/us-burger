@@ -76,9 +76,6 @@
             {% if latest_menu %}
                 <form name="customerForm" action="{% url 'restaurant:newOrder' %}"
                       onsubmit="return validateForm({{ emails }})" method="post">
-                    {% comment %}
-                    TODO: display a message if an order item is not available/out of stock due to race condition
-                    {% endcomment %}
                     {% csrf_token %}
                     {% for item in latest_menu %}
                         {{ item.check_availability|default_if_none:"" }}
@@ -104,15 +101,15 @@
                         {% endif %}
                     {% endfor %}
 
-                    <p><input class="w3-input w3-padding-16 w3-border valid"
+                    <p><input class="w3-input w3-padding-16 w3-border valid w3-center"
                               type="email"
-                              placeholder="Us.Burgers@usu.edu"
+                              placeholder="Email"
                               name="email"
                               style="width: 40%; margin: auto;">
                     </p>
-                    <p><input class="w3-input w3-padding-16 w3-border valid"
+                    <p><input class="w3-input w3-padding-16 w3-border valid w3-center"
                               type="text"
-                              placeholder="Our Favs"
+                              placeholder="Order Name"
                               name="orderName"
                               style="width: 40%; margin: auto;">
                     </p>
@@ -131,25 +128,25 @@
 </div>
 
 <!-- Edit Order -->
-<div class="w3-container w3-padding-64 w3-blue-grey w3-grayscale-min w3-xlarge" id="editOrder">
+<div class="w3-container w3-padding-64 w3-blue-grey w3-grayscale-min w3-xxlarge" id="editOrder">
     <div class="w3-content">
         <h1 class="w3-center w3-jumbo" style="margin-bottom:36px">View/Edit Order</h1>
-        <form action="{% url 'restaurant:verify' %}" method="post" class="w3-center w3-container">
-            {% csrf_token %}
+        <form action="{% url 'restaurant:verify' %}" method="post">
+            <p class="w3-center"> {% csrf_token %} </p>
             <p><input class="w3-input w3-padding-16 w3-border w3-center"
                       type="email"
                       placeholder="Email"
                       name="orderEmail"
-                      style="width: 30%; margin: auto;"></p>
+                      style="width: 40%; margin: auto;"></p>
             <p><input class="w3-input w3-padding-16 w3-border w3-center"
                       type="text"
                       placeholder="Order Name"
                       name="orderName"
-                      style="width: 30%; margin: auto;"></p>
+                      style="width: 40%; margin: auto;"></p>
             <p>
                 <button class="w3-button w3-light-grey w3-block"
                         type="submit"
-                        style="width: 50%; margin: auto;">
+                        style="width: 60%; margin: auto;">
                     EDIT
                 </button>
             </p>

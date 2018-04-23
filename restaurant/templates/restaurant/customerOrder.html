@@ -18,9 +18,6 @@
 			{% else %}
                 <h3>Wait time unavailable</h3>
             {% endif %}
-            {% comment %}
-            TODO: dynamically generate and display appropriate customer PIN
-            {% endcomment %}
 			<h3>Order Name: {{ order.name }}</h3>
 		</header>
 		
@@ -50,7 +47,9 @@
 						<h5>Enter Server PIN to confirm order:
 							<form action="{% url 'restaurant:confirm' order.id %}" method="post">
 							{% csrf_token %}
-                                <input type="password" name="serverPin" value="">
+								<label>Table:</label><input type="text" name="tableNumber" value="">
+								<br>
+                                <label>Pin:</label><input type="password" name="serverPin" value="">
 								<input type="submit" value="Submit">
                                 <h5>Comments or Requests:</h5>
                                 <textarea maxlength="500" name="orderComments" style="height: 15em; width: 30em; resize: none;"></textarea>

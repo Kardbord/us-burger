@@ -175,6 +175,19 @@ class MenuItem(models.Model):
         self.save()
 
 
+	
+class Table(models.Model):
+	"""
+	"""
+	
+	number = models.IntegerField(default=0)
+	available = models.BooleanField(default=True)
+	
+	def __str__(self):
+		return "Table: " + str(self.number)
+	
+
+	
 class Order(models.Model):
     """
     Order class/model:
@@ -193,6 +206,7 @@ class Order(models.Model):
     email = models.EmailField(max_length=254, default="customer@www.com")
     name = models.CharField(max_length=254, default="Customer Smith")
     order_items_are_available = models.BooleanField(default=False)
+    table = models.ForeignKey(Table, on_delete=models.PROTECT, blank=True, null=True)
 
     confirmed = models.BooleanField(default=False)
     cooking = models.BooleanField(default=False)
@@ -262,6 +276,7 @@ class Order(models.Model):
         for order_item in self.orderitem_set.all():
             total += float(order_item.get_price() * order_item.quantity)
         return total
+
 
 
 class OrderItem(models.Model):
@@ -337,6 +352,6 @@ class Host(models.Model):
     def __str__(self):
         return self.name
 
-    # TODO: Figure out why this gives the same PIN to the 4 Hosts created in populate()
     # pin = models.CharField(max_length=50)
     pin = models.CharField(max_length=5, default=create_random_string)
+
