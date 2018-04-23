@@ -1,0 +1,116 @@
+
+header, footer{
+	text-align: center;
+	font-family: "Comic Sans MS", cursive, sans-serif;
+}
+
+ul {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: space-evenly;
+	list-style: none;
+}
+
+ul > li {
+	margin: 10px 10px;
+}
+
+menu {
+	display: flex;
+	flex-direction: column;
+	align-items: left;
+	border: 5px solid white;
+	padding: 10px 10px;
+	align-items: stretch;
+}
+
+menu > div {
+	display: flex;
+	flex-direction: row;
+	align-self: right;
+}
+
+menuitem {
+	display: flex;
+	flex-direction: column;
+	margin: 10px 10px;
+	border: 1px dashed white;
+	padding: 10px 10px;
+}
+
+menuitem > div {
+	display: flex;
+	flex-direction:	row;
+	align-items: center;
+}
+
+/* menuitem > div > div {
+	display: flex;
+	flex-direction: column;
+	align-self: right;
+} */
+
+menuitem > div > div:nth-child(1) {
+	#padding: 10px 10px;
+	margin: 0px 30px;
+	flex: 20;
+}
+
+menuitem > div > div:nth-child(2) {
+    flex: 1;
+}
+
+menuitem > div > div:nth-child(3) {
+	flex: 1;
+}
+
+#numberInput {
+	width: 70px;
+	height: 50px;
+	font-size: 40px;
+}
+
+menu > button, h3, a{
+	align-self: right;
+	margin: 10px 10px;
+}
+
+body {
+	background-color: black;
+	color: white;
+	font-size: 40px;
+}
+
+button {
+	padding: 15px 32px;
+	border-radius: 5px;
+	font-size: 30px;
+}
+
+
+#formButton {
+	padding: 15px 32px;
+	border-radius: 5px;
+	font-size: 30px;
+}
+
+h2 {
+	text-decoration: underline;
+}
+
+
+div.tab {
+	color: white;
+}
+
+order > div {
+
+}
+
+order > button, h3, a{
+
+}
+
+
+
