@@ -44,66 +44,67 @@ def customerMenu(request):
         'emails': serialize_emails
     }
     return HttpResponse(template.render(context, request))
-	
-	
-def changeButton(order:int, button:str):
-	thisOrder = Order.objects.get(id=order)
 
-	if button == "1":
-		if thisOrder.cooking and not thisOrder.cooked:
-			thisOrder.cooking = False
-			thisOrder.save()
-			return False
-		else:
-			thisOrder.changeCooking()
-			thisOrder.save()
-			return True
-			
-			
-	elif button == "2":
-		if thisOrder.cooked and not thisOrder.delivered:
-			thisOrder.cooked = False
-			thisOrder.save()
-			return False
-		else:
-			thisOrder.changeCooked()
-			thisOrder.save()
-			return True
-	
-	elif button == "3":
-		if thisOrder.delivered:
-			thisOrder.delivered = False
-			thisOrder.save()
-			return False
-		else:
-			thisOrder.changeDelivered()
-			thisOrder.save()
-			return True
-	
-	elif button == "4":
-		ran = 4
-			#if thisTable.order.cooking:
-			#	thisTable.order.cooking = False
-			#else:
-			#	thisTable.order.cooking.changeCooking()
-	
-	elif button == "5":
-		ran = 5
-	
-	else:
-		ran = 3
-	
-	return button
-	
+
+def changeButton(order: int, button: str):
+    thisOrder = Order.objects.get(id=order)
+
+    if button == "1":
+        if thisOrder.cooking and not thisOrder.cooked:
+            thisOrder.cooking = False
+            thisOrder.save()
+            return False
+        else:
+            thisOrder.changeCooking()
+            thisOrder.save()
+            return True
+
+
+    elif button == "2":
+        if thisOrder.cooked and not thisOrder.delivered:
+            thisOrder.cooked = False
+            thisOrder.save()
+            return False
+        else:
+            thisOrder.changeCooked()
+            thisOrder.save()
+            return True
+
+    elif button == "3":
+        if thisOrder.delivered:
+            thisOrder.delivered = False
+            thisOrder.save()
+            return False
+        else:
+            thisOrder.changeDelivered()
+            thisOrder.save()
+            return True
+
+    elif button == "4":
+        ran = 4
+    # if thisTable.order.cooking:
+    #	thisTable.order.cooking = False
+    # else:
+    #	thisTable.order.cooking.changeCooking()
+
+    elif button == "5":
+        ran = 5
+
+    else:
+        ran = 3
+
+    return button
+
+
 def button(request):
-	if 'button' in request.GET:
-		table = request.GET.get('order')
-		button = request.GET.get('button')
-		resp = { 'answer': changeButton(request.GET.get('order'), request.GET.get('button'))}
-	else:
-		rep = { 'ERROR': "use the HTTP request variable 'n' and 'button"}
-	
-	return HttpResponse(json.dumps(resp))
+    if 'button' in request.GET:
+        table = request.GET.get('order')
+        button = request.GET.get('button')
+        resp = {'answer': changeButton(request.GET.get('order'), request.GET.get('button'))}
+    else:
+        rep = {'ERROR': "use the HTTP request variable 'n' and 'button"}
+
+    return HttpResponse(json.dumps(resp))
 
 
 def newOrder(request):
@@ -118,10 +119,17 @@ def newOrder(request):
     except KeyError:
         return HttpResponse("Could not find email or name.")
 
-    # Then we need to create an OrderItem for each nonzero value in the request
-    for item in MenuItem.objects.all():
-        item.check_availability()
     menu_items = MenuItem.objects.all()
+    for item in menu_items:
+        item_key = str(item.pk) + 'qty'
+        try:
+            item_amt = int(request.POST[item_key])
+            if item_amt > 0:
+                item.check_availability(qty=item_amt)
+        except KeyError:
+            pass
+
+    # Then we need to create an OrderItem for each nonzero value in the request
     item_count = 0
     for item in menu_items:
         item_key = str(item.pk) + "qty"
@@ -151,6 +159,8 @@ def newOrder(request):
         item.prepare()
     # Finally, save the Order.
     new_order.save()
+    for item in MenuItem.objects.all():
+        item.check_availability()
     return HttpResponseRedirect(reverse('restaurant:customerOrder', kwargs={'order_pk': new_order.pk}))
 
 
@@ -186,32 +196,31 @@ def verify(request):
 
 
 def confirm(request, order_pk):
-	order = get_object_or_404(Order, pk=order_pk)
+    order = get_object_or_404(Order, pk=order_pk)
 
-	try:
-		table = Table.objects.get(number = request.POST.get('tableNumber'))
-		if table.available:
-			table.order_set.add(order)
-			table.available = False
-			table.save()
-			
-	except (KeyError, Table.DoesNotExist):
-		return HttpResponseRedirect(reverse('restaurant:customerOrder', args=(order.pk,)))
-		
-		
-	pin = request.POST.get('serverPin')
-	comments = request.POST.get('orderComments', '')
-    
-	order.comment = comments
+    try:
+        table = Table.objects.get(number=request.POST.get('tableNumber'))
+        if table.available:
+            table.order_set.add(order)
+            table.available = False
+            table.save()
 
-	all_Hosts = Host.objects.all()
+    except (KeyError, Table.DoesNotExist):
+        return HttpResponseRedirect(reverse('restaurant:customerOrder', args=(order.pk,)))
 
-	for n in all_Hosts:
-		if pin == n.pin:	
-			order.changeConfirmed()
-			order.save()
-	
-	return HttpResponseRedirect(reverse('restaurant:customerOrder', args=(order.pk,)))
+    pin = request.POST.get('serverPin')
+    comments = request.POST.get('orderComments', '')
+
+    order.comment = comments
+
+    all_Hosts = Host.objects.all()
+
+    for n in all_Hosts:
+        if pin == n.pin:
+            order.changeConfirmed()
+            order.save()
+
+    return HttpResponseRedirect(reverse('restaurant:customerOrder', args=(order.pk,)))
 
 
 def server(request):
@@ -282,6 +291,7 @@ def changeOrder(request, order_pk):
 def employeeLogin(request):
     return render(request, 'restaurant/login.html')
 
+
 def tryLogin(request):
     try:
         login_name = request.POST['name']
@@ -298,14 +308,14 @@ def tryLogin(request):
 def cookOrder(request):
     order_list = Order.objects.all()
     context = {
-	    'order_list' : order_list,
-	}
+        'order_list': order_list,
+    }
     return render(request, 'restaurant/cookOrder.html', context)
-	
+
+
 def ingredients(request):
     ingredient_list = SupplyItem.objects.all()
     context = {
         'ingredient_list': ingredient_list,
     }
     return render(request, 'restaurant/ingredients.html', context)
-
