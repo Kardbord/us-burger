@@ -32,13 +32,13 @@ urlpatterns = [
     # This url will take you to the login page for employees
     path('login', views.employeeLogin, name='login'),
     # This url will call the view that attempts to login using the provided credentials, redirecting as necessary.for
-    path('tryLogin', views.tryLogin, name='tryLogin')
+    path('tryLogin', views.tryLogin, name='tryLogin'),
     # URL for cooks to view current "cooking" orders
     path('cookOrder/', views.cookOrder, name='cookOrder'),
     # URL for cooks to view current ingredients
     path('ingredients/', views.ingredients, name='ingredients'),
     # URL for orders that are unable to be placed
     path('orderFailed/', views.order_failed, name='orderFailed'),
-  	# Button Changes the status of the order
-	  path('serverPage/button/', views.button, name='button')
-
+    # Button Changes the status of the order
+    path('serverPage/button/', views.button, name='button'),
+]
