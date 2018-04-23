@@ -5,7 +5,7 @@ from django.template import loader
 from django.urls import reverse
 
 from populate_database import populate
-from .models import MenuItem, WaitTime, Order, OrderItem, Host
+from .models import MenuItem, WaitTime, Order, OrderItem, Host, SupplyItem
 
 
 def init(request):
@@ -198,4 +198,8 @@ def cookOrder(request):
     return render(request, 'restaurant/cookOrder.html')
 	
 def ingredients(request):
-    return render(request, 'restaurant/ingredients.html')
+    ingredient_list = SupplyItem.objects.all()
+    context = {
+        'ingredient_list': ingredient_list,
+    }
+    return render(request, 'restaurant/ingredients.html', context)
