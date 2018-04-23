@@ -279,7 +279,11 @@ def changeOrder(request, order_pk):
 
 
 def cookOrder(request):
-    return render(request, 'restaurant/cookOrder.html')
+    orders = Order.objects.all()
+    context = {
+        'orderList': orders,
+    }
+    return render(request, 'restaurant/cookOrder.html', context)
 	
 def ingredients(request):
     return render(request, 'restaurant/ingredients.html')

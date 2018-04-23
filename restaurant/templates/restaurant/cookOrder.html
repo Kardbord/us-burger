@@ -16,19 +16,21 @@
 		<main>
 			<menu>
                 <h2>Orders to cook:</h2>
-                <form>
+					{% for order in orderList %}
 						<menuitem>
-							<h4>Order #1</h4>
-							<div>
+							<h4>{{ order.name }}</h4>
+							{% for item in order.orderItem_set.all %}
 								<div>
-									<h4>Example: 2 Burgers, 1 Grilled cheese</h4>
+									<div>
+										<h4>Example: 2 Burgers, 1 Grilled cheese</h4>
+									</div>
+									<div>
+										<button type="button">Order Cooked</button> 
+									</div>
 								</div>
-								<div>
-									 <button type="button">Order Cooked</button> 
-								</div>
-							</div>
+							{% endfor %}
 						</menuitem>
-						
+					
 						<menuitem>	
 							<h4>Order #2</h4>
 							<div>
@@ -36,11 +38,11 @@
 									<h4>Example: 3 Fries, 2 Tomato soups</h4>
 								</div>
 								<div>
-									 <button type="button">Order Cooked</button> 
+									<button type="button">Order Cooked</button> 
 								</div>
 							</div>
 						</menuitem>
-				</form>
+					{% endfor %}
 			</menu>
 		</main>
 		
