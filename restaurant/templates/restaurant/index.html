@@ -59,7 +59,8 @@
         </span>
     </div>
     <div class="w3-display-middle w3-center">
-        <h1>Us Burger</h1>
+        <span class="w3-text-white w3-hide-small" style="font-size:100px">us<br>BURGER</span>
+        <span class="w3-text-white w3-hide-large w3-hide-medium" style="font-size:60px"><b>us<br>BURGER</b></span>
         <p><a href="#menu" class="w3-button w3-xxlarge w3-black">Let me see the menu</a></p>
     </div>
 </header>
@@ -79,24 +80,24 @@
                     {% for item in latest_menu %}
                         {{ item.check_availability|default_if_none:"" }}
                         {% if item.available %}
-                        <h1>
-                            <b>{{ item }}</b>
-                            <span class="w3-right w3-tag w3-black w3-padding-0">
+                            <h1>
+                                <b>{{ item }}</b>
+                                <span class="w3-right w3-tag w3-black w3-padding-0">
                                 <img src="{% static 'images/' %}{{ item.name }}.jpg"
                                      width="200px" style="margin-right: 5px;"/>
                             </span>
-                        </h1>
-                        <p class="w3-text-grey">{{ item.description }}</p>
-                        <p><input class="w3-tag w3-padding-0 w3-right w3-white"
-                                  type="number"
-                                  name="{{ item.id }}qty"
-                                  placeholder="Buy"
-                                  value="0"
-                                  min="0"
-                                  id="numberInput"
-                                  style="width: 10%; margin-right: 15px;"></p>
-                        <br>
-                        <hr>
+                            </h1>
+                            <p class="w3-text-grey">{{ item.description }}</p>
+                            <p><input class="w3-tag w3-padding-0 w3-right w3-white"
+                                      type="number"
+                                      name="{{ item.id }}qty"
+                                      placeholder="Buy"
+                                      value="0"
+                                      min="0"
+                                      id="numberInput"
+                                      style="width: 10%; margin-right: 15px;"></p>
+                            <br>
+                            <hr>
                         {% endif %}
                     {% endfor %}
 
