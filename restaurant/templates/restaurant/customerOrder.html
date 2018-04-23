@@ -1,103 +1,186 @@
 {% load static %}
-<html lang=en>
-	<head>
-		<title>Us-Burger Menu</title>
-		<link rel="stylesheet" type="text/css" href="{% static 'css/style0.css' %}"/>
-	</head>
-	
-	<body>
-	
-		<header>
-            <a href="/">
-                <img src="{% static 'images\us_burger.png' %}"
-                     height="150">
-            </a>
+<!DOCTYPE html>
+<html>
+<title>Us Burger Order</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="refresh" content="60">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Amatic+SC">
+<script type="text/javascript" src="{% static 'js/functions.js' %}"></script>
+<style>
+    body, html {
+        height: 100%
+    }
+
+    body, h1, h2, h3, h4, h5, h6 {
+        font-family: "Amatic SC", sans-serif
+    }
+
+    .bgimg {
+        background-size: cover;
+        background: url("https://images7.alphacoders.com/611/thumb-1920-611267.jpg") 50% 0 no-repeat fixed;
+        min-height: 90%;
+    }
+
+    input.invalid {
+        border: 2px dashed red;
+    }
+
+    input.valid {
+        border: none;
+    }
+
+
+</style>
+<body>
+
+<!-- Navbar (sits on top) -->
+<div class="w3-top w3-hide-small">
+    <div class="w3-bar w3-xlarge w3-black w3-opacity w3-hover-opacity-off" id="myNavbar">
+        <a href="#" class="w3-bar-item w3-button">HOME</a>
+        <a href="#order" class="w3-bar-item w3-button">YOUR ORDER</a>
+        <a href="#serverConfirm" class="w3-bar-item w3-button">SERVER CONFIRMATION</a>
+    </div>
+</div>
+
+<!-- Header with image -->
+<header class="bgimg w3-display-container w3-grayscale-min" id="home">
+    <div class="w3-display-bottomleft w3-padding">
+        <span class="w3-tag w3-xlarge">
+			{% if order %}
+				Order Status:
+				{% if order.dilivered%} Delivered
+				{% elif order.cooked %} Cooked
+				{% elif order.cooking %} Cooking
+				{% elif order.confirmed %} Confirmed
+				{% else %} Needs Confirmation
+				{% endif %}
 			<br>
+				Comments or Requests:
+			<br>
+				{{ order.comment }}
+			{% endif %}
+            <br>
             {% if wait_time %}
-                <h3>Wait time to be seated: {{ wait_time.get_wait_time }}</h3>
-			{% else %}
-                <h3>Wait time unavailable</h3>
+                Wait time to be seated: {{ wait_time.get_wait_time }} minutes
+            {% else %}
+                Wait time unavailable
             {% endif %}
-			<h3>Order Name: {{ order.name }}</h3>
-		</header>
-		
-		
-		<main>
-			<menu>
-				<h2>Your Order:</h2>
-				{% if order %}
-					{% if order.delivered %}
-						<h3>Status: Delivered</h3>
-                        <h5>Comments or Requests:</h5>
-                        <h6>{{ order.comment }}</h6>
-					{% elif order.cooked %}
-						<h3>Status: Cooked</h3>
-                        <h5>Comments or Requests:</h5>
-                        <h6>{{ order.comment }}</h6>
-					{% elif order.cooking %}
-						<h3>Status: Cooking</h3>
-                        <h5>Comments or Requests:</h5>
-                        <h6>{{ order.comment }}</h6>
-					{% elif order.confirmed %}
-						<h3>Status: Confirmed</h3>
-                        <h5>Comments or Requests:</h5>
-                        <h6>{{ order.comment }}</h6>
-					{% else %}
-						<h3>Status: Needs Confirmation</h3>
-						<h5>Enter Server PIN to confirm order:
-							<form action="{% url 'restaurant:confirm' order.id %}" method="post">
-							{% csrf_token %}
-								<label>Table:</label><input type="text" name="tableNumber" value="">
-								<br>
-                                <label>Pin:</label><input type="password" name="serverPin" value="">
-								<input type="submit" value="Submit">
-                                <h5>Comments or Requests:</h5>
-                                <textarea maxlength="500" name="orderComments" style="height: 15em; width: 30em; resize: none;"></textarea>
-							</form>
-						</h5>
-					{% endif %}
-				
-                    {% for order_item in order.orderitem_set.all %}
-                        <menuitem>
-                            <h4>{{ order_item.menu_item.name }}</h4>
-                            <p>Quantity: {{ order_item.quantity }}</p>
-                        </menuitem>
-                    {% endfor %}
-                    <h3>${{ order.get_total_price }}</h3>
-                {% else %}
-                    <p>An error occurred and no order was sent.</p>
-                {% endif %}
+        </span>
+    </div>
+    <div class="w3-display-middle w3-center">
+        <a href="/"><img src="{% static 'images\us_burger.png' %}" height="150"></a>
+        <p><a href="#order" class="w3-button w3-xxlarge w3-black">Let me see my order</a></p>
+    </div>
+</header>
 
-				{% if order.confirmed %}
-					<a>
-						<button type="button" disabled>
-							<p>Change Order</p>
-						</button>
-					</a>
-				{% else %}
-					<a href="{% url 'restaurant:editOrder' order %}">
-						<button type="button">
-							<p>Change Order</p>
-						</button>
-					</a>
+<!-- Order Container -->
+<div class="w3-container w3-black w3-padding-64 w3-xxlarge" id="order">
+    <div class="w3-content">
+
+        <h1 class="w3-center w3-jumbo" style="margin-bottom:64px">YOUR ORDER</h1>
+
+        <div class="w3-row w3-center w3-border w3-border-dark-grey">
+            <hr>
+            {% if order %}
+            {% for order_item in order.orderitem_set.all %}
+            <h1>
+                <b>{{ order_item.menu_item.name }}</b>
+                <span class="w3-right w3-tag w3-black w3-padding-0">
+									<img src="{% static 'images/' %}{{ order_item.menu_item.name }}.jpg"
+                                         width="200px" style="margin-right: 5px;"/>
+								</span>
+            </h1>
+            <p class="w3-text-grey">{{ order_item.menu_item.description }}</p>
+            <p><input class="w3-tag w3-padding-0 w3-right w3-white" disabled
+                      type="number"
+                      name="{{ order_item.id }}qty"
+                      placeholder="Buy"
+                      value="{{ order_item.quantity }}"
+                      min="0"
+                      id="numberInput"
+                      style="width: 10%; margin-right: 15px;"></p>
+            <br>
+            <hr>
+            {% endfor %}
+            <p>Total: ${{ order.get_total_price|floatformat:2 }}</p>
+            {% else %}
+            <p>An error occurred and no order was sent.</p>
+            {% endif %}
+            {% if order.confirmed %}
+            <p>
+                <button class="w3-button w3-light-grey w3-block" disabled
+                        type="submit"
+                        style="width: 60%; margin: auto;">
+                    EDIT ORDER
+                </button>
+            </p>
+
+            {% else %}
+            <a href="{% url 'restaurant:editOrder' order %}">
+                <p>
+                    <button class="w3-button w3-light-grey w3-block"
+                            type="submit"
+                            style="width: 60%; margin: auto;">
+                        EDIT ORDER
+                    </button>
+                </p>
+            </a>
 				{% endif %}
-					
-				{% if order.confirmed %}
-
-				{% else %}
 					<a href="{% url 'restaurant:delete' order.id %}">
-						<button type="button">
-							<p>Cancel Order</p>
-						</button>
+                        <p>
+                            <button class="w3-button w3-light-grey w3-block"
+                                    type="submit"
+                                    style="width: 60%; margin: auto;">
+                                CANCEL ORDER
+                            </button>
+                        </p>
 					</a>
-				{% endif %}
+        </div>
+        <br>
+    </div>
+</div>
 
-			</menu>
-		</main>
-		
-		<footer>
-			<p>Restaurant Address or other info goes here.</p>
-		</footer>
-		
-	</body>
+<!-- Server Confirmation -->
+<div class="w3-container w3-padding-64 w3-blue-grey w3-grayscale-min w3-xxlarge" id="serverConfirm">
+    <div class="w3-content">
+        <h1 class="w3-center w3-jumbo" style="margin-bottom:36px">SERVER CONFIRMATION</h1>
+        <form action="{% url 'restaurant:confirm' order.id%}" method="post">
+            <p class="w3-center"> {% csrf_token %} </p>
+            <p><input class="w3-input w3-padding-16 w3-border w3-center"
+                      type="text"
+                      placeholder="Table #"
+                      name="tableNumber"
+                      style="width: 40%; margin: auto;"></p>
+            <p><input class="w3-input w3-padding-16 w3-border w3-center"
+                      type="password"
+                      placeholder="Server PIN"
+                      name="serverPin"
+                      style="width: 40%; margin: auto;"></p>
+            <p>
+            <p><input class="w3-input w3-padding-16 w3-border w3-center"
+                      type="text"
+                      placeholder="Comments/Requests"
+                      name="orderComments"
+                      style="width: 40%; margin: auto;"></p>
+            <p>
+                <button class="w3-button w3-light-grey w3-block"
+                        type="submit"
+                        style="width: 60%; margin: auto;">
+                    SUBMIT
+                </button>
+            </p>
+        </form>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="w3-center w3-black w3-padding-48 w3-xxlarge">
+    <p>© 2018 Us Burger, Inc.</p>
+    <p>us.burger@usu.edu</p>
+    <p><a href="https://github.com/jfairbourn96/team_us_3450">Us GitBurger</a></p>
+</footer>
+
+</body>
 </html>

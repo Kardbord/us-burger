@@ -6,7 +6,8 @@ from django.urls import reverse
 import json
 
 from populate_database import populate
-from .models import MenuItem, WaitTime, Order, OrderItem, Host, Table
+
+from .models import MenuItem, WaitTime, Order, OrderItem, Host, Table, SupplyItem
 
 
 def init(request):
@@ -279,11 +280,15 @@ def changeOrder(request, order_pk):
 
 
 def cookOrder(request):
-    orders = Order.objects.all()
+    order_list = Order.objects.all()
     context = {
-        'orderList': orders,
-    }
+	    'order_list' : order_list,
+	}
     return render(request, 'restaurant/cookOrder.html', context)
 	
 def ingredients(request):
-    return render(request, 'restaurant/ingredients.html')
+    ingredient_list = SupplyItem.objects.all()
+    context = {
+        'ingredient_list': ingredient_list,
+    }
+    return render(request, 'restaurant/ingredients.html', context)
