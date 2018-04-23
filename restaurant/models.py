@@ -355,3 +355,6 @@ class Host(models.Model):
     # pin = models.CharField(max_length=50)
     pin = models.CharField(max_length=5, default=create_random_string)
 
+
+    def checkPin(self, test_pin):
+        return test_pin == pin

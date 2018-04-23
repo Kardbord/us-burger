@@ -279,6 +279,22 @@ def changeOrder(request, order_pk):
     return HttpResponseRedirect(reverse('restaurant:customerOrder', kwargs={'order_pk': this_order.pk}))
 
 
+def employeeLogin(request):
+    return render(request, 'restaurant/login.html')
+
+def tryLogin(request):
+    try:
+        login_name = request.POST['name']
+        login_PIN = request.POST['PIN']
+        employee = Host.objects.get(name=login_name)
+        if employee.checkPin(login_PIN):
+            return HttpResponse("You did it!")
+        else:
+            raise KeyError
+    except (KeyError, Host.DoesNotExist):
+        return HttpResponse("Invalid Login Credentials")
+
+
 def cookOrder(request):
     order_list = Order.objects.all()
     context = {
@@ -292,3 +308,4 @@ def ingredients(request):
         'ingredient_list': ingredient_list,
     }
     return render(request, 'restaurant/ingredients.html', context)
+

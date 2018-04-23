@@ -22,6 +22,7 @@ def populate():
     Removes all entries in the database, then repopulates the SupplyAmts, SupplyItems, MenuItems, Menus, and WaitTime
     """
 
+    Table.objects.all().delete()
     OrderItem.objects.all().delete()
     Order.objects.all().delete()
     SupplyAmt.objects.all().delete()
@@ -164,6 +165,10 @@ def populate():
     host2.save()
     host3.save()
     host4.save()
+
+    for i in range(20):
+        table = Table(number=i+1, available=True)
+        table.save()
 
 
 if __name__ == '__main__':
