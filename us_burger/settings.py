@@ -15,6 +15,8 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import django_heroku
 
+COMPRESS_ENABLED = True
+COMPRESS_OFFLINE = True
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
@@ -133,6 +135,7 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
 
 # Heroku
 import dj_database_url
