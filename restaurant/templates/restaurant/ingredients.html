@@ -1,0 +1,44 @@
+{% load static %}
+<html lang=en>
+	<head>
+		<title>Orders to cook</title>
+		<link rel="stylesheet" type="text/css" href="{% static 'css/style0.css' %}"/>
+        <script type="text/javascript" src="{% static 'js/functions.js' %}"></script>
+	</head>
+	
+	<body>
+	
+		<header>
+            <h3>Current Ingredients:</h3>
+			<br>
+		</header>
+
+		<main>
+			<menu>
+                <form>
+					{% for ingredient in ingredient_list %}
+						<menuitem>
+							<div>
+								<div>
+									<h4>{{ ingredient }}</h4>
+								</div>
+								<div>
+									<input type="number" 
+										name="{{ item.id }}qty" 
+										value="{{ ingredient.quantity }}" 
+										min="0"
+										id="numberInput">
+								</div>
+							</div>
+						</menuitem>
+					{% endfor %}
+				</form>
+			</menu>
+		</main>
+		
+		<footer>
+			
+		</footer>
+		
+	</body>
+</html>

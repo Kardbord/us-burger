@@ -32,32 +32,32 @@ def populate():
     WaitTime.objects.all().delete()
 
     # Create WaitTime
-    wait = WaitTime(wait_time=0)
+    wait = WaitTime(wait_time=10)
     wait.save()
 
     # Create SupplyItems
-    tomato_soup = SupplyItem(name='Tomato Soup', units='oz', quantity=10)
+    tomato_soup = SupplyItem(name='Tomato Soup', units='oz', quantity=50)
     tomato_soup.save()
 
-    sliced_potato = SupplyItem(name='Sliced Potato', units='oz', quantity=10)
+    sliced_potato = SupplyItem(name='Sliced Potato', units='oz', quantity=50)
     sliced_potato.save()
 
-    sliced_chicken = SupplyItem(name='Sliced Chicken', units='oz', quantity=10)
+    sliced_chicken = SupplyItem(name='Sliced Chicken', units='oz', quantity=50)
     sliced_chicken.save()
 
-    cheese = SupplyItem(name='Cheese', units='oz', quantity=10)
+    cheese = SupplyItem(name='Cheese', units='oz', quantity=50)
     cheese.save()
 
-    bread = SupplyItem(name='bread', units='oz', quantity=10)
+    bread = SupplyItem(name='Bread', units='oz', quantity=50)
     bread.save()
 
-    lettuce = SupplyItem(name='Lettuce', units='oz', quantity=10)
+    lettuce = SupplyItem(name='Lettuce', units='oz', quantity=50)
     lettuce.save()
 
-    burger_patty = SupplyItem(name='Burger Patty', units='oz', quantity=10)
+    burger_patty = SupplyItem(name='Burger Patty', units='oz', quantity=50)
     burger_patty.save()
 
-    burger_bun = SupplyItem(name='Burger Bun', units='oz', quantity=10)
+    burger_bun = SupplyItem(name='Burger Bun', units='oz', quantity=50)
     burger_bun.save()
 
     # Create MenuItems
@@ -102,9 +102,11 @@ def populate():
     burger.save()
     supply_amt1 = SupplyAmt(item=burger, supply=burger_patty, amt=1)
     supply_amt2 = SupplyAmt(item=burger, supply=burger_bun, amt=1)
+    supply_amt3 = SupplyAmt(item=burger, supply=cheese, amt=1)
     supply_amt1.save()
     supply_amt2.save()
-    burger.supplyamt_set.add(supply_amt1, supply_amt2)
+    supply_amt3.save()
+    burger.supplyamt_set.add(supply_amt1, supply_amt2, supply_amt3)
     burger.check_availability()
     burger.save()
 
@@ -146,8 +148,14 @@ def populate():
     order3.check_availability()
     order3.save()
 
+    for item in order.orderitem_set.all():
+        item.prepare()
+    for item in order2.orderitem_set.all():
+        item.prepare()
+    for item in order3.orderitem_set.all():
+        item.prepare()
+
     # Create some Hosts
-    # TODO: Figure out why this gives the same PIN to the 4 Hosts created in populate()
     host1 = Host(name='Samantha')
     host2 = Host(name='Jonathan')
     host3 = Host(name='Eliza')

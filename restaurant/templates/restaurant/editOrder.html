@@ -1,72 +1,156 @@
 {% load static %}
 {% load order_quantities %}
-<html lang=en>
-	<head>
-		<title>Us-Burger Edit Order</title>
-		<link rel="stylesheet" type="text/css" href="{% static 'css/style0.css' %}"/>
-	</head>
+<!DOCTYPE html>
+<html>
+<title>Us Burger Edit Order</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="refresh" content="60">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Amatic+SC">
+<script type="text/javascript" src="{% static 'js/functions.js' %}"></script>
+<style>
+    body, html {
+        height: 100%
+    }
 
-	<body>
+    body, h1, h2, h3, h4, h5, h6 {
+        font-family: "Amatic SC", sans-serif
+    }
 
-		<header>
-            <a href="/">
-                <img src="{% static 'images\us_burger.png' %}"
-                     height="150">
-            </a>
-			<br>
-		</header>
+    .bgimg {
+        background-size: cover;
+        background: url("https://images7.alphacoders.com/611/thumb-1920-611267.jpg") 50% 0 no-repeat fixed;
+        min-height: 90%;
+    }
 
-		<main>
+    input.invalid {
+        border: 2px dashed red;
+    }
+
+    input.valid {
+        border: none;
+    }
+
+
+
+</style>
+<body>
+
+<!-- Navbar (sits on top) -->
+<div class="w3-top w3-hide-small">
+    <div class="w3-bar w3-xlarge w3-black w3-opacity w3-hover-opacity-off" id="myNavbar">
+        <a href="#" class="w3-bar-item w3-button">HOME</a>
+        <a href="#order" class="w3-bar-item w3-button">YOUR ORDER</a>
+        <a href="#editOrder" class="w3-bar-item w3-button">EDIT ORDER</a>
+    </div>
+</div>
+
+<!-- Header with image -->
+<header class="bgimg w3-display-container w3-grayscale-min" id="home">
+    <div class="w3-display-bottomleft w3-padding">
+        <span class="w3-tag w3-xlarge">
+            Open from 10am to 8pm
+            <br>
+            {% if wait_time %}
+                Wait time to be seated: {{ wait_time.get_wait_time }} minutes
+            {% else %}
+                Wait time unavailable
+            {% endif %}
+        </span>
+    </div>
+    <div class="w3-display-middle w3-center">
+        <a href="/"><img src="{% static 'images\us_burger.png' %}" height="150"></a>
+        <p><a href="#editOrder" class="w3-button w3-xxlarge w3-black">Let me edit my order</a></p>
+    </div>
+</header>
+
+<!-- Order Container -->
+<div class="w3-container w3-black w3-padding-64 w3-xxlarge" id="order">
+    <div class="w3-content">
+
+        <h1 class="w3-center w3-jumbo" style="margin-bottom:64px">YOUR ORDER</h1>
+
+        <div class="w3-row w3-center w3-border w3-border-dark-grey">
+            <hr>
+            {% if order %}
             {% for order_item in order.orderitem_set.all %}
-                <menuitem>
-                    <h4>{{ order_item.menu_item.name }}</h4>
-                    <p>Quantity: {{ order_item.quantity }}</p>
-                </menuitem>
+            <h1>
+                <b>{{ order_item.menu_item.name }}</b>
+                <span class="w3-right w3-tag w3-black w3-padding-0">
+                    <img src="{% static 'images/' %}{{ order_item.menu_item.name }}.jpg"
+                         width="200px" style="margin-right: 5px;"/>
+                </span>
+            </h1>
+            <p class="w3-text-grey">{{ order_item.menu_item.description }}</p>
+            <p><input class="w3-tag w3-padding-0 w3-right w3-white" disabled
+                      type="number"
+                      name="{{ order_item.id }}qty"
+                      placeholder="Buy"
+                      value="{{ order_item.quantity }}"
+                      min="0"
+                      style="width: 10%; margin-right: 15px;"></p>
+            <br>
+            <hr>
             {% endfor %}
+            <p>Total: ${{ order.get_total_price|floatformat:2 }}</p>
+            {% else %}
+            <p>An error occurred and no order was sent.</p>
+            {% endif %}
 
-			<menu>
-                    <h2>Menu:</h2>
-                    {% if latest_menu %}
-                        <form action="{% url 'restaurant:changeOrder' order.id %}" method="post">
-                            {%  csrf_token %}
-                            {% for item in latest_menu %}
-                                <menuitem>
-                                    <h4>{{ item }}</h4>
-                                    <div>
-                                        <div>
-                                            <h4>{{ item.description }}</h4>
-                                        </div>
-                                        <!-- For images to show up make sure item.name in the database is the same as the picture file -->
-                                        <div>
-                                            <h5>
-                                                <img src="{% static 'images/' %}{{ item.name }}.jpg" width="500px"/>
-                                            </h5>
-                                        </div>
-                                        <div>
-                                            <h6>Quantity:</h6>
-                                        </div>
-                                        <div>
-                                            <input type="number"
-												name="{{ item.id }}qty"
-												value="{{ order_qtys|val:item.name }}"
-												min="0"
-												id="numberInput">
-                                        </div>
-                                    </div>
-                                </menuitem>
+        </div>
+        <br>
+    </div>
+</div>
 
-                            {% endfor %}
-                            <input type="submit" value="Save Changes" />
-                        </form>
-                    {% else %}
-                        <p>No menu items available</p>
-                    {% endif %}
-			</menu>
-		</main>
+<!-- Edit Order -->
+<div class="w3-container w3-black w3-padding-64 w3-xxlarge" id="editOrder">
+    <div class="w3-content">
 
-		<footer>
-			<p>Restaurant Address or other info goes here.</p>
-		</footer>
+        <h1 class="w3-center w3-jumbo" style="margin-bottom:64px">EDIT ORDER</h1>
 
-	</body>
+        <div class="w3-row w3-center w3-border w3-border-dark-grey">
+            <hr>
+            <form name="editForm" action="{% url 'restaurant:changeOrder' order.id %}" method="post">
+                {% csrf_token %}
+                {% for item in latest_menu %}
+                <h1>
+                    <b>{{ item }}</b>
+                    <span class="w3-right w3-tag w3-black w3-padding-0">
+                                <img src="{% static 'images/' %}{{ item.name }}.jpg"
+                                     width="200px" style="margin-right: 5px;"/>
+                            </span>
+                </h1>
+                <p class="w3-text-grey">{{ item.description }}</p>
+                <p><input class="w3-tag w3-padding-0 w3-right w3-white"
+                          type="number"
+                          name="{{ item.id }}qty"
+                          value="{{ order_qtys|val:item.name }}"
+                          min="0"
+                          id="numberInput"
+                          style="width: 10%; margin-right: 15px;"></p>
+                <br>
+                <hr>
+                {% endfor %}
+                <p>
+                    <button class="w3-button w3-light-grey w3-block"
+                            type="submit"
+                            style="width: 60%; margin: auto;">
+                        SAVE CHANGES
+                    </button>
+                </p>
+            </form>
+        </div>
+        <br>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="w3-center w3-black w3-padding-48 w3-xxlarge">
+    <p>© 2018 Us Burger, Inc.</p>
+    <p>us.burger@usu.edu</p>
+    <p><a href="https://github.com/jfairbourn96/team_us_3450">Us GitBurger</a></p>
+</footer>
+
+</body>
 </html>

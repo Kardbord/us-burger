@@ -51,9 +51,9 @@ class SupplyItem(models.Model):
             raise ValueError("Insufficient quantity of %s.\n\t Need: %s %s, Have: %s %s"
                              % (self.name, str(amt), self.units, str(self.quantity), self.units))
 
-    def check_availability(self, amt):
-        """Method that returns True or False depending on if the supply quantity is sufficient (>= amt)."""
-        return self.quantity > amt
+    def check_availability(self, amt, qty):
+        """Method that returns True or False depending on if the supply quantity is sufficient (>= amt * qty)."""
+        return self.quantity >= (amt * qty)
 
     def replenish(self, amt):
         """
@@ -93,13 +93,13 @@ class SupplyAmt(models.Model):
         """
         self.supply.decrement(self.amt)
 
-    def check_availability(self):
+    def check_availability(self, qty):
         """Method that returns the availability of the associated SupplyItem."""
-        return self.supply.check_availability(self.amt)
+        return self.supply.check_availability(self.amt, qty)
 
-    def replenish(self, amt):
+    def replenish(self):
         """Increments the associated SupplyItem's quantity by an amt passed to this by the associated MenuItem."""
-        self.supply.replenish(amt)
+        self.supply.replenish(self.amt)
 
 
 class MenuItem(models.Model):
@@ -126,10 +126,11 @@ class MenuItem(models.Model):
         self.check_availability()
         return "%s - $%s" % (self.name, str(self.price))
 
-    def replenish(self, amt):
-        """Method that increments each associated SupplyItem's quantity by amt, then updates availability."""
+    def replenish(self):
+        """Method that increments each associated SupplyItem's quantity by the required amt to make one item,
+         then updates availability."""
         for supply in self.supplyamt_set.all():
-            supply.replenish(amt)
+            supply.replenish()
         self.check_availability()
         self.save()
 
@@ -140,7 +141,6 @@ class MenuItem(models.Model):
         """
         self.check_availability()
         if self.available is True:
-            print("Available!")
             for supply in self.supplyamt_set.all():
                 try:
                     supply.decrement()
@@ -159,14 +159,14 @@ class MenuItem(models.Model):
         for supply in self.supplyamt_set.get_queryset():
             print(supply)
 
-    def check_availability(self):
+    def check_availability(self, qty=1):
         """
         This method will check all the SupplyItems and make sure that there is enough inventory
         to create at least one of these MenuItems. Later, we can also add time checking for lunch/
         breakfast etc...
         """
         for supply in self.supplyamt_set.all():
-            if not supply.check_availability():
+            if not supply.check_availability(qty):
                 self.available = False
                 self.save()
                 return
@@ -175,6 +175,19 @@ class MenuItem(models.Model):
         self.save()
 
 
+	
+class Table(models.Model):
+	"""
+	"""
+	
+	number = models.IntegerField(default=0)
+	available = models.BooleanField(default=True)
+	
+	def __str__(self):
+		return "Table: " + str(self.number)
+	
+
+	
 class Order(models.Model):
     """
     Order class/model:
@@ -193,11 +206,14 @@ class Order(models.Model):
     email = models.EmailField(max_length=254, default="customer@www.com")
     name = models.CharField(max_length=254, default="Customer Smith")
     order_items_are_available = models.BooleanField(default=False)
+    table = models.ForeignKey(Table, on_delete=models.PROTECT, blank=True, null=True)
 
     confirmed = models.BooleanField(default=False)
     cooking = models.BooleanField(default=False)
     cooked = models.BooleanField(default=False)
     delivered = models.BooleanField(default=False)
+
+    comment = models.TextField(max_length=500, default='')
 
     def getValueByName(self, itemName):
         """
@@ -262,6 +278,7 @@ class Order(models.Model):
         return total
 
 
+
 class OrderItem(models.Model):
     """
     OrderItem class/model:
@@ -280,12 +297,21 @@ class OrderItem(models.Model):
 
     quantity = models.PositiveSmallIntegerField()
 
+    def prepare(self):
+        if self.check_availability():
+            for _ in range(self.quantity):
+                self.menu_item.prepare_item()
+
+    def replenish(self):
+        for _ in range(self.quantity):
+            self.menu_item.replenish()
+
     def get_price(self):
         return self.menu_item.price
 
     def check_availability(self):
         """Returns true if all needed ingredients are present. Returns false otherwise."""
-        self.menu_item.check_availability()
+        self.menu_item.check_availability(self.quantity)
         return self.menu_item.available
 
     def __str__(self):
@@ -326,9 +352,9 @@ class Host(models.Model):
     def __str__(self):
         return self.name
 
-    # TODO: Figure out why this gives the same PIN to the 4 Hosts created in populate()
     # pin = models.CharField(max_length=50)
     pin = models.CharField(max_length=5, default=create_random_string)
+
 
     def checkPin(self, test_pin):
         return test_pin == pin

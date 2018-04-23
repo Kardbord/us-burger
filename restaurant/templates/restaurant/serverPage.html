@@ -1,8 +1,10 @@
+<!DOCTYPE html>
 {% load static %}
 <html lang=en>
 	<head>
 		<title>Us-Burger Menu</title>
-		<link rel="stylesheet" type="text/css" href="{% static 'css/style0.css' %}"/>
+		<link rel="stylesheet" type="text/css" href="{% static 'css/style1.css' %}"/>
+		
 	</head>
 	
 	<body>
@@ -14,41 +16,104 @@
             </a>
 			<br>
             {% if wait_time %}
-                <h3>Wait time to be seated: {{ wait_time.get_wait_time }}</h3>
+                <h3>Wait Time: {{ wait_time.get_wait_time }}</h3>
 			{% else %}
                 <h3>Wait time unavailable</h3>
             {% endif %}
 		</header>
 
 		<main>
-			<div class="tab">
-				Table
-				<!--<div>
-					Table
-				</div>
-				<div>
-					Email
-				</div>
-				<div>
-					F.R.
-				</div>
-				<div>
-					Del.
-				</div>
-				<div>
-					Paid
-				</div>
-				<div>
-					N.H.
-				</div>	-->			
-			</div>
+			<div>
+				<table class="table">	
+					<tr>
+						<th>Table</th>
+						<th>Name</th>
+						<th>Email</th>
+						<th>C</th>
+						<th>F.R.</th>
+						<th>Del.</th>
+						<th>Paid</th>
+						<th>N.H.</th>
+					</tr>
+					{% for table in tableList %}
+						{%if not table.available %}
+							{% for order in table.order_set.all %}
+								<tr>
+									<td>{{ table.number }}</td>
+									<td>{{ order.name|truncatechars:10 }}</td>
+									<td>{{ order.email|truncatechars:10 }}</td>
+									{%if order.cooking %}
+										<td><button id="b1_{{ order.id }}" class="tableButtonT" type="button" onclick="buttonChange({{ order.id }}, 1)">T</button></td>
+									{% else %}
+										<td><button id="b1_{{ order.id }}" class="tableButtonF" type="button" onclick="buttonChange({{ order.id }}, 1)">F</button></td>
+									{% endif %}
+									{%if order.cooked %}
+										<td><button id="b2_{{ order.id }}" class="tableButtonT" type="button" onclick="buttonChange({{ order.id }}, 2)">T</button></td>
+									{% else %}
+										<td><button id="b2_{{ order.id }}" class="tableButtonF" type="button" onclick="buttonChange({{ order.id }}, 2)">F</button></td>
+									{% endif %}
+									{%if order.delivered %}
+										<td><button id="b3_{{ order.id }}" class="tableButtonT" type="button" onclick="buttonChange({{ order.id }}, 3)">T</button></td>
+									{% else %}
+										<td><button id="b3_{{ order.id }}" class="tableButtonF" type="button" onclick="buttonChange({{ order.id }}, 3)">F</button></td>
+									{% endif %}
+									{%if order.paid %}
+										<td><button id="b4_{{ order.id }}" class="tableButtonT" type="button" onclick="buttonChange({{ order.id }}, 4)">T</button></td>
+									{% else %}
+										<td><button id="b4_{{ order.id }}" class="tableButtonF" type="button" onclick="buttonChange({{ order.id }}, 4)">F</button></td>
+									{% endif %}
+									
+									<td>:)</td>
+								{% endfor %}
+							</tr>
+						{% endif%}
+					{% endfor%}
+				</table>
+				
+				<script type="text/javascript">
+					function buttonChange(){
+						var url = 'http://localhost:8000/serverPage/button/?order=' + arguments[0] + '&button=' + arguments[1];
+						var changeRequest = new XMLHttpRequest();
+						var button = arguments[1];
+						var order = arguments[0];
+						console.log(url);
+						changeRequest.open('GET', url);
+						changeRequest.responseType = 'json';
+						changeRequest.send();
+				
+						changeRequest.onload = function() {
+							var answer = changeRequest.response;
+							console.log(changeRequest.response.answer);
+							var clickerid = 'b' + button + '_' + order;
+							console.log(clickerid);
+							var clicker = document.getElementById(clickerid);
+							if(answer.answer == false){
+								clicker.textContent = "F";
+								clicker.setAttribute('class', 'tableButtonF');
+							}
+							else if (answer.answer == true){
+								clicker.textContent = "T";
+								clicker.setAttribute('class', 'tableButtonT');
+							}
+						};
+					}
+				</script>
 		
-			
-	
+				<div class="tableA">
+					<p>Available Tables</p>
+					{% for table in tableList %}
+						{%if table.order_set.count == 0 %}
+							<div>
+								Table: {{ table.number }}
+							</div>
+						{% endif %}
+					{% endfor %}
+				</div>
+			</div>
 		</main>
 		
 		<footer>
-			<p>Restaurant Address or other info goes here.</p>
+			<p>C = Cooking  |  F.R. = Food is Ready  |  Del. = Delivered  |  Paid = Has paid for the food  |  N.H. = Table needs help</p>
 		</footer>
 		
 	</body>
