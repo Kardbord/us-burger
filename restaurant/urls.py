@@ -28,5 +28,9 @@ urlpatterns = [
     # This will delete the order specified.
     path('customerOrder/<int:order_pk>/delete/', views.delete, name='delete',),
     # This url will call the view that changes an existing order, and then send you to the Order page
-    path('changeOrder/<int:order_pk>', views.changeOrder, name='changeOrder')
+    path('changeOrder/<int:order_pk>', views.changeOrder, name='changeOrder'),
+    # This url will take you to the login page for employees
+    path('login', views.employeeLogin, name='login'),
+    # This url will call the view that attempts to login using the provided credentials, redirecting as necessary.for
+    path('tryLogin', views.tryLogin, name='tryLogin')
 ]

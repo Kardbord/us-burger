@@ -177,3 +177,20 @@ def changeOrder(request, order_pk):
     # Finally, save the Order.
     this_order.save()
     return HttpResponseRedirect(reverse('restaurant:customerOrder', kwargs={'order_pk': this_order.pk}))
+
+
+def employeeLogin(request):
+    return render(request, 'restaurant/login.html')
+
+def tryLogin(request):
+    try:
+        login_name = request.POST['name']
+        login_PIN = request.POST['PIN']
+        employee = Host.objects.get(name=login_name)
+        if employee.checkPin(login_PIN):
+
+        else:
+            raise KeyError
+    except (KeyError, Host.DoesNotExist):
+        return HttpResponse("Invalid Login Credentials")
+
