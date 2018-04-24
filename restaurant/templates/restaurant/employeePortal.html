@@ -1,7 +1,7 @@
 {% load static %}
 <html lang=en>
 	<head>
-		<title>Us-Burger Employee Login</title>
+		<title>Us-Burger Employee Portal</title>
 		<link rel="stylesheet" type="text/css" href="{% static 'css/style0.css' %}"/>
 	</head>
 
@@ -12,17 +12,17 @@
                 <img src="{% static 'images\us_burger.png' %}"
                      height="150">
             </a>
-			<br>
 		</header>
 
 		<main>
-	        <div class="login_info">
-                <form action="{% url 'restaurant:tryLogin' %}" method="post">
-                    {% csrf_token %}
-                    <div name="name"><input type="text" name="name"></div>
-                    <div name="pin"><input type="password" name="PIN"></div>
-                    <button type="submit" value="Login"/>
-                </form>
+            <div class="server">
+                <a href="{% url 'restaurant:server' %}">Server Page</a>
+            </div>
+            <div class="cook">
+                <a href="{% url 'restaurant:cookOrder' %}">Cook Page</a>
+            </div>
+            <div class="manager">
+                <a href="{% url 'restaurant:ingredients' %}">Inventory Page</a>
             </div>
 		</main>
 
