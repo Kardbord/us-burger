@@ -298,7 +298,8 @@ def tryLogin(request):
         login_PIN = request.POST['PIN']
         employee = Host.objects.get(name=login_name)
         if employee.checkPin(login_PIN):
-            return HttpResponse("You did it!")
+            template = loader.get_template('restaurant/editOrder.html')
+            return HttpResponse(template.render({}, request))
         else:
             raise KeyError
     except (KeyError, Host.DoesNotExist):
