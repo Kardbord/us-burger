@@ -5,6 +5,8 @@ from django.template import loader
 from django.urls import reverse
 import json
 
+from django.views.decorators.csrf import csrf_exempt
+
 from populate_database import populate
 
 from .models import MenuItem, WaitTime, Order, OrderItem, Host, Table, SupplyItem
@@ -107,6 +109,7 @@ def button(request):
     return HttpResponse(json.dumps(resp))
 
 
+@csrf_exempt
 def newOrder(request):
     # First we need to create a new Order
     # Try to get the Email and the Name from the request.
