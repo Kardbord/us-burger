@@ -37,7 +37,7 @@ SESSION_COOKIE_SECURE = False
 X_FRAME_OPTIONS = 'DENY'
 CSRF_COOKIE_SECURE = False
 
-ALLOWED_HOSTS = ['us-burger.herokuapp.com', '127.0.0.1']
+ALLOWED_HOSTS = ['*']
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'restaurant/static')
