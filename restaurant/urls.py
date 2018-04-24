@@ -41,4 +41,6 @@ urlpatterns = [
     path('orderFailed/', views.order_failed, name='orderFailed'),
     # Button Changes the status of the order
     path('serverPage/button/', views.button, name='button'),
+    # Path to the landing page when an employee logs in
+    path('employeePortal/', views.employeePortal, name='employeePortal')
 ]

@@ -298,13 +298,15 @@ def tryLogin(request):
         login_PIN = request.POST['PIN']
         employee = Host.objects.get(name=login_name)
         if employee.checkPin(login_PIN):
-            template = loader.get_template('restaurant/editOrder.html')
-            return HttpResponse(template.render({}, request))
+            return HttpResponseRedirect(reverse('restaurant:employeePortal'))
         else:
             raise KeyError
     except (KeyError, Host.DoesNotExist):
         return HttpResponse("Invalid Login Credentials")
 
+def employeePortal(request):
+    template = loader.get_template('restaurant/employeePortal.html')
+    return HttpResponse(template.render({}, request))
 
 def cookOrder(request):
     order_list = Order.objects.all()
