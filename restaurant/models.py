@@ -357,4 +357,4 @@ class Host(models.Model):
 
 
     def checkPin(self, test_pin):
-        return test_pin == pin
+        return test_pin == self.pin
