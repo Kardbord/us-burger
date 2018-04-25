@@ -326,7 +326,7 @@ def changeSupply(request):
 
 
 def ingredients(request):
-    ingredient_list = SupplyItem.objects.all()
+    ingredient_list = SupplyItem.objects.order_by('name')
     context = {
         'ingredient_list': ingredient_list,
     }
