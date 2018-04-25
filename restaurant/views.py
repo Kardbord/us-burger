@@ -232,7 +232,7 @@ def confirm(request, order_pk):
 
 
 def server(request):
-    if request.session['employee'] == 'true':
+    if request.session.get('employee', 'false') == 'true':
         wait_time = WaitTime.objects.last()
         tables = Table.objects.all()
         context = {
@@ -309,17 +309,18 @@ def tryLogin(request):
         if employee.checkPin(login_PIN):
             # Give the employee a fresh session.
             request.session.flush()
-            request.session['employee'] == 'true'
-            request.session.set_expiry(10)
+            request.session['employee'] = 'true'
+            request.session.set_expiry(300)
             return HttpResponseRedirect(reverse('restaurant:employeePortal'))
         else:
             raise KeyError
     except (KeyError, Host.DoesNotExist):
+        # TODO: Redirect with an error message.
         return HttpResponse("Invalid Login Credentials")
 
 
 def employeePortal(request):
-    if request.session['employee'] == 'true':
+    if request.session.get('employee', 'false') == 'true':
         template = loader.get_template('restaurant/employeePortal.html')
         return HttpResponse(template.render({}, request))
     else:
@@ -335,9 +336,21 @@ def cookOrder(request):
     else:
         return render(request, 'restaurant/login.html')
 
+def cookOrderDetail(request, order_pk):
+    if request.session.get('employee', 'false') == 'true':
+        order = get_object_or_404(Order, pk=order_pk)
+        template = loader.get_template('restaurant/cookOrderDetail.html')
+        context = {
+            'order': order,
+        }
+        return HttpResponse(template.render(context, request))
+    else:
+        return render(request, 'restaurant/login.html')
+
+
 
 def ingredients(request):
-    if request.session['employee'] == 'true':
+    if request.session.get('employee', 'false') == 'true':
         ingredient_list = SupplyItem.objects.all()
         context = {
             'ingredient_list': ingredient_list,

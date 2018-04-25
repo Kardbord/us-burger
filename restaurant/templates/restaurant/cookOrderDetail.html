@@ -6,40 +6,32 @@
 		<link rel="stylesheet" type="text/css" href="{% static 'css/style0.css' %}"/>
         <script type="text/javascript" src="{% static 'js/functions.js' %}"></script>
 	</head>
-	
+
 	<body>
-	
+
 		<header>
-            <h3>Current Ingredients:</h3>
+            <h3>Order {{ order.id }} </h3>
 			<br>
 		</header>
 
 		<main>
 			<menu>
+                {% for order_item in order.orderitem_set.all %}
+                    <menuitem>
+                        <h4>{{ order_item.menu_item.name }}</h4>
+                        <p>Quantity: {{ order_item.quantity }}</p>
+                    </menuitem>
+                {% endfor %}
                 <form>
-					{% for ingredient in ingredient_list %}
-						<menuitem>
-							<div>
-								<div>
-									<h4>{{ ingredient }}</h4>
-								</div>
-								<div>
-									<input type="number" 
-										name="{{ item.id }}qty" 
-										value="{{ ingredient.quantity }}" 
-										min="0"
-										id="numberInput">
-								</div>
-							</div>
-						</menuitem>
-					{% endfor %}
 				</form>
 			</menu>
 		</main>
-		
+
 		<footer>
-			
+
 		</footer>
-		
+
 	</body>
 </html>
+
+
