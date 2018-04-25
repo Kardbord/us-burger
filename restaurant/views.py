@@ -12,6 +12,7 @@ from populate_database import populate
 from .models import MenuItem, WaitTime, Order, OrderItem, Host, Table, SupplyItem
 
 
+@csrf_exempt
 def init(request):
     """
     This view serves as an easy method of repopulating the database.
@@ -21,6 +22,7 @@ def init(request):
     return HttpResponseRedirect(reverse('restaurant:index'))
 
 
+@csrf_exempt
 def index(request):
     serialize_emails = serializers.serialize("json", Order.objects.all(), indent=4)
 
@@ -34,6 +36,7 @@ def index(request):
     return render(request, 'restaurant/index.html', context)
 
 
+@csrf_exempt
 def customerMenu(request):
     serialize_emails = serializers.serialize("json", Order.objects.all(), indent=4)
 
@@ -48,6 +51,7 @@ def customerMenu(request):
     return HttpResponse(template.render(context, request))
 
 
+@csrf_exempt
 def changeButton(order: int, button: str):
     thisOrder = Order.objects.get(id=order)
 
@@ -98,6 +102,7 @@ def changeButton(order: int, button: str):
     return button
 
 
+@csrf_exempt
 def button(request):
     if 'button' in request.GET:
         table = request.GET.get('order')
@@ -167,6 +172,7 @@ def newOrder(request):
     return HttpResponseRedirect(reverse('restaurant:customerOrder', kwargs={'order_pk': new_order.pk}))
 
 
+@csrf_exempt
 def order_failed(request):
     wait_time = WaitTime.objects.last()
     context = {
@@ -186,6 +192,7 @@ def customerOrder(request, order_pk):
     return render(request, 'restaurant/customerOrder.html', context)
 
 
+@csrf_exempt
 def verify(request):
     # order = get_object_or_404(Order, email=request.POST['orderEmail'])
     try:
@@ -228,6 +235,7 @@ def confirm(request, order_pk):
     return HttpResponseRedirect(reverse('restaurant:customerOrder', args=(order.pk,)))
 
 
+@csrf_exempt
 def server(request):
     wait_time = WaitTime.objects.last()
     tables = Table.objects.all()
@@ -239,6 +247,7 @@ def server(request):
     return render(request, 'restaurant/serverPage.html', context)
 
 
+@csrf_exempt
 def delete(request, order_pk):
     order = get_object_or_404(Order, pk=order_pk)
 
@@ -328,6 +337,7 @@ def cookOrder(request):
     return render(request, 'restaurant/cookOrder.html', context)
 
 
+@csrf_exempt
 def ingredients(request):
     ingredient_list = SupplyItem.objects.all()
     context = {
