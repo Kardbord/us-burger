@@ -13,7 +13,7 @@
 	
 		<header>
             <a href="/">
-                <img src="{% static 'images\us_burger.png' %}"
+                <img src="{% static 'images/us_burger.png' %}"
                      height="150">
             </a>
 			<br>
@@ -89,11 +89,11 @@
 							var clickerid = 'b' + button + '_' + order;
 							console.log(clickerid);
 							var clicker = document.getElementById(clickerid);
-							if(answer.answer == false){
+							if(answer.answer === false){
 								clicker.textContent = "F";
 								clicker.setAttribute('class', 'tableButtonF');
 							}
-							else if (answer.answer == true){
+							else if (answer.answer === true){
 								clicker.textContent = "T";
 								clicker.setAttribute('class', 'tableButtonT');
 							}
