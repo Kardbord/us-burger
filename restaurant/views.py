@@ -3,6 +3,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.template import loader
 from django.urls import reverse
+from django.contrib.auth.models import User
+# import django.contrib.sessions
 import json
 
 from django.views.decorators.csrf import csrf_exempt
@@ -167,6 +169,7 @@ def newOrder(request):
         item.prepare()
     # Finally, save the Order.
     new_order.save()
+    request.session['order'] = str(new_order.id)
     for item in MenuItem.objects.all():
         item.check_availability()
     return HttpResponseRedirect(reverse('restaurant:customerOrder', kwargs={'order_pk': new_order.pk}))
@@ -183,14 +186,17 @@ def order_failed(request):
 
 @csrf_exempt
 def customerOrder(request, order_pk):
-    wait_time = WaitTime.objects.last()
-    order = get_object_or_404(Order, id=int(order_pk))
-    context = {
-        'order': order,
-        'wait_time': wait_time
-    }
-    return render(request, 'restaurant/customerOrder.html', context)
-
+    if request.session['order'] == str(order_pk):
+        wait_time = WaitTime.objects.last()
+        order = get_object_or_404(Order, id=int(order_pk))
+        context = {
+            'order': order,
+            'wait_time': wait_time
+        }
+        return render(request, 'restaurant/customerOrder.html', context)
+    else:
+        # TODO: Change this to be more descriptive and to the home page.
+        return HttpResponse("Please enter your Name and Email below to view your order.")
 
 @csrf_exempt
 def verify(request):
@@ -200,10 +206,12 @@ def verify(request):
     except (KeyError, Order.DoesNotExist):
         return HttpResponseRedirect(reverse('restaurant:index'), )
 
-    if order.name != request.POST['orderName']:
+    if order.name == request.POST['orderName']:
+        # Set the Session.order to be the order id associated with this order
+        request.session['order'] = str(order.id)
+        return HttpResponseRedirect(reverse('restaurant:customerOrder', args=(order.pk,)))
+    else:
         return HttpResponseRedirect(reverse('restaurant:index'), )
-    # return HttpResponse("This is a new page.")
-    return HttpResponseRedirect(reverse('restaurant:customerOrder', args=(order.pk,)))
 
 
 @csrf_exempt
@@ -237,15 +245,16 @@ def confirm(request, order_pk):
 
 @csrf_exempt
 def server(request):
-    wait_time = WaitTime.objects.last()
-    tables = Table.objects.all()
-    context = {
-        'wait_time': wait_time,
-        'tableList': tables
-    }
-
-    return render(request, 'restaurant/serverPage.html', context)
-
+    if request.session.get('employee', 'false') == 'true':
+        wait_time = WaitTime.objects.last()
+        tables = Table.objects.all()
+        context = {
+            'wait_time': wait_time,
+            'tableList': tables
+        }
+        return render(request, 'restaurant/serverPage.html', context)
+    else:
+        return render(request, 'restaurant/login.html')
 
 @csrf_exempt
 def delete(request, order_pk):
@@ -315,32 +324,67 @@ def tryLogin(request):
         login_PIN = request.POST['PIN']
         employee = Host.objects.get(name=login_name)
         if employee.checkPin(login_PIN):
+            # Give the employee a fresh session.
+            request.session.flush()
+            request.session['employee'] = 'true'
+            request.session.set_expiry(300)
             return HttpResponseRedirect(reverse('restaurant:employeePortal'))
         else:
             raise KeyError
     except (KeyError, Host.DoesNotExist):
+        # TODO: Redirect with an error message.
         return HttpResponse("Invalid Login Credentials")
 
 
 @csrf_exempt
 def employeePortal(request):
-    template = loader.get_template('restaurant/employeePortal.html')
-    return HttpResponse(template.render(request))
+    if request.session.get('employee', 'false') == 'true':
+        template = loader.get_template('restaurant/employeePortal.html')
+        return HttpResponse(template.render({}, request))
+    else:
+        return render(request, 'restaurant/login.html')
 
 
 @csrf_exempt
 def cookOrder(request):
-    order_list = Order.objects.all()
-    context = {
-        'order_list': order_list,
-    }
-    return render(request, 'restaurant/cookOrder.html', context)
+    if request.session.get('employee', 'false') == 'true':
+        order_list = Order.objects.all()
+        context = {
+            'order_list': order_list,
+        }
+        return render(request, 'restaurant/cookOrder.html', context)
+    else:
+        return render(request, 'restaurant/login.html')
+
+def cookOrderDetail(request, order_pk):
+    if request.session.get('employee', 'false') == 'true':
+        order = get_object_or_404(Order, pk=order_pk)
+        template = loader.get_template('restaurant/cookOrderDetail.html')
+        context = {
+            'order': order,
+        }
+        return HttpResponse(template.render(context, request))
+    else:
+        return render(request, 'restaurant/login.html')
+
+
+
+def changeSupply(request):
+    for ingredient in SupplyItem.objects.all():
+        ingredient_key = str(ingredient.id) + "qty"
+        ingredient.quantity = request.POST[ingredient_key]
+        ingredient.save()
+	
+    return HttpResponseRedirect(reverse('restaurant:ingredients'))
 
 
 @csrf_exempt
 def ingredients(request):
-    ingredient_list = SupplyItem.objects.all()
-    context = {
-        'ingredient_list': ingredient_list,
-    }
-    return render(request, 'restaurant/ingredients.html', context)
+    if request.session.get('employee', 'false') == 'true':
+        ingredient_list = SupplyItem.objects.order_by('name')
+        context = {
+            'ingredient_list': ingredient_list,
+        }
+        return render(request, 'restaurant/ingredients.html', context)
+    else:
+        return render(request, 'restaurant/login.html')

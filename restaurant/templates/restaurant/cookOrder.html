@@ -1,3 +1,4 @@
+<!-- TODO: Add a button that goes back to the employee portal. -->
 {% load static %}
 <html lang=en>
 	<head>
@@ -16,30 +17,30 @@
 		<main>
 			<menu>
                 <h2>Orders To Cook:</h2>
+                {% for order in order_list %}
+                    {% if order.confirmed and not order.cooking %}
+                        <menuitem>
+                            <h4>Order #{{ order }}</h4>
+                            <div>
+                                <div>
+                                    <form action="{% url 'restaurant:orderDetails' order.id %}" method="post">
+                                        {% csrf_token %}
+                                        <button type="submit">I'll Cook This</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </menuitem>
+                    {% endif %}
+                {% endfor %}
 
-                <form>
-					{% for order in order_list %}
-						{% if order.cooking and not order.cooked %}
-							<menuitem>
-								<h4>Order #{{ order }}</h4>
-								<div>
-									<div>
-                                        <button type="button">I'll Cook This</button>
-									</div>
-								</div>
-							</menuitem>
-						{% endif %}
-					{% endfor %}
-
-                    <h2>Orders Cooking:</h2>
-					{% for order in order_list %}
-						{% if order.cooked and not order.delivered %}
-							<menuitem>
-								<h4>Order #{{ order }}</h4>
-							</menuitem>
-						{% endif %}
-					{% endfor %}
-				</form>
+                <h2>Orders Cooking:</h2>
+                {% for order in order_list %}
+                    {% if order.cooking and not order.cooked %}
+                        <menuitem>
+                            <h4>Order #{{ order }}</h4>
+                        </menuitem>
+                    {% endif %}
+                {% endfor %}
 			</menu>
 		</main>
 		
