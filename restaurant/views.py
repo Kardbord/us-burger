@@ -249,7 +249,7 @@ def delete(request, order_pk):
 
     return HttpResponseRedirect(reverse('restaurant:index'), )
 
-
+@csrf_exempt
 def editOrder(request, order_pk):
     order = get_object_or_404(Order, pk=order_pk)
     latest_menu = MenuItem.objects.filter(available=True)
