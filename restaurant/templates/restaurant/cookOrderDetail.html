@@ -1,0 +1,37 @@
+<!-- TODO: Add a button that goes back to the employee portal. -->
+{% load static %}
+<html lang=en>
+	<head>
+		<title>Orders to cook</title>
+		<link rel="stylesheet" type="text/css" href="{% static 'css/style0.css' %}"/>
+        <script type="text/javascript" src="{% static 'js/functions.js' %}"></script>
+	</head>
+
+	<body>
+
+		<header>
+            <h3>Order {{ order.id }} </h3>
+			<br>
+		</header>
+
+		<main>
+			<menu>
+                {% for order_item in order.orderitem_set.all %}
+                    <menuitem>
+                        <h4>{{ order_item.menu_item.name }}</h4>
+                        <p>Quantity: {{ order_item.quantity }}</p>
+                    </menuitem>
+                {% endfor %}
+                <form>
+				</form>
+			</menu>
+		</main>
+
+		<footer>
+
+		</footer>
+
+	</body>
+</html>
+
+

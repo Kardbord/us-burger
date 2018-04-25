@@ -43,6 +43,8 @@ urlpatterns = [
     path('serverPage/button/', views.button, name='button'),
     # Path to the landing page when an employee logs in
     path('employeePortal/', views.employeePortal, name='employeePortal'),
+    # Path to Order details for cooks
+    path('cookOrder/<int:order_pk>', views.cookOrderDetail, name='orderDetails'),
 	# Path to change supply/ingredient amounts
 	path('changeSupply', views.changeSupply, name='changeSupply'),
 ]
