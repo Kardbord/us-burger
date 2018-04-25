@@ -349,9 +349,18 @@ def cookOrderDetail(request, order_pk):
 
 
 
+def changeSupply(request):
+    for ingredient in SupplyItem.objects.all():
+        ingredient_key = str(ingredient.id) + "qty"
+        ingredient.quantity = request.POST[ingredient_key]
+        ingredient.save()
+	
+    return HttpResponseRedirect(reverse('restaurant:ingredients'))
+
+
 def ingredients(request):
     if request.session.get('employee', 'false') == 'true':
-        ingredient_list = SupplyItem.objects.all()
+        ingredient_list = SupplyItem.objects.order_by('name')
         context = {
             'ingredient_list': ingredient_list,
         }

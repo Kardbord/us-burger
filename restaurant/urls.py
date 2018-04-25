@@ -45,4 +45,6 @@ urlpatterns = [
     path('employeePortal/', views.employeePortal, name='employeePortal'),
     # Path to Order details for cooks
     path('cookOrder/<int:order_pk>', views.cookOrderDetail, name='orderDetails'),
+	# Path to change supply/ingredient amounts
+	path('changeSupply', views.changeSupply, name='changeSupply'),
 ]
