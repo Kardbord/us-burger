@@ -3,6 +3,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.template import loader
 from django.urls import reverse
+from django.contrib.auth.models import User
+# import django.contrib.sessions
 import json
 
 from populate_database import populate
@@ -159,6 +161,7 @@ def newOrder(request):
         item.prepare()
     # Finally, save the Order.
     new_order.save()
+    request.session['order'] = str(new_order.id)
     for item in MenuItem.objects.all():
         item.check_availability()
     return HttpResponseRedirect(reverse('restaurant:customerOrder', kwargs={'order_pk': new_order.pk}))
@@ -173,14 +176,17 @@ def order_failed(request):
 
 
 def customerOrder(request, order_pk):
-    wait_time = WaitTime.objects.last()
-    order = get_object_or_404(Order, id=int(order_pk))
-    context = {
-        'order': order,
-        'wait_time': wait_time
-    }
-    return render(request, 'restaurant/customerOrder.html', context)
-
+    if request.session['order'] == str(order_pk):
+        wait_time = WaitTime.objects.last()
+        order = get_object_or_404(Order, id=int(order_pk))
+        context = {
+            'order': order,
+            'wait_time': wait_time
+        }
+        return render(request, 'restaurant/customerOrder.html', context)
+    else:
+        # TODO: Change this to be more descriptive and to the home page.
+        return HttpResponse("Please enter your Name and Email below to view your order.")
 
 def verify(request):
     # order = get_object_or_404(Order, email=request.POST['orderEmail'])
@@ -189,10 +195,12 @@ def verify(request):
     except (KeyError, Order.DoesNotExist):
         return HttpResponseRedirect(reverse('restaurant:index'), )
 
-    if order.name != request.POST['orderName']:
+    if order.name == request.POST['orderName']:
+        # Set the Session.order to be the order id associated with this order
+        request.session['order'] = str(order.id)
+        return HttpResponseRedirect(reverse('restaurant:customerOrder', args=(order.pk,)))
+    else:
         return HttpResponseRedirect(reverse('restaurant:index'), )
-    # return HttpResponse("This is a new page.")
-    return HttpResponseRedirect(reverse('restaurant:customerOrder', args=(order.pk,)))
 
 
 def confirm(request, order_pk):
@@ -224,15 +232,16 @@ def confirm(request, order_pk):
 
 
 def server(request):
-    wait_time = WaitTime.objects.last()
-    tables = Table.objects.all()
-    context = {
-        'wait_time': wait_time,
-        'tableList': tables
-    }
-
-    return render(request, 'restaurant/serverPage.html', context)
-
+    if request.session['employee'] == 'true':
+        wait_time = WaitTime.objects.last()
+        tables = Table.objects.all()
+        context = {
+            'wait_time': wait_time,
+            'tableList': tables
+        }
+        return render(request, 'restaurant/serverPage.html', context)
+    else:
+        return render(request, 'restaurant/login.html')
 
 def delete(request, order_pk):
     order = get_object_or_404(Order, pk=order_pk)
@@ -298,27 +307,41 @@ def tryLogin(request):
         login_PIN = request.POST['PIN']
         employee = Host.objects.get(name=login_name)
         if employee.checkPin(login_PIN):
+            # Give the employee a fresh session.
+            request.session.flush()
+            request.session['employee'] == 'true'
+            request.session.set_expiry(10)
             return HttpResponseRedirect(reverse('restaurant:employeePortal'))
         else:
             raise KeyError
     except (KeyError, Host.DoesNotExist):
         return HttpResponse("Invalid Login Credentials")
 
+
 def employeePortal(request):
-    template = loader.get_template('restaurant/employeePortal.html')
-    return HttpResponse(template.render({}, request))
+    if request.session['employee'] == 'true':
+        template = loader.get_template('restaurant/employeePortal.html')
+        return HttpResponse(template.render({}, request))
+    else:
+        return render(request, 'restaurant/login.html')
 
 def cookOrder(request):
-    order_list = Order.objects.all()
-    context = {
-        'order_list': order_list,
-    }
-    return render(request, 'restaurant/cookOrder.html', context)
+    if request.session.get('employee', 'false') == 'true':
+        order_list = Order.objects.all()
+        context = {
+            'order_list': order_list,
+        }
+        return render(request, 'restaurant/cookOrder.html', context)
+    else:
+        return render(request, 'restaurant/login.html')
 
 
 def ingredients(request):
-    ingredient_list = SupplyItem.objects.all()
-    context = {
-        'ingredient_list': ingredient_list,
-    }
-    return render(request, 'restaurant/ingredients.html', context)
+    if request.session['employee'] == 'true':
+        ingredient_list = SupplyItem.objects.all()
+        context = {
+            'ingredient_list': ingredient_list,
+        }
+        return render(request, 'restaurant/ingredients.html', context)
+    else:
+        return render(request, 'restaurant/login.html')
