@@ -20,9 +20,13 @@
 	        <div class="login_info">
                 <form action="{% url 'restaurant:tryLogin' %}" method="post">
                     {% csrf_token %}
-                    <div name="name"><input type="text" name="name"></div>
-                    <div name="pin"><input type="password" name="PIN"></div>
-                    <button type="submit" value="Login"/>
+                    <div><label>
+                        <input type="text" name="name">
+                    </label></div>
+                    <div><label>
+                        <input type="password" name="PIN">
+                    </label></div>
+                    <button type="submit" value="Login"></button>
                 </form>
             </div>
 		</main>
