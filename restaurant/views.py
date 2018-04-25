@@ -6,6 +6,7 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 # import django.contrib.sessions
 import json
+import pdb
 
 from django.views.decorators.csrf import csrf_exempt
 
@@ -198,6 +199,7 @@ def customerOrder(request, order_pk):
         # TODO: Change this to be more descriptive and to the home page.
         return HttpResponse("Please enter your Name and Email below to view your order.")
 
+
 @csrf_exempt
 def verify(request):
     # order = get_object_or_404(Order, email=request.POST['orderEmail'])
@@ -256,6 +258,7 @@ def server(request):
     else:
         return render(request, 'restaurant/login.html')
 
+
 @csrf_exempt
 def delete(request, order_pk):
     order = get_object_or_404(Order, pk=order_pk)
@@ -266,6 +269,7 @@ def delete(request, order_pk):
         order.delete()
 
     return HttpResponseRedirect(reverse('restaurant:index'), )
+
 
 @csrf_exempt
 def editOrder(request, order_pk):
@@ -356,6 +360,7 @@ def cookOrder(request):
     else:
         return render(request, 'restaurant/login.html')
 
+
 def cookOrderDetail(request, order_pk):
     if request.session.get('employee', 'false') == 'true':
         order = get_object_or_404(Order, pk=order_pk)
@@ -368,13 +373,12 @@ def cookOrderDetail(request, order_pk):
         return render(request, 'restaurant/login.html')
 
 
-
 def changeSupply(request):
     for ingredient in SupplyItem.objects.all():
         ingredient_key = str(ingredient.id) + "qty"
         ingredient.quantity = request.POST[ingredient_key]
         ingredient.save()
-	
+
     return HttpResponseRedirect(reverse('restaurant:ingredients'))
 
 
