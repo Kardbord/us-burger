@@ -29,14 +29,13 @@ STATIC_URL = '/static/'
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', '-1*vp_uo(^@^dpyu4om@urht)i&dse!4+zb%&pn&$*pml5r@^5')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = bool(os.environ.get('DJANGO_DEBUG', True))
-DEBUG = False
+DEBUG = bool(os.environ.get('DJANGO_DEBUG', True))
 
-# SECURE_CONTENT_TYPE_NOSNIFF = True
-# SECURE_BROWSER_XSS_FILTER = True
-# SESSION_COOKIE_SECURE = True
-# X_FRAME_OPTIONS = 'DENY'
-# CSRF_COOKIE_SECURE = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_BROWSER_XSS_FILTER = True
+SESSION_COOKIE_SECURE = True
+X_FRAME_OPTIONS = 'DENY'
+CSRF_COOKIE_SECURE = True
 
 ALLOWED_HOSTS = ['*']
 
