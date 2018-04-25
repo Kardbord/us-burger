@@ -312,10 +312,14 @@ def tryLogin(request):
     except (KeyError, Host.DoesNotExist):
         return HttpResponse("Invalid Login Credentials")
 
+
+@csrf_exempt
 def employeePortal(request):
     template = loader.get_template('restaurant/employeePortal.html')
-    return HttpResponse(template.render({}, request))
+    return HttpResponse(template.render(request))
 
+
+@csrf_exempt
 def cookOrder(request):
     order_list = Order.objects.all()
     context = {
