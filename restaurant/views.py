@@ -316,6 +316,15 @@ def cookOrder(request):
     return render(request, 'restaurant/cookOrder.html', context)
 
 
+def changeSupply(request):
+    for ingredient in SupplyItem.objects.all():
+        ingredient_key = str(ingredient.id) + "qty"
+        ingredient.quantity = request.POST[ingredient_key]
+        ingredient.save()
+	
+    return HttpResponseRedirect(reverse('restaurant:ingredients'))
+
+
 def ingredients(request):
     ingredient_list = SupplyItem.objects.all()
     context = {

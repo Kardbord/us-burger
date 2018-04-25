@@ -42,5 +42,7 @@ urlpatterns = [
     # Button Changes the status of the order
     path('serverPage/button/', views.button, name='button'),
     # Path to the landing page when an employee logs in
-    path('employeePortal/', views.employeePortal, name='employeePortal')
+    path('employeePortal/', views.employeePortal, name='employeePortal'),
+	# Path to change supply/ingredient amounts
+	path('changeSupply', views.changeSupply, name='changeSupply'),
 ]

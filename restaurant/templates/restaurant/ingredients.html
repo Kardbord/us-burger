@@ -1,7 +1,7 @@
 {% load static %}
 <html lang=en>
 	<head>
-		<title>Orders to cook</title>
+		<title>Supplies</title>
 		<link rel="stylesheet" type="text/css" href="{% static 'css/style0.css' %}"/>
         <script type="text/javascript" src="{% static 'js/functions.js' %}"></script>
 	</head>
@@ -15,7 +15,8 @@
 
 		<main>
 			<menu>
-                <form>
+                <form name="changeSupplyForm" action="{% url 'restaurant:changeSupply' %}" method="post">
+					{% csrf_token %}
 					{% for ingredient in ingredient_list %}
 						<menuitem>
 							<div>
@@ -24,7 +25,7 @@
 								</div>
 								<div>
 									<input type="number" 
-										name="{{ item.id }}qty" 
+										name="{{ ingredient.id }}qty"
 										value="{{ ingredient.quantity }}" 
 										min="0"
 										id="numberInput">
@@ -32,6 +33,10 @@
 							</div>
 						</menuitem>
 					{% endfor %}
+					
+					<button type="submit">
+                        SAVE CHANGES
+                    </button> 
 				</form>
 			</menu>
 		</main>
