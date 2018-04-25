@@ -175,6 +175,7 @@ def order_failed(request):
     return render(request, 'restaurant/orderFailed.html', context)
 
 
+@csrf_exempt
 def customerOrder(request, order_pk):
     wait_time = WaitTime.objects.last()
     order = get_object_or_404(Order, id=int(order_pk))
@@ -198,6 +199,7 @@ def verify(request):
     return HttpResponseRedirect(reverse('restaurant:customerOrder', args=(order.pk,)))
 
 
+@csrf_exempt
 def confirm(request, order_pk):
     order = get_object_or_404(Order, pk=order_pk)
 
@@ -263,6 +265,7 @@ def editOrder(request, order_pk):
     return HttpResponse(template.render(context, request))
 
 
+@csrf_exempt
 def changeOrder(request, order_pk):
     this_order = get_object_or_404(Order, pk=order_pk)
     # delete the existing order items since we want to overwrite them.
@@ -291,10 +294,12 @@ def changeOrder(request, order_pk):
     return HttpResponseRedirect(reverse('restaurant:customerOrder', kwargs={'order_pk': this_order.pk}))
 
 
+@csrf_exempt
 def employeeLogin(request):
     return render(request, 'restaurant/login.html')
 
 
+@csrf_exempt
 def tryLogin(request):
     try:
         login_name = request.POST['name']
