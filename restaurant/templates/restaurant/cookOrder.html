@@ -28,9 +28,9 @@
                                     <h4>Order #{{ order }}</h4>
                                 </div>
                                 <div>
-                                    <form action="{% url 'restaurant:orderDetails' order.id %}" method="post">
+                                    <form action="{% url 'restaurant:orderdetails' order.id %}" method="post">
                                         {% csrf_token %}
-                                        <button type="submit">I'll Cook This</button>
+                                        <button type="submit">i'll cook this</button>
                                     </form>
                                 </div>
                         </div>
@@ -40,9 +40,17 @@
                 <h2>Orders Cooking:</h2>
                 {% for order in order_list %}
                     {% if order.cooking and not order.cooked %}
-                        <menuitem>
-                            <h4>Order #{{ order }}</h4>
-                        </menuitem>
+                        <div class="order">
+                            <div>
+                                <h4>Order #{{ order }}</h4>
+                            </div>
+                            <div>
+                                <form action="{% url 'restaurant:orderDetails2' order.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit">View Order</button>
+                                </form>
+                            </div>
+                        </div>
                     {% endif %}
                 {% endfor %}
 			</menu>
