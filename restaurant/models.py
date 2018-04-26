@@ -1,5 +1,7 @@
 from django.db import models
 from utility.create_random_string import *
+from django.utils import timezone
+import time
 
 
 class WaitTime(models.Model):
@@ -207,6 +209,7 @@ class Order(models.Model):
     name = models.CharField(max_length=254, default="Customer Smith")
     order_items_are_available = models.BooleanField(default=False)
     table = models.ForeignKey(Table, on_delete=models.PROTECT, blank=True, null=True)
+    pub_date = models.DateTimeField('date created', default=timezone.now)
 
     confirmed = models.BooleanField(default=False)
     cooking = models.BooleanField(default=False)

@@ -3,8 +3,9 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.template import loader
 from django.urls import reverse
-# from django.core.mail import send_mail
+from django.utils import timezone
 import json
+import time
 
 from populate_database import populate
 
@@ -156,24 +157,6 @@ def newOrder(request):
     return HttpResponseRedirect(reverse('restaurant:customerOrder', kwargs={'order_pk': new_order.pk}))
 
 
-'''
-    send_mail(
-        'Thank you for choosing Us Burger!',
-        'Hey scrub',
-        'teamus3450@gmail.com',
-        [new_order.email],
-        fail_silently=False
-    )
-    'Hello, ' + new_order.name + '!\n\n' +
-    'We have received your order and look forward to serving you!' +
-    'To view, edit, or cancel your order visit our website and enter your order information:\n' +
-    '\tOrder Name: ' + new_order.name + '\n' +
-    '\tOrder Email: ' + new_order.email + '\n' +
-    '\tOrder Number: ' + str(new_order.id) + '\n' +
-    'Thanks again for choosing Us Burger!',
-'''
-
-
 def order_failed(request):
     wait_time = WaitTime.objects.last()
     context = {
@@ -219,6 +202,8 @@ def confirm(request, order_pk):
             table.order_set.add(order)
             table.available = False
             table.save()
+        else:
+            return HttpResponseRedirect(reverse('restaurant:customerOrder', args=(order.pk,)))
 
     except (KeyError, Table.DoesNotExist):
         return HttpResponseRedirect(reverse('restaurant:customerOrder', args=(order.pk,)))
@@ -233,6 +218,7 @@ def confirm(request, order_pk):
     for n in all_Hosts:
         if pin == n.pin:
             order.changeConfirmed()
+            order.pub_date = timezone.now()
             order.save()
 
     return HttpResponseRedirect(reverse('restaurant:customerOrder', args=(order.pk,)))
@@ -342,7 +328,7 @@ def employeePortal(request):
 
 def cookOrder(request):
     if request.session.get('employee', 'false') == 'true':
-        order_list = Order.objects.all()
+        order_list = Order.objects.all().order_by('-pub_date')
         context = {
             'order_list': order_list,
         }
@@ -354,15 +340,33 @@ def cookOrder(request):
 def cookOrderDetail(request, order_pk):
     if request.session.get('employee', 'false') == 'true':
         order = get_object_or_404(Order, pk=order_pk)
-        if order.cooking:
-            return HttpResponseRedirect(reverse('restaurant:cookOrder'))
-        template = loader.get_template('restaurant/cookOrderDetail.html')
-        context = {
-            'order': order,
-        }
-        return HttpResponse(template.render(context, request))
+        if not order.cooking:
+            order.changeCooking()
+            order.save()
+		
+            template = loader.get_template('restaurant/cookOrderDetail.html')
+            context = {
+                'order': order,
+            }
+            return HttpResponse(template.render(context, request))
+			
+        else:
+            return HttpResponseRedirect(reverse('restaurant:cookOrder',))
     else:
         return render(request, 'restaurant/login.html')
+		
+		
+def foodReady(request, order_pk):
+	if request.session.get('employee', 'false') == 'true':
+		order = get_object_or_404(Order, pk=order_pk)
+	
+		order.changeCooked()
+		order.save()
+		
+		return HttpResponseRedirect(reverse('restaurant:cookOrder',))
+		
+	else:
+		return render(request, 'restaurant/login.html')
 
 
 def changeSupply(request):

@@ -49,4 +49,6 @@ urlpatterns = [
 	path('changeSupply/', views.changeSupply, name='changeSupply'),
     # Path to update the wait time from the server page
     path('updateWaitTime/', views.updateWait, name='updateWaitTime'),
+	# Path to change the order to cooked
+	path('cookOrder/<int:order_pk>/foodReady', views.foodReady, name='foodReady'),
 ]
