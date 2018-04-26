@@ -212,6 +212,8 @@ def confirm(request, order_pk):
             table.order_set.add(order)
             table.available = False
             table.save()
+        else:
+            return HttpResponseRedirect(reverse('restaurant:customerOrder', args=(order.pk,)))
 
     except (KeyError, Table.DoesNotExist):
         return HttpResponseRedirect(reverse('restaurant:customerOrder', args=(order.pk,)))
@@ -340,14 +342,19 @@ def cookOrderDetail(request, order_pk):
     if request.session.get('employee', 'false') == 'true':
         order = get_object_or_404(Order, pk=order_pk)
 		
-        order.changeCooking()
-        order.save()
+        if not order.cooking:
+            order.changeCooking()
+            order.save()
 		
-        template = loader.get_template('restaurant/cookOrderDetail.html')
-        context = {
-            'order': order,
-        }
-        return HttpResponse(template.render(context, request))
+            template = loader.get_template('restaurant/cookOrderDetail.html')
+            context = {
+                'order': order,
+            }
+            return HttpResponse(template.render(context, request))
+			
+        else:
+            return HttpResponseRedirect(reverse('restaurant:cookOrder',))
+
     else:
         return render(request, 'restaurant/login.html')
 		
