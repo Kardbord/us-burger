@@ -148,7 +148,8 @@
     <div class="w3-content">
         <h1 class="w3-center w3-jumbo" style="margin-bottom:36px">SERVER CONFIRMATION</h1>
         <form action="{% url 'restaurant:confirm' order.id%}" method="post" autocomplete="false">
-            <p class="w3-center"> {% csrf_token %} </p>
+            {% csrf_token %}
+            <p class="w3-center"></p>
             <p><input class="w3-input w3-padding-16 w3-border w3-center"
                       type="text"
                       placeholder="Table #"
