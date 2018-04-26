@@ -25,10 +25,17 @@ SECRET_KEY = '-1*vp_uo(^@^dpyu4om@urht)i&dse!4+zb%&pn&$*pml5r@^5'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.net'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'teamus3450'
+EMAIL_HOST_PASSWORD = 'restaurant'
+EMAIL_USE_TLS = True
+
+ALLOWED_HOSTS = ['*']
 
 STATICFILES_DIRS = [
-    "/restaurant/static",
+    "/restaurant/static/",
 ]
 # Application definition
 

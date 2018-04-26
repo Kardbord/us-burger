@@ -30,9 +30,9 @@ urlpatterns = [
     # This url will call the view that changes an existing order, and then send you to the Order page
     path('changeOrder/<int:order_pk>', views.changeOrder, name='changeOrder'),
     # This url will take you to the login page for employees
-    path('login', views.employeeLogin, name='login'),
+    path('login/', views.employeeLogin, name='login'),
     # This url will call the view that attempts to login using the provided credentials, redirecting as necessary.for
-    path('tryLogin', views.tryLogin, name='tryLogin'),
+    path('tryLogin/', views.tryLogin, name='tryLogin'),
     # URL for cooks to view current "cooking" orders
     path('cookOrder/', views.cookOrder, name='cookOrder'),
     # URL for cooks to view current ingredients
@@ -46,5 +46,5 @@ urlpatterns = [
     # Path to Order details for cooks
     path('cookOrder/<int:order_pk>', views.cookOrderDetail, name='orderDetails'),
 	# Path to change supply/ingredient amounts
-	path('changeSupply', views.changeSupply, name='changeSupply'),
+	path('changeSupply/', views.changeSupply, name='changeSupply'),
 ]

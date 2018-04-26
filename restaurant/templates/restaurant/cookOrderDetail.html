@@ -10,6 +10,11 @@
 	<body>
 
 		<header>
+            <a href="{% url 'restaurant:employeePortal' %}">
+                <img src="{% static 'images\us_burger.png' %}"
+                     height="150">
+            </a>
+			<br>
             <h3>Order {{ order.id }} </h3>
 			<br>
 		</header>
