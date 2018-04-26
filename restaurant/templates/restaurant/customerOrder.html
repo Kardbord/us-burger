@@ -109,14 +109,6 @@
             <p>An error occurred and no order was sent.</p>
             {% endif %}
             {% if order.confirmed %}
-            <p>
-                <button class="w3-button w3-light-grey w3-block" disabled
-                        type="submit"
-                        style="width: 60%; margin: auto;">
-                    EDIT ORDER
-                </button>
-            </p>
-
             {% else %}
             <a href="{% url 'restaurant:editOrder' order %}">
                 <p>
@@ -127,16 +119,16 @@
                     </button>
                 </p>
             </a>
-				{% endif %}
-					<a href="{% url 'restaurant:delete' order.id %}">
-                        <p>
-                            <button class="w3-button w3-light-grey w3-block"
-                                    type="submit"
-                                    style="width: 60%; margin: auto;">
-                                CANCEL ORDER
-                            </button>
-                        </p>
-					</a>
+            <a href="{% url 'restaurant:delete' order.id %}">
+                <p>
+                    <button class="w3-button w3-light-grey w3-block"
+                            type="submit"
+                            style="width: 60%; margin: auto;">
+                        CANCEL ORDER
+                    </button>
+                </p>
+            </a>
+            {% endif %}
         </div>
         <br>
     </div>

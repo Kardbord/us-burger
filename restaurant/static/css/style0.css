@@ -39,15 +39,6 @@ menuitem {
 	padding: 10px 10px;
 }
 
-main {
-	display: flex;
-	justify-content: center;
-}
-
-div.login_info {
-	align-self: center;
-}
-
 
 menuitem > div {
 	display: flex;
