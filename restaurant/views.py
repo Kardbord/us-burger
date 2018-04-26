@@ -4,8 +4,10 @@ from django.shortcuts import render, get_object_or_404
 from django.template import loader
 from django.urls import reverse
 from django.contrib.auth.models import User
+from django.utils import timezone
 # import django.contrib.sessions
 import json
+import time
 
 from populate_database import populate
 
@@ -228,6 +230,7 @@ def confirm(request, order_pk):
     for n in all_Hosts:
         if pin == n.pin:
             order.changeConfirmed()
+            order.pub_date = timezone.now()
             order.save()
 
     return HttpResponseRedirect(reverse('restaurant:customerOrder', args=(order.pk,)))
@@ -330,7 +333,7 @@ def employeePortal(request):
 
 def cookOrder(request):
     if request.session.get('employee', 'false') == 'true':
-        order_list = Order.objects.all()
+        order_list = Order.objects.all().order_by('-pub_date')
         context = {
             'order_list': order_list,
         }
