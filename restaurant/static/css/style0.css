@@ -44,6 +44,7 @@ menuitem > div {
 	display: flex;
 	flex-direction:	row;
 	align-items: center;
+	justify-items: stretch;
 }
 
 /* menuitem > div > div {
@@ -105,8 +106,9 @@ div.tab {
 	color: white;
 }
 
-order > div {
-
+div.order {
+	display: flex;
+	align-items: stretch;
 }
 
 order > button, h3, a{
