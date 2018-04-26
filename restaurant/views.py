@@ -296,7 +296,7 @@ def tryLogin(request):
         if employee.checkPin(login_PIN):
             # Give the employee a fresh session.
             request.session['employee'] = 'true'
-            request.session.set_expiry(300)
+            request.session.set_expiry(900)
             return HttpResponseRedirect(reverse('restaurant:employeePortal'))
         else:
             raise KeyError
