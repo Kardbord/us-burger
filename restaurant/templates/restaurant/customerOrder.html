@@ -143,10 +143,11 @@
 </div>
 
 <!-- Server Confirmation -->
+{% if not order.confirmed %}
 <div class="w3-container w3-padding-64 w3-blue-grey w3-grayscale-min w3-xxlarge" id="serverConfirm">
     <div class="w3-content">
         <h1 class="w3-center w3-jumbo" style="margin-bottom:36px">SERVER CONFIRMATION</h1>
-        <form action="{% url 'restaurant:confirm' order.id%}" method="post">
+        <form action="{% url 'restaurant:confirm' order.id%}" method="post" autocomplete="false">
             <p class="w3-center"> {% csrf_token %} </p>
             <p><input class="w3-input w3-padding-16 w3-border w3-center"
                       type="text"
@@ -174,6 +175,7 @@
         </form>
     </div>
 </div>
+{% endif %}
 
 <!-- Footer -->
 <footer class="w3-center w3-black w3-padding-48 w3-xxlarge">
