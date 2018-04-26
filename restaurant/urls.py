@@ -47,4 +47,6 @@ urlpatterns = [
     path('cookOrder/<int:order_pk>', views.cookOrderDetail, name='orderDetails'),
 	# Path to change supply/ingredient amounts
 	path('changeSupply/', views.changeSupply, name='changeSupply'),
+    # Path to update the wait time from the server page
+    path('updateWaitTime/', views.updateWait, name='updateWaitTime'),
 ]

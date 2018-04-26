@@ -250,14 +250,21 @@ def server(request):
     else:
         return render(request, 'restaurant/login.html')
 
+
+def updateWait(request):
+    new_wait_time = request.POST.get('waittime', '')
+    if new_wait_time != '':
+        wait_time = WaitTime(wait_time=int(new_wait_time))
+        wait_time.save()
+    return HttpResponseRedirect(reverse('restaurant:server'))
+
+
 def delete(request, order_pk):
     order = get_object_or_404(Order, pk=order_pk)
-
     if not order.confirmed:
         for item in order.orderitem_set.all():
             item.replenish()
         order.delete()
-
     return HttpResponseRedirect(reverse('restaurant:index'), )
 
 
