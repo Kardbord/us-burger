@@ -47,4 +47,6 @@ urlpatterns = [
     path('cookOrder/<int:order_pk>', views.cookOrderDetail, name='orderDetails'),
 	# Path to change supply/ingredient amounts
 	path('changeSupply', views.changeSupply, name='changeSupply'),
+	# Path to change the order to cooked
+	path('cookOrder/<int:order_pk>/foodReady', views.foodReady, name='foodReady'),
 ]

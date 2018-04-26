@@ -22,7 +22,9 @@
                         <p>Quantity: {{ order_item.quantity }}</p>
                     </menuitem>
                 {% endfor %}
-                <form>
+                <form action="{% url 'restaurant:foodReady' order.id%}" method="post">
+				{% csrf_token %}
+					<button type="submit">Cooked</button>
 				</form>
 			</menu>
 		</main>

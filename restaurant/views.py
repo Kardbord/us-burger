@@ -339,6 +339,10 @@ def cookOrder(request):
 def cookOrderDetail(request, order_pk):
     if request.session.get('employee', 'false') == 'true':
         order = get_object_or_404(Order, pk=order_pk)
+		
+        order.changeCooking()
+        order.save()
+		
         template = loader.get_template('restaurant/cookOrderDetail.html')
         context = {
             'order': order,
@@ -346,6 +350,19 @@ def cookOrderDetail(request, order_pk):
         return HttpResponse(template.render(context, request))
     else:
         return render(request, 'restaurant/login.html')
+		
+		
+def foodReady(request, order_pk):
+	if request.session.get('employee', 'false') == 'true':
+		order = get_object_or_404(Order, pk=order_pk)
+	
+		order.changeCooked()
+		order.save()
+		
+		return HttpResponseRedirect(reverse('restaurant:cookOrder',))
+		
+	else:
+		return render(request, 'restaurant/login.html')
 
 
 
