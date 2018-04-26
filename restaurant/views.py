@@ -13,11 +13,13 @@ from .models import MenuItem, WaitTime, Order, OrderItem, Host, Table, SupplyIte
 
 
 def init(request):
+
     """
     This view serves as an easy method of repopulating the database.
     It is for testing/developing purposes only, and should ABSOLUTELY NOT be included in the production build.
     """
-    populate()
+    if request.session.get('employee', 'false') == 'true':
+        populate()
     return HttpResponseRedirect(reverse('restaurant:index'))
 
 
@@ -175,8 +177,7 @@ def customerOrder(request, order_pk):
         }
         return render(request, 'restaurant/customerOrder.html', context)
     else:
-        # TODO: Change this to be more descriptive and to the home page.
-        return HttpResponse("Please enter your Name and Email below to view your order.")
+        return HttpResponseRedirect(reverse('restaurant:index'),)
 
 
 def verify(request):
