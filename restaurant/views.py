@@ -36,20 +36,6 @@ def index(request):
     return render(request, 'restaurant/index.html', context)
 
 
-def customerMenu(request):
-    serialize_emails = serializers.serialize("json", Order.objects.all(), indent=4)
-
-    wait_time = WaitTime.objects.last()
-    latest_menu = MenuItem.objects.filter(available=True)
-    template = loader.get_template('restaurant/customerMenu.html')
-    context = {
-        'latest_menu': latest_menu,
-        'wait_time': wait_time,
-        'emails': serialize_emails
-    }
-    return HttpResponse(template.render(context, request))
-
-
 def changeButton(order: int, button: str):
     thisOrder = Order.objects.get(id=order)
 
@@ -106,7 +92,7 @@ def button(request):
         button = request.GET.get('button')
         resp = {'answer': changeButton(request.GET.get('order'), request.GET.get('button'))}
     else:
-        rep = {'ERROR': "use the HTTP request variable 'n' and 'button"}
+        resp = {'ERROR': "use the HTTP request variable 'n' and 'button"}
 
     return HttpResponse(json.dumps(resp))
 
@@ -190,6 +176,7 @@ def customerOrder(request, order_pk):
         # TODO: Change this to be more descriptive and to the home page.
         return HttpResponse("Please enter your Name and Email below to view your order.")
 
+
 def verify(request):
     # order = get_object_or_404(Order, email=request.POST['orderEmail'])
     try:
@@ -247,6 +234,7 @@ def server(request):
         return render(request, 'restaurant/serverPage.html', context)
     else:
         return render(request, 'restaurant/login.html')
+
 
 def delete(request, order_pk):
     order = get_object_or_404(Order, pk=order_pk)
@@ -331,6 +319,7 @@ def employeePortal(request):
     else:
         return render(request, 'restaurant/login.html')
 
+
 def cookOrder(request):
     if request.session.get('employee', 'false') == 'true':
         order_list = Order.objects.all().order_by('-pub_date')
@@ -341,39 +330,39 @@ def cookOrder(request):
     else:
         return render(request, 'restaurant/login.html')
 
+
 def cookOrderDetail(request, order_pk):
     if request.session.get('employee', 'false') == 'true':
         order = get_object_or_404(Order, pk=order_pk)
-		
+
         if not order.cooking:
             order.changeCooking()
             order.save()
-		
+
             template = loader.get_template('restaurant/cookOrderDetail.html')
             context = {
                 'order': order,
             }
             return HttpResponse(template.render(context, request))
-			
+
         else:
-            return HttpResponseRedirect(reverse('restaurant:cookOrder',))
+            return HttpResponseRedirect(reverse('restaurant:cookOrder', ))
 
     else:
         return render(request, 'restaurant/login.html')
-		
-		
-def foodReady(request, order_pk):
-	if request.session.get('employee', 'false') == 'true':
-		order = get_object_or_404(Order, pk=order_pk)
-	
-		order.changeCooked()
-		order.save()
-		
-		return HttpResponseRedirect(reverse('restaurant:cookOrder',))
-		
-	else:
-		return render(request, 'restaurant/login.html')
 
+
+def foodReady(request, order_pk):
+    if request.session.get('employee', 'false') == 'true':
+        order = get_object_or_404(Order, pk=order_pk)
+
+        order.changeCooked()
+        order.save()
+
+        return HttpResponseRedirect(reverse('restaurant:cookOrder', ))
+
+    else:
+        return render(request, 'restaurant/login.html')
 
 
 def changeSupply(request):
@@ -381,7 +370,7 @@ def changeSupply(request):
         ingredient_key = str(ingredient.id) + "qty"
         ingredient.quantity = request.POST[ingredient_key]
         ingredient.save()
-	
+
     return HttpResponseRedirect(reverse('restaurant:ingredients'))
 
 
