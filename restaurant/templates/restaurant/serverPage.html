@@ -11,7 +11,7 @@
 	<body>
 	
 		<header>
-            <a href="/">
+            <a href="{% url 'restaurant:employeePortal' %}">
                 <img src="{% static 'images\us_burger.png' %}"
                      height="150">
             </a>
@@ -21,6 +21,12 @@
 			{% else %}
                 <h3>Wait time unavailable</h3>
             {% endif %}
+                <form action="{% url 'restaurant:updateWaitTime' %}" method="post">
+                    {% csrf_token %}
+                    <p>New Wait Time: <input type="number" name="waittime"/>
+                        <button type="submit">Update</button>
+                    </p>
+                </form>
 		</header>
 
 		<main>
@@ -115,7 +121,10 @@
 		
 		<footer>
 			<p>C = Cooking  |  F.R. = Food is Ready  |  Del. = Delivered  |  Paid = Has paid for the food  |  N.H. = Table needs help</p>
-		</footer>
+            <p>© 2018 Us Burger, Inc.</p>
+            <p>us.burger@usu.edu</p>
+            <p><a href="https://github.com/jfairbourn96/team_us_3450">Us GitBurger</a></p>
+        </footer>
 		
 	</body>
 </html>

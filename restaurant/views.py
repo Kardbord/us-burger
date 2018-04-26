@@ -3,9 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.template import loader
 from django.urls import reverse
-from django.contrib.auth.models import User
 from django.utils import timezone
-# import django.contrib.sessions
 import json
 import time
 
@@ -38,7 +36,6 @@ def index(request):
 
 def changeButton(order: int, button: str):
     thisOrder = Order.objects.get(id=order)
-
     if button == "1":
         if thisOrder.cooking and not thisOrder.cooked:
             thisOrder.cooking = False
@@ -48,8 +45,6 @@ def changeButton(order: int, button: str):
             thisOrder.changeCooking()
             thisOrder.save()
             return True
-
-
     elif button == "2":
         if thisOrder.cooked and not thisOrder.delivered:
             thisOrder.cooked = False
@@ -72,17 +67,10 @@ def changeButton(order: int, button: str):
 
     elif button == "4":
         ran = 4
-    # if thisTable.order.cooking:
-    #	thisTable.order.cooking = False
-    # else:
-    #	thisTable.order.cooking.changeCooking()
-
     elif button == "5":
         ran = 5
-
     else:
         ran = 3
-
     return button
 
 
@@ -164,7 +152,7 @@ def order_failed(request):
 
 
 def customerOrder(request, order_pk):
-    if request.session['order'] == str(order_pk):
+    if request.session.get('order', 'none') == str(order_pk) or request.session.get('employee', 'False') == True:
         wait_time = WaitTime.objects.last()
         order = get_object_or_404(Order, id=int(order_pk))
         context = {
@@ -194,7 +182,6 @@ def verify(request):
 
 def confirm(request, order_pk):
     order = get_object_or_404(Order, pk=order_pk)
-
     try:
         table = Table.objects.get(number=request.POST.get('tableNumber'))
         if table.available:
@@ -236,14 +223,20 @@ def server(request):
         return render(request, 'restaurant/login.html')
 
 
+def updateWait(request):
+    new_wait_time = request.POST.get('waittime', '')
+    if new_wait_time != '':
+        wait_time = WaitTime(wait_time=int(new_wait_time))
+        wait_time.save()
+    return HttpResponseRedirect(reverse('restaurant:server'))
+
+
 def delete(request, order_pk):
     order = get_object_or_404(Order, pk=order_pk)
-
     if not order.confirmed:
         for item in order.orderitem_set.all():
             item.replenish()
         order.delete()
-
     return HttpResponseRedirect(reverse('restaurant:index'), )
 
 
@@ -282,7 +275,7 @@ def changeOrder(request, order_pk):
                 )
                 new_order_item.save()
         except KeyError:
-            new_order.delete()
+            this_order.delete()
             return HttpResponse("Invalid key: %s" % item_key)
 
     # Finally, save the Order.
@@ -301,7 +294,6 @@ def tryLogin(request):
         employee = Host.objects.get(name=login_name)
         if employee.checkPin(login_PIN):
             # Give the employee a fresh session.
-            request.session.flush()
             request.session['employee'] = 'true'
             request.session.set_expiry(300)
             return HttpResponseRedirect(reverse('restaurant:employeePortal'))
@@ -334,7 +326,6 @@ def cookOrder(request):
 def cookOrderDetail(request, order_pk):
     if request.session.get('employee', 'false') == 'true':
         order = get_object_or_404(Order, pk=order_pk)
-
         if not order.cooking:
             order.changeCooking()
             order.save()
@@ -347,7 +338,6 @@ def cookOrderDetail(request, order_pk):
 
         else:
             return HttpResponseRedirect(reverse('restaurant:cookOrder', ))
-
     else:
         return render(request, 'restaurant/login.html')
 
@@ -364,13 +354,11 @@ def foodReady(request, order_pk):
     else:
         return render(request, 'restaurant/login.html')
 
-
 def changeSupply(request):
     for ingredient in SupplyItem.objects.all():
         ingredient_key = str(ingredient.id) + "qty"
         ingredient.quantity = request.POST[ingredient_key]
         ingredient.save()
-
     return HttpResponseRedirect(reverse('restaurant:ingredients'))
 
 
