@@ -1,5 +1,22 @@
 {% load static %}
 <html lang=en>
+<title>Us Burger Order</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="refresh" content="60">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Amatic+SC">
+<script type="text/javascript" src="{% static 'js/functions.js' %}"></script>
+<style>
+    body, html {
+        height: 100%
+    }
+
+   /* body, h1, h2, h3, h4, h5, h6 {
+    #    font-family: "Amatic SC", sans-serif
+    #}
+    */
+</style>
 	<head>
 		<title>Orders to cook</title>
 		<link rel="stylesheet" type="text/css" href="{% static 'css/style0.css' %}"/>
@@ -10,7 +27,7 @@
 	
 		<header>
             <a href="{% url 'restaurant:employeePortal' %}">
-                <img src="{% static 'images\us_burger.png' %}"
+                <img src="{% static 'images/us_burger.png' %}"
                      height="150">
             </a>
 			<br>
@@ -23,14 +40,14 @@
                 <h2>Orders To Cook:</h2>
                 {% for order in order_list %}
                     {% if order.confirmed and not order.cooking %}
-                        <div class="order">
+                        <div class="order w3-xlarge">
                                 <div>
                                     <h4>Order #{{ order }}</h4>
                                 </div>
-                                <div>
-                                    <form action="{% url 'restaurant:orderdetails' order.id %}" method="post">
+                                <div class="w3-display-right">
+                                    <form action="{% url 'restaurant:orderDetails' order.id %}" method="post">
                                         {% csrf_token %}
-                                        <button type="submit">i'll cook this</button>
+                                        <button type="submit">I'll cook this</button>
                                     </form>
                                 </div>
                         </div>
