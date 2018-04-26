@@ -42,6 +42,13 @@ ALLOWED_HOSTS = ['*']
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'restaurant/static')
 ]
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.net'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'teamus3450'
+EMAIL_HOST_PASSWORD = 'restaurant'
+EMAIL_USE_TLS = True
 # Application definition
 
 INSTALLED_APPS = [
@@ -87,7 +94,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'us_burger.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
@@ -101,7 +107,6 @@ DATABASES = {
         'PORT': '',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
@@ -121,7 +126,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
 
@@ -135,9 +139,9 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Heroku
 import dj_database_url
+
 db_from_env = dj_database_url.config(conn_max_age=500)
 DATABASES['default'].update(db_from_env)
 django_heroku.settings(locals())
@@ -161,7 +165,7 @@ LOGGING = {
             'filters': ['require_debug_false'],
             'class': 'django.utils.log.AdminEmailHandler'
         },
-     'console':{
+        'console': {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
         },

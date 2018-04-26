@@ -39,6 +39,7 @@ menuitem {
 	padding: 10px 10px;
 }
 
+
 menuitem > div {
 	display: flex;
 	flex-direction:	row;

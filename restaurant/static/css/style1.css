@@ -4,6 +4,11 @@ body {
 	font-size: 40px;
 }
 
+p {
+    word-break: break-all;
+    white-space: normal;
+}
+
 header, footer{
 	text-align: center;
 	font-family: "Comic Sans MS", cursive, sans-serif;

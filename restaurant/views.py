@@ -3,11 +3,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.template import loader
 from django.urls import reverse
-from django.contrib.auth.models import User
-# import django.contrib.sessions
+from django.utils import timezone
 import json
-import pdb
-
 from django.views.decorators.csrf import csrf_exempt
 
 from populate_database import populate
@@ -21,7 +18,8 @@ def init(request):
     This view serves as an easy method of repopulating the database.
     It is for testing/developing purposes only, and should ABSOLUTELY NOT be included in the production build.
     """
-    populate()
+    if request.session.get('employee', 'false') == 'true':
+        populate()
     return HttpResponseRedirect(reverse('restaurant:index'))
 
 
@@ -40,24 +38,8 @@ def index(request):
 
 
 @csrf_exempt
-def customerMenu(request):
-    serialize_emails = serializers.serialize("json", Order.objects.all(), indent=4)
-
-    wait_time = WaitTime.objects.last()
-    latest_menu = MenuItem.objects.filter(available=True)
-    template = loader.get_template('restaurant/customerMenu.html')
-    context = {
-        'latest_menu': latest_menu,
-        'wait_time': wait_time,
-        'emails': serialize_emails
-    }
-    return HttpResponse(template.render(context, request))
-
-
-@csrf_exempt
 def changeButton(order: int, button: str):
     thisOrder = Order.objects.get(id=order)
-
     if button == "1":
         if thisOrder.cooking and not thisOrder.cooked:
             thisOrder.cooking = False
@@ -67,8 +49,6 @@ def changeButton(order: int, button: str):
             thisOrder.changeCooking()
             thisOrder.save()
             return True
-
-
     elif button == "2":
         if thisOrder.cooked and not thisOrder.delivered:
             thisOrder.cooked = False
@@ -91,17 +71,10 @@ def changeButton(order: int, button: str):
 
     elif button == "4":
         ran = 4
-    # if thisTable.order.cooking:
-    #	thisTable.order.cooking = False
-    # else:
-    #	thisTable.order.cooking.changeCooking()
-
     elif button == "5":
         ran = 5
-
     else:
         ran = 3
-
     return button
 
 
@@ -112,7 +85,7 @@ def button(request):
         button = request.GET.get('button')
         resp = {'answer': changeButton(request.GET.get('order'), request.GET.get('button'))}
     else:
-        rep = {'ERROR': "use the HTTP request variable 'n' and 'button"}
+        resp = {'ERROR': "use the HTTP request variable 'n' and 'button"}
 
     return HttpResponse(json.dumps(resp))
 
@@ -187,7 +160,7 @@ def order_failed(request):
 
 @csrf_exempt
 def customerOrder(request, order_pk):
-    if request.session['order'] == str(order_pk):
+    if request.session.get('order', 'none') == str(order_pk) or request.session.get('employee', 'False') == True:
         wait_time = WaitTime.objects.last()
         order = get_object_or_404(Order, id=int(order_pk))
         context = {
@@ -196,8 +169,7 @@ def customerOrder(request, order_pk):
         }
         return render(request, 'restaurant/customerOrder.html', context)
     else:
-        # TODO: Change this to be more descriptive and to the home page.
-        return HttpResponse("Please enter your Name and Email below to view your order.")
+        return HttpResponseRedirect(reverse('restaurant:index'), )
 
 
 @csrf_exempt
@@ -219,13 +191,14 @@ def verify(request):
 @csrf_exempt
 def confirm(request, order_pk):
     order = get_object_or_404(Order, pk=order_pk)
-
     try:
         table = Table.objects.get(number=request.POST.get('tableNumber'))
         if table.available:
             table.order_set.add(order)
             table.available = False
             table.save()
+        else:
+            return HttpResponseRedirect(reverse('restaurant:customerOrder', args=(order.pk,)))
 
     except (KeyError, Table.DoesNotExist):
         return HttpResponseRedirect(reverse('restaurant:customerOrder', args=(order.pk,)))
@@ -240,6 +213,7 @@ def confirm(request, order_pk):
     for n in all_Hosts:
         if pin == n.pin:
             order.changeConfirmed()
+            order.pub_date = timezone.now()
             order.save()
 
     return HttpResponseRedirect(reverse('restaurant:customerOrder', args=(order.pk,)))
@@ -260,14 +234,21 @@ def server(request):
 
 
 @csrf_exempt
+def updateWait(request):
+    new_wait_time = request.POST.get('waittime', '')
+    if new_wait_time != '':
+        wait_time = WaitTime(wait_time=int(new_wait_time))
+        wait_time.save()
+    return HttpResponseRedirect(reverse('restaurant:server'))
+
+
+@csrf_exempt
 def delete(request, order_pk):
     order = get_object_or_404(Order, pk=order_pk)
-
     if not order.confirmed:
         for item in order.orderitem_set.all():
             item.replenish()
         order.delete()
-
     return HttpResponseRedirect(reverse('restaurant:index'), )
 
 
@@ -308,7 +289,7 @@ def changeOrder(request, order_pk):
                 )
                 new_order_item.save()
         except KeyError:
-            new_order.delete()
+            this_order.delete()
             return HttpResponse("Invalid key: %s" % item_key)
 
     # Finally, save the Order.
@@ -329,7 +310,6 @@ def tryLogin(request):
         employee = Host.objects.get(name=login_name)
         if employee.checkPin(login_PIN):
             # Give the employee a fresh session.
-            request.session.flush()
             request.session['employee'] = 'true'
             request.session.set_expiry(300)
             return HttpResponseRedirect(reverse('restaurant:employeePortal'))
@@ -352,7 +332,7 @@ def employeePortal(request):
 @csrf_exempt
 def cookOrder(request):
     if request.session.get('employee', 'false') == 'true':
-        order_list = Order.objects.all()
+        order_list = Order.objects.all().order_by('-pub_date')
         context = {
             'order_list': order_list,
         }
@@ -364,21 +344,42 @@ def cookOrder(request):
 def cookOrderDetail(request, order_pk):
     if request.session.get('employee', 'false') == 'true':
         order = get_object_or_404(Order, pk=order_pk)
-        template = loader.get_template('restaurant/cookOrderDetail.html')
-        context = {
-            'order': order,
-        }
-        return HttpResponse(template.render(context, request))
+        if not order.cooking:
+            order.changeCooking()
+            order.save()
+
+            template = loader.get_template('restaurant/cookOrderDetail.html')
+            context = {
+                'order': order,
+            }
+            return HttpResponse(template.render(context, request))
+
+        else:
+            return HttpResponseRedirect(reverse('restaurant:cookOrder', ))
     else:
         return render(request, 'restaurant/login.html')
 
 
+@csrf_exempt
+def foodReady(request, order_pk):
+    if request.session.get('employee', 'false') == 'true':
+        order = get_object_or_404(Order, pk=order_pk)
+
+        order.changeCooked()
+        order.save()
+
+        return HttpResponseRedirect(reverse('restaurant:cookOrder', ))
+
+    else:
+        return render(request, 'restaurant/login.html')
+
+
+@csrf_exempt
 def changeSupply(request):
     for ingredient in SupplyItem.objects.all():
         ingredient_key = str(ingredient.id) + "qty"
         ingredient.quantity = request.POST[ingredient_key]
         ingredient.save()
-
     return HttpResponseRedirect(reverse('restaurant:ingredients'))
 
 

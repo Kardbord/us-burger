@@ -1,4 +1,3 @@
-<!-- TODO: Add a button that goes back to the employee portal. -->
 {% load static %}
 <html lang=en>
 	<head>
@@ -10,7 +9,12 @@
 	<body>
 	
 		<header>
-            <h3>Orders to cook:</h3>
+            <a href="{% url 'restaurant:employeePortal' %}">
+                <img src="{% static 'images\us_burger.png' %}"
+                     height="150">
+            </a>
+			<br>
+            <h3>View Orders</h3>
 			<br>
 		</header>
 
@@ -19,17 +23,17 @@
                 <h2>Orders To Cook:</h2>
                 {% for order in order_list %}
                     {% if order.confirmed and not order.cooking %}
-                        <menuitem>
-                            <h4>Order #{{ order }}</h4>
-                            <div>
+                        <div class="order">
+                                <div>
+                                    <h4>Order #{{ order }}</h4>
+                                </div>
                                 <div>
                                     <form action="{% url 'restaurant:orderDetails' order.id %}" method="post">
                                         {% csrf_token %}
                                         <button type="submit">I'll Cook This</button>
                                     </form>
                                 </div>
-                            </div>
-                        </menuitem>
+                        </div>
                     {% endif %}
                 {% endfor %}
 
@@ -45,16 +49,12 @@
 		</main>
 		
 		<footer>
-			
+            <p>© 2018 Us Burger, Inc.</p>
+            <p>us.burger@usu.edu</p>
+            <p><a href="https://github.com/jfairbourn96/team_us_3450">Us GitBurger</a></p>
 		</footer>
 		
 	</body>
 </html>
 
 
-{% for order_item in order.orderitem_set.all %}
-	<menuitem>
-		<h4>{{ order_item.menu_item.name }}</h4>
-		<p>Quantity: {{ order_item.quantity }}</p>
-	</menuitem>
-{% endfor %}

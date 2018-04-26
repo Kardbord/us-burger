@@ -1,32 +1,80 @@
 {% load static %}
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/style0.css' %}"/>
-    <title>Order Failed</title>
-</head>
+<!DOCTYPE html>
+<html>
+<title>Order Failed</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="refresh" content="60">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Amatic+SC">
+<script type="text/javascript" src="{% static 'js/functions.js' %}"></script>
+<style>
+    body, html {
+        height: 100%
+    }
+
+    body, h1, h2, h3, h4, h5, h6 {
+        font-family: "Amatic SC", sans-serif
+    }
+
+    .bgimg {
+        background-size: cover;
+        background: url("https://images7.alphacoders.com/611/thumb-1920-611267.jpg") 50% 0 no-repeat fixed;
+        min-height: 90%;
+    }
+
+    input.invalid {
+        border: 2px dashed red;
+    }
+
+    input.valid {
+        border: none;
+    }
+
+
+</style>
 <body>
 
-<header>
+<header class="w3-center w3-black">
     <a href="/">
         <img src="{% static 'images/us_burger.png' %}"
              height="150">
     </a>
-    <br>
-    {% if wait_time %}
-        <h3>Wait time to be seated: {{ wait_time.get_wait_time }}</h3>
-    {% else %}
-        <h3>Wait time unavailable</h3>
-    {% endif %}
+    <div class="w3-padding">
+        <span class="w3-tag w3-xxxlarge">
+            {% if wait_time %}
+                Wait time to be seated: {{ wait_time.get_wait_time }} minutes
+            {% else %}
+                Wait time unavailable
+            {% endif %}
+        </span>
+    </div>
 </header>
-<div style="text-align: center">
-    <p>Sorry! We're unable to fulfill that order at this time.</p>
-    <p>Please place a new order.</p>
-    <a href="{% url 'restaurant:index' %}">
-        <button type="button">
-            <p>Home</p>
-        </button>
-    </a>
+<!-- Place a New Order -->
+<div class="w3-container w3-padding-64 w3-red w3-grayscale w3-xxxlarge" id="about">
+    <div class="w3-content">
+        <h1 class="w3-center w3-jumbo" style="margin-bottom:64px">Sorry! We're unable to fulfill that order at this time.</h1>
+        <p class="w3-center w3-xxxlarge">
+            Please place a new order.
+        </p>
+        <a href="/">
+            <p>
+                <button class="w3-button w3-light-grey w3-block"
+                        type="submit"
+                        style="width: 60%; margin: auto;">
+                    Home
+                </button>
+            </p>
+        </a>
+    </div>
 </div>
+
+<!-- Footer -->
+<footer class="w3-center w3-black w3-padding-48 w3-xxlarge">
+    <p>© 2018 Us Burger, Inc.</p>
+    <p>us.burger@usu.edu</p>
+    <p><a href="https://github.com/jfairbourn96/team_us_3450">Us GitBurger</a></p>
+</footer>
+
 </body>
 </html>
