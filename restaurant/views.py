@@ -13,11 +13,13 @@ from .models import MenuItem, WaitTime, Order, OrderItem, Host, Table, SupplyIte
 
 
 def init(request):
+
     """
     This view serves as an easy method of repopulating the database.
     It is for testing/developing purposes only, and should ABSOLUTELY NOT be included in the production build.
     """
-    populate()
+    if request.session.get('employee', 'false') == 'true':
+        populate()
     return HttpResponseRedirect(reverse('restaurant:index'))
 
 
@@ -32,20 +34,6 @@ def index(request):
         'emails': serialize_emails
     }
     return render(request, 'restaurant/index.html', context)
-
-
-def customerMenu(request):
-    serialize_emails = serializers.serialize("json", Order.objects.all(), indent=4)
-
-    wait_time = WaitTime.objects.last()
-    latest_menu = MenuItem.objects.filter(available=True)
-    template = loader.get_template('restaurant/customerMenu.html')
-    context = {
-        'latest_menu': latest_menu,
-        'wait_time': wait_time,
-        'emails': serialize_emails
-    }
-    return HttpResponse(template.render(context, request))
 
 
 def changeButton(order: int, button: str):
@@ -94,7 +82,7 @@ def button(request):
         button = request.GET.get('button')
         resp = {'answer': changeButton(request.GET.get('order'), request.GET.get('button'))}
     else:
-        rep = {'ERROR': "use the HTTP request variable 'n' and 'button"}
+        resp = {'ERROR': "use the HTTP request variable 'n' and 'button"}
 
     return HttpResponse(json.dumps(resp))
 
@@ -175,8 +163,7 @@ def customerOrder(request, order_pk):
         }
         return render(request, 'restaurant/customerOrder.html', context)
     else:
-        # TODO: Change this to be more descriptive and to the home page.
-        return HttpResponse("Please enter your Name and Email below to view your order.")
+        return HttpResponseRedirect(reverse('restaurant:index'),)
 
 
 def verify(request):
@@ -309,7 +296,7 @@ def tryLogin(request):
         if employee.checkPin(login_PIN):
             # Give the employee a fresh session.
             request.session['employee'] = 'true'
-            request.session.set_expiry(300)
+            request.session.set_expiry(900)
             return HttpResponseRedirect(reverse('restaurant:employeePortal'))
         else:
             raise KeyError
@@ -343,20 +330,32 @@ def cookOrderDetail(request, order_pk):
         if not order.cooking:
             order.changeCooking()
             order.save()
-		
+
             template = loader.get_template('restaurant/cookOrderDetail.html')
             context = {
                 'order': order,
             }
             return HttpResponse(template.render(context, request))
-			
+
         else:
-            return HttpResponseRedirect(reverse('restaurant:cookOrder',))
+            return HttpResponseRedirect(reverse('restaurant:cookOrder', ))
     else:
         return render(request, 'restaurant/login.html')
-		
-		
+
+def cookOrderDetail2(request, order_pk):
+    if request.session.get('employee', 'false') == 'true':
+        order = get_object_or_404(Order, pk=order_pk)
+        template = loader.get_template('restaurant/cookOrderDetail.html')
+        context = {
+            'order': order,
+        }
+        return HttpResponse(template.render(context, request))
+    else:
+        return render(request, 'restaurant/login.html')
+
+
 def foodReady(request, order_pk):
+
 	if request.session.get('employee', 'false') == 'true':
 		order = get_object_or_404(Order, pk=order_pk)
 	

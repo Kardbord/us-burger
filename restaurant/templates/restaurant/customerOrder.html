@@ -4,7 +4,6 @@
 <title>Us Burger Order</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="refresh" content="60">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Amatic+SC">
 <script type="text/javascript" src="{% static 'js/functions.js' %}"></script>
@@ -109,14 +108,6 @@
             <p>An error occurred and no order was sent.</p>
             {% endif %}
             {% if order.confirmed %}
-            <p>
-                <button class="w3-button w3-light-grey w3-block" disabled
-                        type="submit"
-                        style="width: 60%; margin: auto;">
-                    EDIT ORDER
-                </button>
-            </p>
-
             {% else %}
             <a href="{% url 'restaurant:editOrder' order %}">
                 <p>
@@ -127,16 +118,16 @@
                     </button>
                 </p>
             </a>
-				{% endif %}
-					<a href="{% url 'restaurant:delete' order.id %}">
-                        <p>
-                            <button class="w3-button w3-light-grey w3-block"
-                                    type="submit"
-                                    style="width: 60%; margin: auto;">
-                                CANCEL ORDER
-                            </button>
-                        </p>
-					</a>
+            <a href="{% url 'restaurant:delete' order.id %}">
+                <p>
+                    <button class="w3-button w3-light-grey w3-block"
+                            type="submit"
+                            style="width: 60%; margin: auto;">
+                        CANCEL ORDER
+                    </button>
+                </p>
+            </a>
+            {% endif %}
         </div>
         <br>
     </div>
@@ -148,7 +139,8 @@
     <div class="w3-content">
         <h1 class="w3-center w3-jumbo" style="margin-bottom:36px">SERVER CONFIRMATION</h1>
         <form action="{% url 'restaurant:confirm' order.id%}" method="post" autocomplete="false">
-            <p class="w3-center"> {% csrf_token %} </p>
+            {% csrf_token %}
+            <p class="w3-center"></p>
             <p><input class="w3-input w3-padding-16 w3-border w3-center"
                       type="text"
                       placeholder="Table #"

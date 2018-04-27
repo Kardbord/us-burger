@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 {% load static %}
 <html lang=en>
+<meta http-equiv="refresh" content="10">
 	<head>
 		<title>Us-Burger Menu</title>
 		<link rel="stylesheet" type="text/css" href="{% static 'css/style1.css' %}"/>
@@ -12,7 +13,7 @@
 	
 		<header>
             <a href="{% url 'restaurant:employeePortal' %}">
-                <img src="{% static 'images\us_burger.png' %}"
+                <img src="{% static 'images/us_burger.png' %}"
                      height="150">
             </a>
 			<br>
@@ -23,7 +24,9 @@
             {% endif %}
                 <form action="{% url 'restaurant:updateWaitTime' %}" method="post">
                     {% csrf_token %}
-                    <p>New Wait Time: <input type="number" name="waittime"/>
+                    <p>New Wait Time: <label>
+                        <input type="number" name="waittime"/>
+                    </label>
                         <button type="submit">Update</button>
                     </p>
                 </form>
@@ -85,7 +88,7 @@
 						var checkid = 'b' + (button - 1) + '_' + order;
 						var check = document.getElementById(checkid);
 						
-						if(check.textContent == "T"){
+						if(check.textContent === "T"){
 							var url = '{% url 'restaurant:button' %}' +'?order=' + order + '&button=' + button;
 							var changeRequest = new XMLHttpRequest();
 							console.log(url);
@@ -99,11 +102,11 @@
 								var clickerid = 'b' + button + '_' + order;
 								console.log(clickerid);
 								var clicker = document.getElementById(clickerid);
-								if(answer.answer == false){
+								if(answer.answer === false){
 									clicker.textContent = "F";
 									clicker.setAttribute('class', 'tableButtonF');
 								}
-								else if (answer.answer == true){
+								else if (answer.answer === true){
 									clicker.textContent = "T";
 									clicker.setAttribute('class', 'tableButtonT');
 								}

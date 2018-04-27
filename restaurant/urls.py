@@ -7,7 +7,6 @@ urlpatterns = [
     # ex: /restaurant/
     path('', views.index, name='index'),
     # ex: /restaurant/customerMenu/
-    path('customerMenu/', views.customerMenu, name='customerMenu'),
     # Path to newOrder view, which reverses to customerOrder
     path('newOrder/', views.newOrder, name='newOrder'),
     # ex: /restaurant/customerOrder/1
@@ -53,4 +52,6 @@ urlpatterns = [
 	path('cookOrder/<int:order_pk>/foodReady', views.foodReady, name='foodReady'),
 	# Path to the Pay view
 	path('serverPage/paid/<int:order_pk>', views.paid, name='paid'),
+    # Path for cookOrderDetail without changing the order's status
+    path('cookOrderDetail/<int:order_pk>', views.cookOrderDetail2, name='orderDetails2')
 ]
