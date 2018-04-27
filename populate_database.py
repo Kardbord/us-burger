@@ -160,7 +160,7 @@ def populate():
     host1 = Host(name='Samantha')
     host2 = Host(name='Jonathan')
     host3 = Host(name='Eliza')
-    host4 = Host(name='Peter', pin='12345')
+    host4 = Host(name='Peter')
     host1.save()
     host2.save()
     host3.save()
