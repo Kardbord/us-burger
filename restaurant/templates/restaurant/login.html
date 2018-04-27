@@ -1,36 +1,85 @@
 {% load static %}
-<html lang=en>
-	<head>
-		<title>Us-Burger Employee Login</title>
-		<link rel="stylesheet" type="text/css" href="{% static 'css/style0.css' %}"/>
-	</head>
+<!DOCTYPE html>
+<html>
+<title>Us Burger Employee Login</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="refresh" content="60">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Amatic+SC">
+<script type="text/javascript" src="{% static 'js/functions.js' %}"></script>
+<style>
+    body, html {
+        height: 100%
+    }
 
-	<body>
+    body, h1, h2, h3, h4, h5, h6 {
+        font-family: "Amatic SC", sans-serif
+    }
 
-		<header>
-            <a href="/">
-                <img src="{% static 'images\us_burger.png' %}"
-                     height="150">
-            </a>
-			<br>
-		</header>
+    .bgimg {
+        background-size: cover;
+        background: url("https://images7.alphacoders.com/611/thumb-1920-611267.jpg") 50% 0 no-repeat fixed;
+        min-height: 90%;
+    }
 
-		<main>
-	        <div class="login_info">
-                <form action="{% url 'restaurant:tryLogin' %}" method="post">
-                    {% csrf_token %}
-                    <div name="name"><input type="text" name="name"></div>
-                    <div name="pin"><input type="password" name="PIN"></div>
-                    <button type="submit">Login</button>
-                </form>
-            </div>
-		</main>
+    input.invalid {
+        border: 2px dashed red;
+    }
 
-<footer>
+    input.valid {
+        border: none;
+    }
+
+
+
+</style>
+<body>
+
+<header class="w3-center w3-black">
+    <a href="/">
+        <img src="{% static 'images/us_burger.png' %}"
+             height="150">
+    </a>
+</header>
+
+<!-- Login -->
+<div class="login_info w3-container w3-padding-64 w3-blue-grey w3-grayscale-min w3-xxlarge">
+    <div class="w3-content">
+        <h1 class="w3-center w3-jumbo" style="margin-bottom:36px">Employee Login</h1>
+        <form action="{% url 'restaurant:tryLogin' %}" method="post">
+            <p class="w3-center"> {% csrf_token %} </p>
+            <p name="name">
+                <input class="w3-input w3-padding-16 w3-border w3-center"
+                       type="text"
+                       placeholder="Name"
+                       name="name"
+                       style="width: 40%; margin: auto;">
+            </p>
+            <p name="pin">
+                <input class="w3-input w3-padding-16 w3-border w3-center"
+                       type="password"
+                       placeholder="PIN"
+                       name="PIN"
+                       style="width: 40%; margin: auto;">
+            </p>
+            <p>
+                <button class="w3-button w3-light-grey w3-block"
+                        type="submit"
+                        style="width: 60%; margin: auto;">
+                    Login
+                </button>
+            </p>
+        </form>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="w3-center w3-black w3-padding-48 w3-xxlarge">
     <p>© 2018 Us Burger, Inc.</p>
     <p>us.burger@usu.edu</p>
     <p><a href="https://github.com/jfairbourn96/team_us_3450">Us GitBurger</a></p>
 </footer>
 
-	</body>
+</body>
 </html>
