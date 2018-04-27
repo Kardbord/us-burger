@@ -311,7 +311,7 @@ def tryLogin(request):
         if employee.checkPin(login_PIN):
             # Give the employee a fresh session.
             request.session['employee'] = 'true'
-            request.session.set_expiry(300)
+            request.session.set_expiry(900)
             return HttpResponseRedirect(reverse('restaurant:employeePortal'))
         else:
             raise KeyError
@@ -373,16 +373,32 @@ def cookOrderDetail2(request, order_pk):
 
 @csrf_exempt
 def foodReady(request, order_pk):
-    if request.session.get('employee', 'false') == 'true':
-        order = get_object_or_404(Order, pk=order_pk)
 
-        order.changeCooked()
-        order.save()
+	if request.session.get('employee', 'false') == 'true':
+		order = get_object_or_404(Order, pk=order_pk)
+	
+		order.changeCooked()
+		order.save()
+		
+		return HttpResponseRedirect(reverse('restaurant:cookOrder',))
+		
+	else:
+		return render(request, 'restaurant/login.html')
+		
+def paid(request, order_pk):
+	if request.session.get('employee', 'false') == 'true':
+		order = get_object_or_404(Order, pk=order_pk)
+		
+		table = Table.objects.get(number=order.table.number)
+		table.available = True
+		table.save()
+		
+		order.delete()
+		
+		return HttpResponseRedirect(reverse('restaurant:server'))
+	else:
+		return render(request, 'restaurant/login.html')
 
-        return HttpResponseRedirect(reverse('restaurant:cookOrder', ))
-
-    else:
-        return render(request, 'restaurant/login.html')
 
 
 @csrf_exempt

@@ -43,7 +43,7 @@
 						<th>C</th>
 						<th>F.R.</th>
 						<th>Del.</th>
-						<th>Paid</th>
+						<th>Pay</th>
 						<!--<th>N.H.</th>-->
 					</tr>
 					{% for table in tableList %}
@@ -68,10 +68,10 @@
 									{% else %}
 										<td><button id="b3_{{ order.id }}" class="tableButtonF" type="button" onclick="buttonChange({{ order.id }}, 3)">F</button></td>
 									{% endif %}
-									{%if order.paid %}
-										<td><button id="b4_{{ order.id }}" class="tableButtonT" type="button" onclick="buttonChange({{ order.id }}, 4)">T</button></td>
+									{%if order.delivered %}
+										<td id="p{{ order.id }}"><a href="{% url 'restaurant:paid' order.id %}"><button id="b4_{{ order.id }}" class="tableButtonP" type="button">$</button></a></td>
 									{% else %}
-										<td><button id="b4_{{ order.id }}" class="tableButtonF" type="button" onclick="buttonChange({{ order.id }}, 4)">F</button></td>
+										<td id="p{{ order.id }}"></td>
 									{% endif %}
 									
 									<!--<td>:)</td>-->
