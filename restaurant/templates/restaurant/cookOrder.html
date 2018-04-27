@@ -38,7 +38,9 @@
                 {% for order in order_list %}
                     {% if order.confirmed and not order.cooking %}
 
-            <b>Order #{{ order }}</b>
+            <b style="margin-left: 15px">
+                Order #{{ order }}
+            </b>
 
             <form action="{% url 'restaurant:orderDetails' order.id %}" method="post">
                 {% csrf_token %}
@@ -65,7 +67,9 @@
             {% for order in order_list %}
             {% if order.cooking and not order.cooked %}
 
-            <b>Order #{{ order }}</b>
+            <b style="margin-left: 15px">
+                Order #{{ order }}
+            </b>
 
             <form action="{% url 'restaurant:orderDetails2' order.id %}" method="post">
                 {% csrf_token %}

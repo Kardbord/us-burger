@@ -1,51 +1,75 @@
-<!-- TODO: Add a button that goes back to the employee portal. -->
 {% load static %}
-<html lang=en>
-	<head>
-		<title>Orders to cook</title>
-		<link rel="stylesheet" type="text/css" href="{% static 'css/style0.css' %}"/>
-        <script type="text/javascript" src="{% static 'js/functions.js' %}"></script>
-	</head>
+<!DOCTYPE html>
+<html>
+<title>Us Burger Order Detail</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="refresh" content="60">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Amatic+SC">
+<script type="text/javascript" src="{% static 'js/functions.js' %}"></script>
+<style>
+    body, html {
+        height: 100%
+    }
 
-	<body>
 
-		<header>
-            <a href="{% url 'restaurant:employeePortal' %}">
-                <img src="{% static 'images/us_burger.png' %}"
-                     height="150">
-            </a>
-			<br>
-            <h3>Order {{ order.id }} </h3>
-			<br>
-		</header>
 
-		<main>
-			<p>
-				Comments: {{ order.comment }}
-			</p>
-			<menu>
-                {% for order_item in order.orderitem_set.all %}
-                    <menuitem>
-                        <div>
-                            <h4>{{ order_item.menu_item.name }}</h4>
-                            <p>Quantity: {{ order_item.quantity }}</p>
-                        </div>
-                    </menuitem>
-                {% endfor %}
-                <form action="{% url 'restaurant:foodReady' order.id%}" method="post">
+
+</style>
+<body>
+
+<!-- Header -->
+<header class="w3-center w3-black">
+    <a href="{% url 'restaurant:employeePortal' %}">
+        <img src="{% static 'images/us_burger.png' %}"
+             height="150">
+    </a>
+    <div class="w3-padding">
+        <span class="w3-tag w3-jumbo">
+            Order #{{ order.id }}
+        </span>
+    </div>
+</header>
+
+<!-- Orders to Cook Container -->
+<div class="w3-container w3-black w3-padding-0 w3-xxlarge">
+    <div class="w3-content">
+        <p>
+            Comments: {{ order.comment }}
+        </p>
+        <div class="w3-row w3-border w3-border-dark-grey">
+            <hr>
+            {% for order_item in order.orderitem_set.all %}
+            <b style="margin-left: 15px;">
+                {{ order_item.menu_item.name }}
+            </b>
+            <p class="w3-right"
+               style="margin-top: -5px; margin-right: 15px;">
+                Quantity: {{ order_item.quantity }}
+            </p>
+            <hr>
+            {% endfor %}
+            <form action="{% url 'restaurant:foodReady' order.id %}" method="post">
 				{% csrf_token %}
-					<button type="submit">Cooked</button>
-				</form>
-			</menu>
-		</main>
+                <p class="w3-center">
+                    <button class="w3-button w3-white"
+                            type="submit"
+                            style="width:30%; margin: auto;">
+                        Cooked
+                    </button>
+                </p>
+            </form>
+        </div>
+    </div>
+</div>
 
-		<footer>
-            <p>© 2018 Us Burger, Inc.</p>
-            <p>us.burger@usu.edu</p>
-            <p><a href="https://github.com/jfairbourn96/team_us_3450">Us GitBurger</a></p>
-		</footer>
+<!-- Footer -->
+<footer class="w3-center w3-black w3-padding-48 w3-xxlarge">
+    <p>© 2018 Us Burger, Inc.</p>
+    <p>us.burger@usu.edu</p>
+    <p><a href="https://github.com/jfairbourn96/team_us_3450">Us GitBurger</a></p>
+</footer>
 
-	</body>
+</body>
 </html>
-
-
