@@ -373,6 +373,7 @@ def paid(request, order_pk):
 		
 		table = Table.objects.get(number=order.table.number)
 		table.available = True
+		table.save()
 		
 		order.delete()
 		
