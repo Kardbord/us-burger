@@ -10,6 +10,11 @@
 	<body>
 
 		<header>
+            <a href="{% url 'restaurant:employeePortal' %}">
+                <img src="{% static 'images/us_burger.png' %}"
+                     height="150">
+            </a>
+			<br>
             <h3>Order {{ order.id }} </h3>
 			<br>
 		</header>
@@ -21,8 +26,10 @@
 			<menu>
                 {% for order_item in order.orderitem_set.all %}
                     <menuitem>
-                        <h4>{{ order_item.menu_item.name }}</h4>
-                        <p>Quantity: {{ order_item.quantity }}</p>
+                        <div>
+                            <h4>{{ order_item.menu_item.name }}</h4>
+                            <p>Quantity: {{ order_item.quantity }}</p>
+                        </div>
                     </menuitem>
                 {% endfor %}
                 <form action="{% url 'restaurant:foodReady' order.id%}" method="post">
@@ -33,7 +40,9 @@
 		</main>
 
 		<footer>
-
+            <p>© 2018 Us Burger, Inc.</p>
+            <p>us.burger@usu.edu</p>
+            <p><a href="https://github.com/jfairbourn96/team_us_3450">Us GitBurger</a></p>
 		</footer>
 
 	</body>

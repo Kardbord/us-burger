@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 {% load static %}
 <html lang=en>
+<meta http-equiv="refresh" content="10">
 	<head>
 		<title>Us-Burger Menu</title>
 		<link rel="stylesheet" type="text/css" href="{% static 'css/style1.css' %}"/>
@@ -11,8 +12,8 @@
 	<body>
 	
 		<header>
-            <a href="/">
-                <img src="{% static 'images\us_burger.png' %}"
+            <a href="{% url 'restaurant:employeePortal' %}">
+                <img src="{% static 'images/us_burger.png' %}"
                      height="150">
             </a>
 			<br>
@@ -21,6 +22,14 @@
 			{% else %}
                 <h3>Wait time unavailable</h3>
             {% endif %}
+                <form action="{% url 'restaurant:updateWaitTime' %}" method="post">
+                    {% csrf_token %}
+                    <p>New Wait Time: <label>
+                        <input type="number" name="waittime"/>
+                    </label>
+                        <button type="submit">Update</button>
+                    </p>
+                </form>
 		</header>
 
 		<main>
@@ -33,8 +42,8 @@
 						<th>C</th>
 						<th>F.R.</th>
 						<th>Del.</th>
-						<th>Paid</th>
-						<th>N.H.</th>
+						<th>Pay</th>
+						<!--<th>N.H.</th>-->
 					</tr>
 					{% for table in tableList %}
 						{%if not table.available %}
@@ -44,27 +53,27 @@
 									<td>{{ order.name|truncatechars:10 }}</td>
 									<td>{{ order.email|truncatechars:10 }}</td>
 									{%if order.cooking %}
-										<td><button id="b1_{{ order.id }}" class="tableButtonT" type="button" onclick="buttonChange({{ order.id }}, 1)">T</button></td>
+										<td><button id="b1_{{ order.id }}" class="tableButtonT" type="button" onclick="<!--buttonChange({{ order.id }}, 1)-->" disabled>T</button></td>
 									{% else %}
-										<td><button id="b1_{{ order.id }}" class="tableButtonF" type="button" onclick="buttonChange({{ order.id }}, 1)">F</button></td>
+										<td><button id="b1_{{ order.id }}" class="tableButtonF" type="button" onclick="<!--buttonChange({{ order.id }}, 1)-->" disabled>F</button></td>
 									{% endif %}
 									{%if order.cooked %}
-										<td><button id="b2_{{ order.id }}" class="tableButtonT" type="button" onclick="buttonChange({{ order.id }}, 2)">T</button></td>
+										<td><button id="b2_{{ order.id }}" class="tableButtonT" type="button" onclick="<!--buttonChange({{ order.id }}, 2)-->" disabled>T</button></td>
 									{% else %}
-										<td><button id="b2_{{ order.id }}" class="tableButtonF" type="button" onclick="buttonChange({{ order.id }}, 2)">F</button></td>
+										<td><button id="b2_{{ order.id }}" class="tableButtonF" type="button" onclick="<!--buttonChange({{ order.id }}, 2)-->" disabled>F</button></td>
 									{% endif %}
 									{%if order.delivered %}
 										<td><button id="b3_{{ order.id }}" class="tableButtonT" type="button" onclick="buttonChange({{ order.id }}, 3)">T</button></td>
 									{% else %}
 										<td><button id="b3_{{ order.id }}" class="tableButtonF" type="button" onclick="buttonChange({{ order.id }}, 3)">F</button></td>
 									{% endif %}
-									{%if order.paid %}
-										<td><button id="b4_{{ order.id }}" class="tableButtonT" type="button" onclick="buttonChange({{ order.id }}, 4)">T</button></td>
+									{%if order.delivered %}
+										<td id="p{{ order.id }}"><a href="{% url 'restaurant:paid' order.id %}"><button id="b4_{{ order.id }}" class="tableButtonP" type="button">$</button></a></td>
 									{% else %}
-										<td><button id="b4_{{ order.id }}" class="tableButtonF" type="button" onclick="buttonChange({{ order.id }}, 4)">F</button></td>
+										<td id="p{{ order.id }}"></td>
 									{% endif %}
 									
-									<td>:)</td>
+									<!--<td>:)</td>-->
 								{% endfor %}
 							</tr>
 						{% endif%}
@@ -73,30 +82,36 @@
 				
 				<script type="text/javascript">
 					function buttonChange(){
-						var url = 'http://localhost:8000/serverPage/button/?order=' + arguments[0] + '&button=' + arguments[1];
-						var changeRequest = new XMLHttpRequest();
 						var button = arguments[1];
 						var order = arguments[0];
-						console.log(url);
-						changeRequest.open('GET', url);
-						changeRequest.responseType = 'json';
-						changeRequest.send();
+						
+						var checkid = 'b' + (button - 1) + '_' + order;
+						var check = document.getElementById(checkid);
+						
+						if(check.textContent === "T"){
+							var url = '{% url 'restaurant:button' %}' +'?order=' + order + '&button=' + button;
+							var changeRequest = new XMLHttpRequest();
+							console.log(url);
+							changeRequest.open('GET', url);
+							changeRequest.responseType = 'json';
+							changeRequest.send();
 				
-						changeRequest.onload = function() {
-							var answer = changeRequest.response;
-							console.log(changeRequest.response.answer);
-							var clickerid = 'b' + button + '_' + order;
-							console.log(clickerid);
-							var clicker = document.getElementById(clickerid);
-							if(answer.answer == false){
-								clicker.textContent = "F";
-								clicker.setAttribute('class', 'tableButtonF');
-							}
-							else if (answer.answer == true){
-								clicker.textContent = "T";
-								clicker.setAttribute('class', 'tableButtonT');
-							}
-						};
+							changeRequest.onload = function() {
+								var answer = changeRequest.response;
+								console.log(changeRequest.response.answer);
+								var clickerid = 'b' + button + '_' + order;
+								console.log(clickerid);
+								var clicker = document.getElementById(clickerid);
+								if(answer.answer === false){
+									clicker.textContent = "F";
+									clicker.setAttribute('class', 'tableButtonF');
+								}
+								else if (answer.answer === true){
+									clicker.textContent = "T";
+									clicker.setAttribute('class', 'tableButtonT');
+								}
+							};
+						}
 					}
 				</script>
 		
@@ -115,7 +130,10 @@
 		
 		<footer>
 			<p>C = Cooking  |  F.R. = Food is Ready  |  Del. = Delivered  |  Paid = Has paid for the food  |  N.H. = Table needs help</p>
-		</footer>
+            <p>© 2018 Us Burger, Inc.</p>
+            <p>us.burger@usu.edu</p>
+            <p><a href="https://github.com/jfairbourn96/team_us_3450">Us GitBurger</a></p>
+        </footer>
 		
 	</body>
 </html>

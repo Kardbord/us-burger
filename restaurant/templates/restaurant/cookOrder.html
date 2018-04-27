@@ -1,6 +1,18 @@
-<!-- TODO: Add a button that goes back to the employee portal. -->
 {% load static %}
 <html lang=en>
+<title>Us Burger Order</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="refresh" content="60">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Amatic+SC">
+<script type="text/javascript" src="{% static 'js/functions.js' %}"></script>
+<style>
+    body, html {
+        height: 100%
+    }
+
+</style>
 	<head>
 		<title>Orders to cook</title>
 		<link rel="stylesheet" type="text/css" href="{% static 'css/style0.css' %}"/>
@@ -10,7 +22,12 @@
 	<body>
 	
 		<header>
-            <h3>Orders to cook:</h3>
+            <a href="{% url 'restaurant:employeePortal' %}">
+                <img src="{% static 'images/us_burger.png' %}"
+                     height="150">
+            </a>
+			<br>
+            <h3>View Orders</h3>
 			<br>
 		</header>
 
@@ -19,42 +36,46 @@
                 <h2>Orders To Cook:</h2>
                 {% for order in order_list %}
                     {% if order.confirmed and not order.cooking %}
-                        <menuitem>
-                            <h4>Order #{{ order }}</h4>
-                            <div>
+                        <div class="order w3-xlarge">
                                 <div>
+                                    <h4>Order #{{ order }}</h4>
+                                </div>
+                                <div class="w3-display-right">
                                     <form action="{% url 'restaurant:orderDetails' order.id %}" method="post">
                                         {% csrf_token %}
-                                        <button type="submit">I'll Cook This</button>
+                                        <button type="submit">I'll cook this</button>
                                     </form>
                                 </div>
-                            </div>
-                        </menuitem>
+                        </div>
                     {% endif %}
                 {% endfor %}
 
                 <h2>Orders Cooking:</h2>
                 {% for order in order_list %}
                     {% if order.cooking and not order.cooked %}
-                        <menuitem>
-                            <h4>Order #{{ order }}</h4>
-                        </menuitem>
+                        <div class="order">
+                            <div>
+                                <h4>Order #{{ order }}</h4>
+                            </div>
+                            <div>
+                                <form action="{% url 'restaurant:orderDetails2' order.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit">View Order</button>
+                                </form>
+                            </div>
+                        </div>
                     {% endif %}
                 {% endfor %}
 			</menu>
 		</main>
 		
 		<footer>
-			
+            <p>© 2018 Us Burger, Inc.</p>
+            <p>us.burger@usu.edu</p>
+            <p><a href="https://github.com/jfairbourn96/team_us_3450">Us GitBurger</a></p>
 		</footer>
 		
 	</body>
 </html>
 
 
-{% for order_item in order.orderitem_set.all %}
-	<menuitem>
-		<h4>{{ order_item.menu_item.name }}</h4>
-		<p>Quantity: {{ order_item.quantity }}</p>
-	</menuitem>
-{% endfor %}

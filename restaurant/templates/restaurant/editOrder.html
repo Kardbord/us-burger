@@ -5,7 +5,7 @@
 <title>Us Burger Edit Order</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="refresh" content="60">
+<meta http-equiv="refresh" content="120">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Amatic+SC">
 <script type="text/javascript" src="{% static 'js/functions.js' %}"></script>
@@ -122,13 +122,13 @@
                             </span>
                 </h1>
                 <p class="w3-text-grey">{{ item.description }}</p>
-                <p><input class="w3-tag w3-padding-0 w3-right w3-white"
-                          type="number"
-                          name="{{ item.id }}qty"
-                          value="{{ order_qtys|val:item.name }}"
-                          min="0"
-                          id="numberInput"
-                          style="width: 10%; margin-right: 15px;"></p>
+                <p><label for="numberInput"></label><input class="w3-tag w3-padding-0 w3-right w3-white"
+                                                           type="number"
+                                                           name="{{ item.id }}qty"
+                                                           value="{{ order_qtys|val:item.name }}"
+                                                           min="0"
+                                                           id="numberInput"
+                                                           style="width: 10%; margin-right: 15px;"></p>
                 <br>
                 <hr>
                 {% endfor %}

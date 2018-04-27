@@ -4,12 +4,17 @@ body {
 	font-size: 40px;
 }
 
+p {
+    word-break: break-all;
+    white-space: normal;
+}
+
 header, footer{
 	text-align: center;
 	font-family: "Comic Sans MS", cursive, sans-serif;
 }
 
-button {
+button, a > button {
 	padding: 15px 32px;
 	border-radius: 5px;
 	font-size: 30px;
@@ -62,6 +67,15 @@ table {
 
 .tableButtonF {
 	background-color: red;
+	color: white;
+	font-size: 20px;
+	cursor: pointer;
+	border: none;
+}
+
+
+.tableButtonP {
+	background-color: green;
 	color: white;
 	font-size: 20px;
 	cursor: pointer;
