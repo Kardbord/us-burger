@@ -9,6 +9,10 @@ function orderVerification() {
     var totalItems = 0;
 
     for (var iterator = 1; iterator < form.length - 3; ++iterator) {
+        // noinspection EqualityComparisonWithCoercionJS
+        if (form[iterator].value == null || form[iterator].value === null || form[iterator].value == '') {
+            form[iterator].value = 0;
+        }
         if (form[iterator].value !== "0") {
             ++totalItems;
         }
